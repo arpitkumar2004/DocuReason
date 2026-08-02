@@ -1,0 +1,5 @@
+Product Launch Overview
+
+The new platform launched in Europe and Asia. Customer adoption reached 68% in the first month.
+
+Figure: a bar chart showing adoption by region.

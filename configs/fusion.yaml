@@ -1,0 +1,5 @@
+strategy: "weighted"
+weights:
+  text: 0.5
+  table: 0.3
+  vision: 0.2
