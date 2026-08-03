@@ -1,0 +1,8 @@
+{
+  "document_count": 2,
+  "chunk_count": 6,
+  "notes": [
+    "Basic ingestion pipeline completed.",
+    "Table and figure regions are captured as structured metadata."
+  ]
+}

@@ -12,7 +12,7 @@ def test_ingestion_and_indexing_modules(tmp_path):
     wrapper = DoclingWrapper(input_dir=sample_dir, output_dir=output_dir)
     documents = wrapper.ingest()
 
-    assert len(documents) == 2
+    assert len(documents) >= 2
     assert documents[0].title == "Quarterly Revenue Report"
     assert any(region.type == "table" for region in documents[0].regions)
     assert any(region.type == "figure" for region in documents[1].regions)

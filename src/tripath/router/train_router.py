@@ -10,10 +10,10 @@ class RouterTrainer:
 
     def build_labeled_queries(self) -> List[Dict[str, object]]:
         return [
-            {"query": "revenue growth report", "labels": ["text"]},
-            {"query": "revenue by region", "labels": ["text", "table"]},
-            {"query": "adoption chart", "labels": ["vision"]},
-            {"query": "quarterly revenue table", "labels": ["text", "table"]},
+            {"query": "revenue growth report", "labels": ["text"], "target": "text-only"},
+            {"query": "revenue by region", "labels": ["text", "table"], "target": "mixed"},
+            {"query": "adoption chart", "labels": ["vision"], "target": "figure-heavy"},
+            {"query": "quarterly revenue table", "labels": ["text", "table"], "target": "mixed"},
         ]
 
     def save_dataset(self, output_path: str | Path) -> Path:

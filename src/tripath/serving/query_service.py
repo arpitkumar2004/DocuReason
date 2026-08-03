@@ -11,6 +11,7 @@ from ..retrieval.table_retrieval import TableRetrieval
 from ..retrieval.vision_retrieval import VisionRetrieval
 from ..router.configurable_router import ConfigurableRouter
 from ..fusion.fuse import Fuser
+from ..generation.generate import GenerationModule
 
 
 class QueryService:
@@ -23,6 +24,7 @@ class QueryService:
         self.embedder = ChunkEmbedder()
         self.router = ConfigurableRouter()
         self.ranker = Ranker()
+        self.generator = GenerationModule()
 
     def query(self, text: str) -> Dict[str, object]:
         route = self.router.route(text)
@@ -37,9 +39,11 @@ class QueryService:
         fused = Fuser().fuse(results) if results else []
         ranked = self.ranker.rank(fused)
         embeddings = self.embedder.embed([chunk for document in self.documents for chunk in document.chunks])
+        answer = self.generator.generate(text, ranked)
         return {
             "query": text,
             "route": route,
             "results": ranked,
             "embeddings": embeddings,
+            "answer": answer,
         }

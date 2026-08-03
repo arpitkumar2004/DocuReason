@@ -1,0 +1,109 @@
+{
+  "chunks": [
+    {
+      "id": "doc-sample_doc_1-4895e04398d7-region-0-chunk-0",
+      "document_id": "doc-sample_doc_1-4895e04398d7",
+      "region_id": "doc-sample_doc_1-4895e04398d7-region-0",
+      "modality": "text",
+      "text": "Quarterly Revenue Report",
+      "metadata": {
+        "source_path": "sample_doc_1.txt",
+        "region_type": "title",
+        "modality": "text",
+        "namespace": "tripath-v1",
+        "document_id": "doc-sample_doc_1-4895e04398d7",
+        "region_id": "doc-sample_doc_1-4895e04398d7-region-0"
+      }
+    },
+    {
+      "id": "doc-sample_doc_1-4895e04398d7-region-1-chunk-1",
+      "document_id": "doc-sample_doc_1-4895e04398d7",
+      "region_id": "doc-sample_doc_1-4895e04398d7-region-1",
+      "modality": "text",
+      "text": "The company reported revenue of $12.4M in Q1 and $14.8M in Q2. The operating margin improved to 21%.",
+      "metadata": {
+        "source_path": "sample_doc_1.txt",
+        "region_type": "body",
+        "modality": "text",
+        "namespace": "tripath-v1",
+        "document_id": "doc-sample_doc_1-4895e04398d7",
+        "region_id": "doc-sample_doc_1-4895e04398d7-region-1"
+      }
+    },
+    {
+      "id": "doc-sample_doc_1-4895e04398d7-region-2-chunk-2",
+      "document_id": "doc-sample_doc_1-4895e04398d7",
+      "region_id": "doc-sample_doc_1-4895e04398d7-region-2",
+      "modality": "table",
+      "text": "Table:\nRevenue by region\nRegion | Revenue\nNorth | 4.2M\nSouth | 3.7M\nWest | 4.5M",
+      "metadata": {
+        "source_path": "sample_doc_1.txt",
+        "region_type": "table",
+        "modality": "table",
+        "namespace": "tripath-v1",
+        "document_id": "doc-sample_doc_1-4895e04398d7",
+        "region_id": "doc-sample_doc_1-4895e04398d7-region-2"
+      }
+    },
+    {
+      "id": "doc-sample_doc_2-0dbff6387dfc-region-0-chunk-0",
+      "document_id": "doc-sample_doc_2-0dbff6387dfc",
+      "region_id": "doc-sample_doc_2-0dbff6387dfc-region-0",
+      "modality": "text",
+      "text": "Product Launch Overview",
+      "metadata": {
+        "source_path": "sample_doc_2.txt",
+        "region_type": "title",
+        "modality": "text",
+        "namespace": "tripath-v1",
+        "document_id": "doc-sample_doc_2-0dbff6387dfc",
+        "region_id": "doc-sample_doc_2-0dbff6387dfc-region-0"
+      }
+    },
+    {
+      "id": "doc-sample_doc_2-0dbff6387dfc-region-1-chunk-1",
+      "document_id": "doc-sample_doc_2-0dbff6387dfc",
+      "region_id": "doc-sample_doc_2-0dbff6387dfc-region-1",
+      "modality": "text",
+      "text": "The new platform launched in Europe and Asia. Customer adoption reached 68% in the first month.",
+      "metadata": {
+        "source_path": "sample_doc_2.txt",
+        "region_type": "body",
+        "modality": "text",
+        "namespace": "tripath-v1",
+        "document_id": "doc-sample_doc_2-0dbff6387dfc",
+        "region_id": "doc-sample_doc_2-0dbff6387dfc-region-1"
+      }
+    },
+    {
+      "id": "doc-sample_doc_2-0dbff6387dfc-region-2-chunk-2",
+      "document_id": "doc-sample_doc_2-0dbff6387dfc",
+      "region_id": "doc-sample_doc_2-0dbff6387dfc-region-2",
+      "modality": "vision",
+      "text": "Figure: a bar chart showing adoption by region.",
+      "metadata": {
+        "source_path": "sample_doc_2.txt",
+        "region_type": "figure",
+        "modality": "vision",
+        "namespace": "tripath-v1",
+        "document_id": "doc-sample_doc_2-0dbff6387dfc",
+        "region_id": "doc-sample_doc_2-0dbff6387dfc-region-2"
+      }
+    },
+    {
+      "id": "doc-9781513563602-mod01-b7fa9e8544b1-region-0-chunk-0",
+      "document_id": "doc-9781513563602-mod01-b7fa9e8544b1",
+      "region_id": "doc-9781513563602-mod01-b7fa9e8544b1-region-0",
+      "modality": "text",
+      "text": "[Extracted from .pdf document] 9781513563602-mod01.pdf",
+      "metadata": {
+        "source_path": "9781513563602-mod01.pdf",
+        "region_type": "title",
+        "modality": "text",
+        "namespace": "tripath-v1",
+        "document_id": "doc-9781513563602-mod01-b7fa9e8544b1",
+        "region_id": "doc-9781513563602-mod01-b7fa9e8544b1-region-0"
+      }
+    }
+  ]
+}

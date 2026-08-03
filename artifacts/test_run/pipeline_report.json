@@ -1,0 +1,74 @@
+{
+  "document_count": 2,
+  "chunk_count": 6,
+  "route": {
+    "text": true,
+    "table": true,
+    "vision": false
+  },
+  "retrieval_results": [
+    {
+      "document_id": "doc-sample_doc_1-8a162c26e5c4",
+      "region_id": "Quarterly Revenue Report",
+      "score": 1.0,
+      "text": "Quarterly Revenue Report",
+      "modality": "text"
+    },
+    {
+      "document_id": "doc-sample_doc_1-8a162c26e5c4",
+      "region_id": "The company reported rev",
+      "score": 1.0,
+      "text": "The company reported revenue of $12.4M in Q1 and $14.8M in Q2. The operating margin improved to 21%.",
+      "modality": "text"
+    },
+    {
+      "document_id": "doc-sample_doc_1-8a162c26e5c4",
+      "score": 1.0,
+      "text": "Table:\nRevenue by region\nRegion | Revenue\nNorth | 4.2M\nSouth | 3.7M\nWest | 4.5M",
+      "modality": "table"
+    },
+    {
+      "document_id": "doc-sample_doc_2-73828f696147",
+      "score": 1.0,
+      "text": "Figure: a bar chart showing adoption by region.",
+      "modality": "vision"
+    }
+  ],
+  "metrics": {
+    "query": "revenue by region",
+    "recall_at_5": 3.0,
+    "result_count": 4
+  },
+  "benchmark_dataset": [
+    {
+      "id": "finqa-001",
+      "source": "FinQA",
+      "question": "What was the revenue growth between Q1 and Q2?",
+      "answer": "2.4M",
+      "modality": "table",
+      "evidence": [
+        "Revenue by region"
+      ]
+    },
+    {
+      "id": "tatqa-001",
+      "source": "TAT-QA",
+      "question": "What was the operating margin?",
+      "answer": "21%",
+      "modality": "text",
+      "evidence": [
+        "operating margin improved"
+      ]
+    },
+    {
+      "id": "docvqa-001",
+      "source": "DocVQA",
+      "question": "What does the chart show?",
+      "answer": "adoption by region",
+      "modality": "vision",
+      "evidence": [
+        "bar chart"
+      ]
+    }
+  ]
+}

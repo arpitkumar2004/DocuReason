@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DocuReason Tri-Path UI</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 2rem; background: #f7f7fb; color: #222; }
+      .card { background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+      input, button { font-size: 1rem; padding: 0.7rem; border-radius: 8px; border: 1px solid #ccc; }
+      input { width: 70%; margin-right: 0.5rem; }
+      button { cursor: pointer; background: #2563eb; color: white; border: none; }
+      pre { white-space: pre-wrap; background: #f3f4f6; padding: 0.8rem; border-radius: 8px; }
+      .pill { display: inline-block; margin-right: 0.5rem; padding: 0.25rem 0.6rem; background: #e0f2fe; border-radius: 999px; font-size: 0.9rem; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>DocuReason Tri-Path</h1>
+      <p>Run retrieval and view the generated answer, citations, and evaluation summary.</p>
+      <input id="query" placeholder="Enter a query, e.g. revenue by region" />
+      <button onclick="runQuery()">Run Query</button>
+    </div>
+
+    <div class="card">
+      <h2>Answer</h2>
+      <pre id="answer">Waiting for a query...</pre>
+    </div>
+
+    <div class="card">
+      <h2>Attribution Report</h2>
+      <pre id="attribution">-</pre>
+    </div>
+
+    <div class="card">
+      <h2>Results</h2>
+      <div id="results"></div>
+    </div>
+
+    <script>
+      async function runQuery() {
+        const query = document.getElementById('query').value;
+        if (!query) return;
+        const response = await fetch('/query', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query })
+        });
+        const data = await response.json();
+        document.getElementById('answer').textContent = data.answer || 'No answer';
+        document.getElementById('attribution').textContent = JSON.stringify(data.citation_report, null, 2);
+
+        const resultsContainer = document.getElementById('results');
+        resultsContainer.innerHTML = '';
+        (data.results || []).slice(0, 5).forEach((item, index) => {
+          const div = document.createElement('div');
+          div.className = 'card';
+          div.innerHTML = `<strong>#${index + 1}</strong> <span class="pill">${item.modality || 'text'}</span> Score: ${item.score || 0}<br/><pre>${item.text || ''}</pre>`;
+          resultsContainer.appendChild(div);
+        });
+      }
+    </script>
+  </body>
+</html>

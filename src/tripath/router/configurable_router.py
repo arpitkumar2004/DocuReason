@@ -8,9 +8,9 @@ class ConfigurableRouter:
 
     def __init__(self, config: Optional[Dict[str, List[str]]] = None) -> None:
         self.config = config or {
-            "text": ["revenue", "growth", "report", "overview", "company"],
-            "table": ["table", "region", "quarter", "by"],
-            "vision": ["chart", "figure", "image", "adoption"],
+            "text": ["revenue", "growth", "report", "overview", "company", "margin"],
+            "table": ["table", "region", "quarter", "by", "revenue"],
+            "vision": ["chart", "figure", "image", "adoption", "bar"],
         }
 
     def route(self, query: str) -> Dict[str, bool]:

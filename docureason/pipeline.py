@@ -4,6 +4,10 @@ import json
 from pathlib import Path
 from typing import Dict, List
 
+from src.tripath.indexing.artifact_writer import ArtifactWriter
+from src.tripath.ingestion.format_loader import FormatAwareLoader
+from src.tripath.ingestion.identity import IdentityManager
+
 
 class Phase1Pipeline:
     """Build a lightweight corpus and index artifact from sample text documents."""
@@ -12,24 +16,31 @@ class Phase1Pipeline:
         self.input_dir = Path(input_dir)
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
+        self.identity = IdentityManager()
+        self.artifact_writer = ArtifactWriter(self.output_dir)
+        self.loader = FormatAwareLoader()
 
     def run(self) -> Dict[str, object]:
         documents: List[Dict[str, object]] = []
         chunks: List[Dict[str, object]] = []
 
-        for path in sorted(self.input_dir.glob("*.txt")):
-            text = path.read_text(encoding="utf-8")
-            doc_id = f"doc-{path.stem}"
+        for path in self.loader.iter_supported_files(self.input_dir):
+            payload = self.loader.load(path)
+            text = str(payload.get("text", ""))
+            doc_id = self.identity.build_document_id(path)
             regions = self._segment_regions(text)
             doc_regions = []
             doc_chunks = []
             for index, region in enumerate(regions):
-                region_id = f"{doc_id}-region-{index + 1}"
+                region_id = self.identity.build_region_id(doc_id, index)
                 modality = self._modality_for_region(region["type"])
                 metadata = {
                     "source_path": str(path.name),
                     "region_type": region["type"],
                     "modality": modality,
+                    "namespace": "tripath-v1",
+                    "document_id": doc_id,
+                    "region_id": region_id,
                 }
                 doc_regions.append({
                     "id": region_id,
@@ -40,7 +51,7 @@ class Phase1Pipeline:
                     "metadata": metadata,
                 })
                 chunk = {
-                    "id": f"{region_id}-chunk",
+                    "id": self.identity.build_chunk_id(region_id, len(doc_chunks)),
                     "document_id": doc_id,
                     "region_id": region_id,
                     "modality": modality,
@@ -60,6 +71,7 @@ class Phase1Pipeline:
                     "document_id": doc_id,
                     "source_path": str(path.name),
                     "chunk_count": len(doc_chunks),
+                    "namespace": "tripath-v1",
                 },
             })
 
@@ -71,12 +83,14 @@ class Phase1Pipeline:
             "notes": [
                 "Basic ingestion pipeline completed.",
                 "Table and figure regions are captured as structured metadata.",
+                "The loader now accepts common document formats such as PDF, DOCX, PPTX, XLSX, HTML, CSV, and plain text.",
             ],
         }
 
         (self.output_dir / "corpus.json").write_text(json.dumps(corpus, indent=2), encoding="utf-8")
         (self.output_dir / "index.json").write_text(json.dumps(index, indent=2), encoding="utf-8")
         (self.output_dir / "quality_audit.json").write_text(json.dumps(audit, indent=2), encoding="utf-8")
+        self.artifact_writer.write_manifest(documents, chunks)
 
         return {
             "document_count": len(documents),
