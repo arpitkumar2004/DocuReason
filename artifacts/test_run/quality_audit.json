@@ -1,8 +1,9 @@
 {
-  "document_count": 2,
-  "chunk_count": 6,
+  "document_count": 3,
+  "chunk_count": 7,
   "notes": [
     "Basic ingestion pipeline completed.",
-    "Table and figure regions are captured as structured metadata."
+    "Table and figure regions are captured as structured metadata.",
+    "The loader now accepts common document formats such as PDF, DOCX, PPTX, XLSX, HTML, CSV, and plain text."
   ]
 }

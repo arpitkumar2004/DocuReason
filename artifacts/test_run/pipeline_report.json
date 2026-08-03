@@ -1,6 +1,6 @@
 {
-  "document_count": 2,
-  "chunk_count": 6,
+  "document_count": 3,
+  "chunk_count": 7,
   "route": {
     "text": true,
     "table": true,
@@ -32,12 +32,21 @@
       "score": 1.0,
       "text": "Figure: a bar chart showing adoption by region.",
       "modality": "vision"
+    },
+    {
+      "document_id": "doc-sample_doc_1-8a162c26e5c4",
+      "score": 1.0,
+      "text": "Table:\nRevenue by region\nRegion | Revenue\nNorth | 4.2M\nSouth | 3.7M\nWest | 4.5M",
+      "modality": "table",
+      "mode": "sql-like",
+      "query": "revenue by region"
     }
   ],
   "metrics": {
     "query": "revenue by region",
-    "recall_at_5": 3.0,
-    "result_count": 4
+    "recall_at_5": 4.0,
+    "ndcg_at_5": 2.033,
+    "result_count": 6
   },
   "benchmark_dataset": [
     {

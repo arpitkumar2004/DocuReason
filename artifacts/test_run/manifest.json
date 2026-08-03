@@ -209,6 +209,51 @@
         "chunk_count": 3,
         "namespace": "tripath-v1"
       }
+    },
+    {
+      "id": "doc-9781513563602-mod01-6dd33091e454",
+      "source": "9781513563602-mod01.pdf",
+      "title": "[Extracted from .pdf document] 9781513563602-mod01.pdf",
+      "regions": [
+        {
+          "id": "doc-9781513563602-mod01-6dd33091e454-region-0",
+          "type": "title",
+          "text": "[Extracted from .pdf document] 9781513563602-mod01.pdf",
+          "start": 0,
+          "end": 54,
+          "metadata": {
+            "source_path": "9781513563602-mod01.pdf",
+            "region_type": "title",
+            "modality": "text",
+            "namespace": "tripath-v1",
+            "document_id": "doc-9781513563602-mod01-6dd33091e454",
+            "region_id": "doc-9781513563602-mod01-6dd33091e454-region-0"
+          }
+        }
+      ],
+      "chunks": [
+        {
+          "id": "doc-9781513563602-mod01-6dd33091e454-region-0-chunk-0",
+          "document_id": "doc-9781513563602-mod01-6dd33091e454",
+          "region_id": "doc-9781513563602-mod01-6dd33091e454-region-0",
+          "modality": "text",
+          "text": "[Extracted from .pdf document] 9781513563602-mod01.pdf",
+          "metadata": {
+            "source_path": "9781513563602-mod01.pdf",
+            "region_type": "title",
+            "modality": "text",
+            "namespace": "tripath-v1",
+            "document_id": "doc-9781513563602-mod01-6dd33091e454",
+            "region_id": "doc-9781513563602-mod01-6dd33091e454-region-0"
+          }
+        }
+      ],
+      "metadata": {
+        "document_id": "doc-9781513563602-mod01-6dd33091e454",
+        "source_path": "9781513563602-mod01.pdf",
+        "chunk_count": 1,
+        "namespace": "tripath-v1"
+      }
     }
   ],
   "chunks": [
@@ -300,6 +345,21 @@
         "namespace": "tripath-v1",
         "document_id": "doc-sample_doc_2-73828f696147",
         "region_id": "doc-sample_doc_2-73828f696147-region-2"
+      }
+    },
+    {
+      "id": "doc-9781513563602-mod01-6dd33091e454-region-0-chunk-0",
+      "document_id": "doc-9781513563602-mod01-6dd33091e454",
+      "region_id": "doc-9781513563602-mod01-6dd33091e454-region-0",
+      "modality": "text",
+      "text": "[Extracted from .pdf document] 9781513563602-mod01.pdf",
+      "metadata": {
+        "source_path": "9781513563602-mod01.pdf",
+        "region_type": "title",
+        "modality": "text",
+        "namespace": "tripath-v1",
+        "document_id": "doc-9781513563602-mod01-6dd33091e454",
+        "region_id": "doc-9781513563602-mod01-6dd33091e454-region-0"
       }
     }
   ],
