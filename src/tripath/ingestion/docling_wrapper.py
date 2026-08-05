@@ -14,9 +14,7 @@ class DoclingWrapper:
         self.input_dir = Path(input_dir)
         self.output_dir = Path(output_dir)
 
-    def ingest(self) -> List[Document]:
-        pipeline = Phase1Pipeline(input_dir=self.input_dir, output_dir=self.output_dir)
-        result = pipeline.run()
+    def load_corpus(self) -> List[Document]:
         documents: List[Document] = []
         corpus_path = self.output_dir / "corpus.json"
         if corpus_path.exists():
@@ -55,3 +53,12 @@ class DoclingWrapper:
                     )
                 )
         return documents
+
+    def ingest(self, force_reingest: bool = False) -> List[Document]:
+        corpus_path = self.output_dir / "corpus.json"
+        if not force_reingest and corpus_path.exists():
+            return self.load_corpus()
+
+        pipeline = Phase1Pipeline(input_dir=self.input_dir, output_dir=self.output_dir)
+        pipeline.run()
+        return self.load_corpus()

@@ -1,6 +1,6 @@
 {
   "document_count": 3,
-  "chunk_count": 7,
+  "chunk_count": 45,
   "route": {
     "text": true,
     "table": true,
@@ -8,45 +8,334 @@
   },
   "retrieval_results": [
     {
-      "document_id": "doc-sample_doc_1-8a162c26e5c4",
-      "region_id": "Quarterly Revenue Report",
-      "score": 1.0,
-      "text": "Quarterly Revenue Report",
-      "modality": "text"
-    },
-    {
-      "document_id": "doc-sample_doc_1-8a162c26e5c4",
-      "region_id": "The company reported rev",
-      "score": 1.0,
-      "text": "The company reported revenue of $12.4M in Q1 and $14.8M in Q2. The operating margin improved to 21%.",
-      "modality": "text"
-    },
-    {
-      "document_id": "doc-sample_doc_1-8a162c26e5c4",
-      "score": 1.0,
-      "text": "Table:\nRevenue by region\nRegion | Revenue\nNorth | 4.2M\nSouth | 3.7M\nWest | 4.5M",
-      "modality": "table"
-    },
-    {
-      "document_id": "doc-sample_doc_2-73828f696147",
-      "score": 1.0,
-      "text": "Figure: a bar chart showing adoption by region.",
-      "modality": "vision"
-    },
-    {
-      "document_id": "doc-sample_doc_1-8a162c26e5c4",
-      "score": 1.0,
-      "text": "Table:\nRevenue by region\nRegion | Revenue\nNorth | 4.2M\nSouth | 3.7M\nWest | 4.5M",
+      "document_id": "doc-sample_doc_1-4895e04398d7",
+      "region_id": "doc-sample_doc_1-4895e04398d7-table-3",
+      "score": 0.866,
+      "text": "Table: Revenue Summary\nQuarter | Region | Revenue\nQ1 | North America | $10M\nQ2 | Europe | $8M",
+      "parent_text": "Table: Revenue Summary\nQuarter | Region | Revenue\nQ1 | North America | $10M\nQ2 | Europe | $8M",
       "modality": "table",
-      "mode": "sql-like",
-      "query": "revenue by region"
+      "field_weight": 3.0,
+      "rrf_score": 0.00866,
+      "fused_modalities": [
+        "table"
+      ],
+      "cross_encoder_score": 4.2112,
+      "rank_score": 4.2112
+    },
+    {
+      "document_id": "doc-sample_doc_1-4895e04398d7",
+      "region_id": "doc-sample_doc_1-4895e04398d7-table-2",
+      "score": 0.852,
+      "text": "Table: Revenue Summary\nQuarter | Region | Revenue\nQ1 | North America | $10M\nQ2 | Europe | $8M",
+      "modality": "table",
+      "mode": "typed_duckdb_sql",
+      "sql_query": "SELECT * FROM doc_table",
+      "sql_result": [
+        {
+          "Quarter": "Q1",
+          "Region": "North America",
+          "Revenue": "$10M"
+        },
+        {
+          "Quarter": "Q2",
+          "Region": "Europe",
+          "Revenue": "$8M"
+        }
+      ],
+      "table_schema": [
+        "Quarter",
+        "Region",
+        "Revenue"
+      ],
+      "inferred_types": {
+        "Quarter": "VARCHAR",
+        "Region": "VARCHAR",
+        "Revenue": "VARCHAR"
+      },
+      "unit_multiplier": 1,
+      "query": "revenue by region",
+      "rrf_score": 0.00852,
+      "fused_modalities": [
+        "table"
+      ],
+      "cross_encoder_score": 4.2112,
+      "rank_score": 4.2112
+    },
+    {
+      "document_id": "doc-sample_doc_1-4895e04398d7",
+      "region_id": "doc-sample_doc_1-4895e04398d7-region-1",
+      "score": 0.632,
+      "text": "Quarterly Revenue Report",
+      "parent_text": "Quarterly Revenue Report",
+      "modality": "text",
+      "field_weight": 1.0,
+      "rrf_score": 0.00632,
+      "fused_modalities": [
+        "text"
+      ],
+      "cross_encoder_score": -4.1323,
+      "rank_score": -4.1323
+    },
+    {
+      "document_id": "doc-sample_doc_1-4895e04398d7",
+      "region_id": "doc-sample_doc_1-4895e04398d7-region-2",
+      "score": 0.684,
+      "text": "Overview of financial performance across all operational regions.",
+      "parent_text": "Overview of financial performance across all operational regions.",
+      "modality": "text",
+      "field_weight": 2.5,
+      "rrf_score": 0.00684,
+      "fused_modalities": [
+        "text"
+      ],
+      "cross_encoder_score": -8.8294,
+      "rank_score": -8.8294
+    },
+    {
+      "document_id": "doc-9781513563602-mod01-b7fa9e8544b1",
+      "region_id": "doc-9781513563602-mod01-b7fa9e8544b1-table-7",
+      "score": 0.838,
+      "text": "| description | note | 2019 | 2018 |\n| --- | --- | --- | --- |\n| ASSETS |  |  |  |\n| Foreign currency financial assets |  |  |  |\n| Cash and cash equivalents | 3.1 | 19671825 | 19067867 |\n| Deposits with banks | 3.2 | 49738005 | 42154364 |\n| Securities | 3.2 | 9605555 | 12855888 |\n| Monetary gold | 6 | 108000 | 94000 |\n| IMF related assets | 5 | 2537070 | 2337041 |\n| Derivatives | 3.2 | 120000 | 84000 |\n| Equity investments | 7.a | 8100 | 8000 |\n| Other receivables | 11 | 100273 | 270044 |\n| Total foreign currency financial assets |  | 81888828 | 76871204 |\n| Local currency financial assets |  |  |  |\n| Cash and cash equivalents | 3.1 | 657756 | 518053 |\n| Loans due from financial institutions | 3.3 (a,b) | 500000 | 550000 |\n| Securities | 3.4 (a) | 349000 | 450000 |\n| Loans to staff | 11 | 31882 | 36188 |\n| Advance to government | 3.4 (b) | 1234500 | 1100000 |\n| Other receivables | 11 | 59521 | 44125 |\n| Total local currency financial assets |  | 2832659 | 2698366 |\n| Non-financial assets |  |  |  |\n| Non-monetary gold | 11 | 16672 | 4437 |\n| Inventories | 8 | 41319 | 92116 |\n| Property, plant and equipment | 9 | 134565 | 90032 |\n| Intangible assets | 9 | 15000 | 12000 |\n| Investment properties | 9 | 14000 | 15000 |\n| Other assets | 11 | 155604 | 126142 |\n| Total non-financial assets |  | 377160 | 339727 |\n| TOTAL ASSETS |  | 85098647 | 79909298 |\n| LIABILITIES |  |  |  |\n| Foreign currency financial liabilities |  |  |  |\n| Balances of commercial banks | 3.3 (f) | 23000 | 19000 |\n| Balances of government | 3.4 (c) | 7206767 | 7164579 |\n| IMF related liabilities | 5 | 2096913 | 1933723 |\n| Derivatives | 3.2 | 8100 | 8000 |\n| Due to financial institutions | 7.b | 7662 | 25944 |\n| Due to foreign central banks | 3.5 | 10845460 | 3872190 |\n| Other liabilities | 11 | 71086 | 30655 |\n| Total foreign currency financial liabilities |  | 20258988 | 13054092 |\n| Local currency financial liabilities |  |  |  |\n| Currency in circulation | 10 | 14467118 | 13928764 |\n| Balances of commercial banks | 3.3 (f) | 23666760 | 27950888 |\n| Balances of government | 3.4 (c) | 348351 | 1835649 |\n| Certificates of deposits from Bank of Utopia | 3.3 (e) | 5000944 | 3507159 |\n| Due to financial institutions | 3.3 (c) | 557 | 557 |\n| Other liabilities | 11, 15.2 | 270700 | 1618982 |\n| Total local currency financial liabilities |  | 43754431 | 48841999 |\n| TOTAL LIABILITIES |  | 64013419 | 61896091 |\n| Equity |  |  |  |\n| Capital and general reserves | 12.1; 20 | 4385242 | 3898932 |\n| Revaluation reserves | 12.2 | 16699986 | 14114275 |\n| Total equity |  | 21085228 | 18013207 |\n| TOTAL EQUITY AND LIABILITIES |  | 85098647 | 79909298 |",
+      "modality": "table",
+      "mode": "typed_duckdb_sql",
+      "sql_query": "SELECT \"description\", \"2019\" FROM doc_table",
+      "sql_result": [
+        {
+          "description": "ASSETS",
+          "2019": null
+        },
+        {
+          "description": "Foreign currency financial assets",
+          "2019": null
+        },
+        {
+          "description": "Cash and cash equivalents",
+          "2019": 19671825
+        },
+        {
+          "description": "Deposits with banks",
+          "2019": 49738005
+        },
+        {
+          "description": "Securities",
+          "2019": 9605555
+        },
+        {
+          "description": "Monetary gold",
+          "2019": 108000
+        },
+        {
+          "description": "IMF related assets",
+          "2019": 2537070
+        },
+        {
+          "description": "Derivatives",
+          "2019": 120000
+        },
+        {
+          "description": "Equity investments",
+          "2019": 8100
+        },
+        {
+          "description": "Other receivables",
+          "2019": 100273
+        },
+        {
+          "description": "Total foreign currency financial assets",
+          "2019": 81888828
+        },
+        {
+          "description": "Local currency financial assets",
+          "2019": null
+        },
+        {
+          "description": "Cash and cash equivalents",
+          "2019": 657756
+        },
+        {
+          "description": "Loans due from financial institutions",
+          "2019": 500000
+        },
+        {
+          "description": "Securities",
+          "2019": 349000
+        },
+        {
+          "description": "Loans to staff",
+          "2019": 31882
+        },
+        {
+          "description": "Advance to government",
+          "2019": 1234500
+        },
+        {
+          "description": "Other receivables",
+          "2019": 59521
+        },
+        {
+          "description": "Total local currency financial assets",
+          "2019": 2832659
+        },
+        {
+          "description": "Non-financial assets",
+          "2019": null
+        },
+        {
+          "description": "Non-monetary gold",
+          "2019": 16672
+        },
+        {
+          "description": "Inventories",
+          "2019": 41319
+        },
+        {
+          "description": "Property, plant and equipment",
+          "2019": 134565
+        },
+        {
+          "description": "Intangible assets",
+          "2019": 15000
+        },
+        {
+          "description": "Investment properties",
+          "2019": 14000
+        },
+        {
+          "description": "Other assets",
+          "2019": 155604
+        },
+        {
+          "description": "Total non-financial assets",
+          "2019": 377160
+        },
+        {
+          "description": "TOTAL ASSETS",
+          "2019": 85098647
+        },
+        {
+          "description": "LIABILITIES",
+          "2019": null
+        },
+        {
+          "description": "Foreign currency financial liabilities",
+          "2019": null
+        },
+        {
+          "description": "Balances of commercial banks",
+          "2019": 23000
+        },
+        {
+          "description": "Balances of government",
+          "2019": 7206767
+        },
+        {
+          "description": "IMF related liabilities",
+          "2019": 2096913
+        },
+        {
+          "description": "Derivatives",
+          "2019": 8100
+        },
+        {
+          "description": "Due to financial institutions",
+          "2019": 7662
+        },
+        {
+          "description": "Due to foreign central banks",
+          "2019": 10845460
+        },
+        {
+          "description": "Other liabilities",
+          "2019": 71086
+        },
+        {
+          "description": "Total foreign currency financial liabilities",
+          "2019": 20258988
+        },
+        {
+          "description": "Local currency financial liabilities",
+          "2019": null
+        },
+        {
+          "description": "Currency in circulation",
+          "2019": 14467118
+        },
+        {
+          "description": "Balances of commercial banks",
+          "2019": 23666760
+        },
+        {
+          "description": "Balances of government",
+          "2019": 348351
+        },
+        {
+          "description": "Certificates of deposits from Bank of Utopia",
+          "2019": 5000944
+        },
+        {
+          "description": "Due to financial institutions",
+          "2019": 557
+        },
+        {
+          "description": "Other liabilities",
+          "2019": 270700
+        },
+        {
+          "description": "Total local currency financial liabilities",
+          "2019": 43754431
+        },
+        {
+          "description": "TOTAL LIABILITIES",
+          "2019": 64013419
+        },
+        {
+          "description": "Equity",
+          "2019": null
+        },
+        {
+          "description": "Capital and general reserves",
+          "2019": 4385242
+        },
+        {
+          "description": "Revaluation reserves",
+          "2019": 16699986
+        },
+        {
+          "description": "Total equity",
+          "2019": 21085228
+        },
+        {
+          "description": "TOTAL EQUITY AND LIABILITIES",
+          "2019": 85098647
+        }
+      ],
+      "table_schema": [
+        "description",
+        "note",
+        "2019",
+        "2018"
+      ],
+      "inferred_types": {
+        "description": "VARCHAR",
+        "note": "VARCHAR",
+        "2019": "INTEGER",
+        "2018": "INTEGER"
+      },
+      "unit_multiplier": 1,
+      "query": "revenue by region",
+      "rrf_score": 0.00838,
+      "fused_modalities": [
+        "table"
+      ],
+      "cross_encoder_score": -10.7165,
+      "rank_score": -10.7165
     }
   ],
   "metrics": {
     "query": "revenue by region",
     "recall_at_5": 4.0,
-    "ndcg_at_5": 2.033,
-    "result_count": 6
+    "ndcg_at_5": 2.083,
+    "result_count": 9
   },
   "benchmark_dataset": [
     {

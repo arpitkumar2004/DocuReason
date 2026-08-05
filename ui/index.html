@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tri-Path Multimodal RAG — Workspace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="brand-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+        </svg>
+      </div>
+      <div>
+        <h1 class="header-title">Tri-Path RAG Workspace</h1>
+        <span class="header-subtitle">Multimodal Enterprise Intelligence Engine</span>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <div class="status-indicator">
+        <span class="dot-online"></span>
+        <span id="conn-status">Connected · http://127.0.0.1:8001</span>
+      </div>
+      <button class="icon-btn" title="Clear Chat Feed" onclick="clearFeed()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="3 6 5 6 21 6" />
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+        </svg>
+      </button>
+      <button class="icon-btn" title="Settings & Ingestion Pipeline" onclick="toggleSettingsModal()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3" />
+          <path
+            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Feed Area (Single-Column Fixed Width) -->
+  <main class="feed-wrapper">
+    <div id="chat-feed" class="chat-feed">
+
+      <!-- Welcome Hero Message -->
+      <div class="message-group assistant-group">
+        <div class="avatar assistant-avatar">RAG</div>
+        <div class="message-content">
+          <div class="welcome-card">
+            <h2>Welcome to Tri-Path Multimodal RAG</h2>
+            <p>Ask natural language questions across text passages, structured DuckDB tables, and visual chart regions.
+            </p>
+
+            <div class="sample-queries-list">
+              <button class="sample-chip"
+                onclick="sendSample('What was the total asset value of the model central bank as of December 31, 2019?')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 3v18h18" />
+                  <path d="M18 17V9" />
+                  <path d="M13 17V5" />
+                  <path d="M8 17v-3" />
+                </svg>
+                Table-SQL: What was the total asset value of the model central bank as of December 31, 2019?
+              </button>
+              <button class="sample-chip" onclick="sendSample('quarterly adoption chart trend')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" />
+                  <circle cx="8.5" cy="8.5" r="1.5" />
+                  <polyline points="21 15 16 10 5 21" />
+                </svg>
+                Vision Patch: Analyse adoption chart trend
+              </button>
+              <button class="sample-chip"
+                onclick="sendSample('Why do central banks often segregate the balance sheet into foreign currency and domestic currency')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                </svg>
+                Hybrid Text: Why do central banks often segregate the balance sheet into foreign currency and domestic
+                currency?
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Sticky Bottom Input Bar -->
+  <div class="sticky-footer">
+    <div class="input-container">
+      <button class="icon-btn-ghost" title="Attach Document / Sample" onclick="toggleUploadModal()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path
+            d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+        </svg>
+      </button>
+
+      <textarea id="prompt-input" class="prompt-textarea"
+        placeholder="Ask a question about your enterprise documents..." rows="1"
+        onkeydown="handleKeyDown(event)"></textarea>
+
+      <button id="send-btn" class="send-btn" title="Send Prompt" onclick="submitPrompt()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="22" y1="2" x2="11" y2="13" />
+          <polygon points="22 2 15 22 11 13 2 9 22 2" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Quiet Status Indicators Footer -->
+    <div class="footer-meta">
+      <span class="meta-item"><span class="meta-dot"></span> DuckDB Text-to-SQL Active</span>
+      <span class="meta-item">RRF $k=60$ Fusion</span>
+      <span class="meta-item">Token Limit: 4,096 / 8,192</span>
+    </div>
+  </div>
+
+  <!-- Settings / Ingestion Modal -->
+  <div id="settings-modal" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Pipeline Settings & Ingestion (§01)</h3>
+        <button class="icon-btn-ghost" onclick="toggleSettingsModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="field-group">
+          <label>Input Document Directory</label>
+          <input type="text" id="ingest-input-path" class="text-field" value="samples">
+        </div>
+        <div class="field-group">
+          <label>Output Index Artifacts Path</label>
+          <input type="text" id="ingest-output-path" class="text-field" value="artifacts/dashboard_run">
+        </div>
+        <button class="primary-btn" onclick="triggerIngestion()">Run Ingestion & Indexing Pipeline (A1 – A7)</button>
+        <div id="ingest-modal-status" class="status-box" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+
+</html>

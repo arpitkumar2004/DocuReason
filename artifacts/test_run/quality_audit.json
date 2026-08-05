@@ -1,9 +1,13 @@
 {
   "document_count": 3,
-  "chunk_count": 7,
+  "chunk_count": 20,
   "notes": [
-    "Basic ingestion pipeline completed.",
-    "Table and figure regions are captured as structured metadata.",
-    "The loader now accepts common document formats such as PDF, DOCX, PPTX, XLSX, HTML, CSV, and plain text."
+    "Vision-based layout parsing via Docling deep parser (TableFormer + DocLayNet).",
+    "EasyOCR fallback active for scanned / image-only PDF pages.",
+    "Table regions serialized to Markdown, HTML, and JSON schema for SQL generation.",
+    "Figure captioning via BLIP-2 / CLIP / metadata fallback chain.",
+    "FAISS dense indices (all-MiniLM-L6-v2) built per modality.",
+    "BM25S sparse index built for text and table modalities.",
+    "Loader accepts: PDF, DOCX, PPTX, XLSX, HTML, CSV, plain text."
   ]
 }

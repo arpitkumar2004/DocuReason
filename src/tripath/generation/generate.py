@@ -10,4 +10,5 @@ class GenerationModule:
         if not evidence:
             return "No supporting evidence found."
         top = evidence[0]
-        return f"Using evidence from {top.get('modality', 'unknown')} modality: {top.get('text', '')[:160]}"
+        # return f"Using evidence from {top.get('modality', 'unknown')} modality: {top.get('text', '')[:160]}"
+        return f"{top.get('text', '')}"

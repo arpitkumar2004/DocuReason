@@ -4,6 +4,10 @@ import json
 from pathlib import Path
 from typing import Dict, List
 
+from src.tripath.utils import get_logger, trace_execution
+
+logger = get_logger(__name__)
+
 
 class EvaluationHarness:
     """A minimal evaluation harness for retrieval metrics and run logging."""
@@ -12,6 +16,7 @@ class EvaluationHarness:
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
+    @trace_execution(logger=logger)
     def evaluate(self, query: str, results: List[dict], relevant_ids: List[str] | None = None) -> Dict[str, float]:
         relevant_ids = relevant_ids or []
         hits = sum(1 for item in results[:5] if item.get("document_id") in relevant_ids)

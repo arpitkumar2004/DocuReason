@@ -1,10 +1,11 @@
 Quarterly Revenue Report
 
-The company reported revenue of $12.4M in Q1 and $14.8M in Q2. The operating margin improved to 21%.
+Overview of financial performance across all operational regions.
 
-Table:
-Revenue by region
-Region | Revenue
-North | 4.2M
-South | 3.7M
-West | 4.5M
+Table: Revenue Summary
+Quarter | Region | Revenue
+Q1 | North America | $10M
+Q2 | Europe | $8M
+
+Figure: Revenue Chart
+Bar chart showing quarterly revenue breakdown by region.

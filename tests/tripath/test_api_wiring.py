@@ -1,10 +1,26 @@
 from fastapi.testclient import TestClient
-
-from src.tripath.serving.main import app
+import src.tripath.serving.main as main_module
+from src.tripath.ingestion.schema import Document, Region
 
 
 def test_query_and_evaluation_endpoints():
-    client = TestClient(app)
+    # Pre-seed cached documents to eliminate PDF layout parsing overhead in unit tests
+    main_module._CACHED_DOCUMENTS = [
+        Document(
+            id="sample_doc_1",
+            title="Revenue Report",
+            source="sample_doc_1.txt",
+            regions=[
+                Region(
+                    type="paragraph",
+                    text="[Context: Revenue Report] Q1 revenue by region totaled $10 million in North America.",
+                    bbox=(0, 0, 100, 50),
+                )
+            ],
+        )
+    ]
+
+    client = TestClient(main_module.app)
 
     query_response = client.post("/query", json={"query": "revenue by region"})
     assert query_response.status_code == 200

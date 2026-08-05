@@ -37,7 +37,7 @@ class QueryService:
             results.append(VisionRetrieval().retrieve(text, self.documents))
 
         fused = Fuser().fuse(results) if results else []
-        ranked = self.ranker.rank(fused)
+        ranked = self.ranker.rank(text, fused)
         embeddings = self.embedder.embed([chunk for document in self.documents for chunk in document.chunks])
         answer = self.generator.generate(text, ranked)
         return {

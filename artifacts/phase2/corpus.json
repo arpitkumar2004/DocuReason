@@ -1,61 +1,104 @@
 {
   "documents": [
     {
-      "id": "doc-sample_doc_1-4895e04398d7",
+      "id": "doc-sample_doc_1-8a162c26e5c4",
       "source": "sample_doc_1.txt",
       "title": "Quarterly Revenue Report",
       "regions": [
         {
-          "id": "doc-sample_doc_1-4895e04398d7-region-0",
+          "id": "doc-sample_doc_1-8a162c26e5c4-region-0",
           "type": "title",
           "text": "Quarterly Revenue Report",
           "start": 0,
           "end": 24,
+          "page_no": -1,
+          "bbox": null,
+          "layout_source": "rule",
+          "table_markdown": null,
+          "table_json": null,
           "metadata": {
             "source_path": "sample_doc_1.txt",
             "region_type": "title",
             "modality": "text",
             "namespace": "tripath-v1",
-            "document_id": "doc-sample_doc_1-4895e04398d7",
-            "region_id": "doc-sample_doc_1-4895e04398d7-region-0"
+            "document_id": "doc-sample_doc_1-8a162c26e5c4",
+            "region_id": "doc-sample_doc_1-8a162c26e5c4-region-0",
+            "page_no": -1,
+            "layout_source": "rule"
           }
         },
         {
-          "id": "doc-sample_doc_1-4895e04398d7-region-1",
+          "id": "doc-sample_doc_1-8a162c26e5c4-region-1",
           "type": "body",
-          "text": "The company reported revenue of $12.4M in Q1 and $14.8M in Q2. The operating margin improved to 21%.",
+          "text": "Overview of financial performance across all operational regions.",
           "start": 2,
-          "end": 102,
+          "end": 67,
+          "page_no": -1,
+          "bbox": null,
+          "layout_source": "rule",
+          "table_markdown": null,
+          "table_json": null,
           "metadata": {
             "source_path": "sample_doc_1.txt",
             "region_type": "body",
             "modality": "text",
             "namespace": "tripath-v1",
-            "document_id": "doc-sample_doc_1-4895e04398d7",
-            "region_id": "doc-sample_doc_1-4895e04398d7-region-1"
+            "document_id": "doc-sample_doc_1-8a162c26e5c4",
+            "region_id": "doc-sample_doc_1-8a162c26e5c4-region-1",
+            "page_no": -1,
+            "layout_source": "rule"
           }
         },
         {
-          "id": "doc-sample_doc_1-4895e04398d7-region-2",
+          "id": "doc-sample_doc_1-8a162c26e5c4-region-2",
           "type": "table",
-          "text": "Table:\nRevenue by region\nRegion | Revenue\nNorth | 4.2M\nSouth | 3.7M\nWest | 4.5M",
+          "text": "Table: Revenue Summary\nQuarter | Region | Revenue\nQ1 | North America | $10M\nQ2 | Europe | $8M",
           "start": 4,
-          "end": 83,
+          "end": 97,
+          "page_no": -1,
+          "bbox": null,
+          "layout_source": "rule",
+          "table_markdown": null,
+          "table_json": null,
           "metadata": {
             "source_path": "sample_doc_1.txt",
             "region_type": "table",
             "modality": "table",
             "namespace": "tripath-v1",
-            "document_id": "doc-sample_doc_1-4895e04398d7",
-            "region_id": "doc-sample_doc_1-4895e04398d7-region-2"
+            "document_id": "doc-sample_doc_1-8a162c26e5c4",
+            "region_id": "doc-sample_doc_1-8a162c26e5c4-region-2",
+            "page_no": -1,
+            "layout_source": "rule"
+          }
+        },
+        {
+          "id": "doc-sample_doc_1-8a162c26e5c4-region-3",
+          "type": "figure",
+          "text": "Figure: Revenue Chart\nBar chart showing quarterly revenue breakdown by region.",
+          "start": 9,
+          "end": 87,
+          "page_no": -1,
+          "bbox": null,
+          "layout_source": "rule",
+          "table_markdown": null,
+          "table_json": null,
+          "metadata": {
+            "source_path": "sample_doc_1.txt",
+            "region_type": "figure",
+            "modality": "vision",
+            "namespace": "tripath-v1",
+            "document_id": "doc-sample_doc_1-8a162c26e5c4",
+            "region_id": "doc-sample_doc_1-8a162c26e5c4-region-3",
+            "page_no": -1,
+            "layout_source": "rule"
           }
         }
       ],
       "chunks": [
         {
-          "id": "doc-sample_doc_1-4895e04398d7-region-0-chunk-0",
-          "document_id": "doc-sample_doc_1-4895e04398d7",
-          "region_id": "doc-sample_doc_1-4895e04398d7-region-0",
+          "id": "doc-sample_doc_1-8a162c26e5c4-region-0-chunk-0",
+          "document_id": "doc-sample_doc_1-8a162c26e5c4",
+          "region_id": "doc-sample_doc_1-8a162c26e5c4-region-0",
           "modality": "text",
           "text": "Quarterly Revenue Report",
           "metadata": {
@@ -63,195 +106,910 @@
             "region_type": "title",
             "modality": "text",
             "namespace": "tripath-v1",
-            "document_id": "doc-sample_doc_1-4895e04398d7",
-            "region_id": "doc-sample_doc_1-4895e04398d7-region-0"
+            "document_id": "doc-sample_doc_1-8a162c26e5c4",
+            "region_id": "doc-sample_doc_1-8a162c26e5c4-region-0",
+            "page_no": -1,
+            "layout_source": "rule"
           }
         },
         {
-          "id": "doc-sample_doc_1-4895e04398d7-region-1-chunk-1",
-          "document_id": "doc-sample_doc_1-4895e04398d7",
-          "region_id": "doc-sample_doc_1-4895e04398d7-region-1",
+          "id": "doc-sample_doc_1-8a162c26e5c4-region-1-chunk-1",
+          "document_id": "doc-sample_doc_1-8a162c26e5c4",
+          "region_id": "doc-sample_doc_1-8a162c26e5c4-region-1",
           "modality": "text",
-          "text": "The company reported revenue of $12.4M in Q1 and $14.8M in Q2. The operating margin improved to 21%.",
+          "text": "Overview of financial performance across all operational regions.",
           "metadata": {
             "source_path": "sample_doc_1.txt",
             "region_type": "body",
             "modality": "text",
             "namespace": "tripath-v1",
-            "document_id": "doc-sample_doc_1-4895e04398d7",
-            "region_id": "doc-sample_doc_1-4895e04398d7-region-1"
+            "document_id": "doc-sample_doc_1-8a162c26e5c4",
+            "region_id": "doc-sample_doc_1-8a162c26e5c4-region-1",
+            "page_no": -1,
+            "layout_source": "rule"
           }
         },
         {
-          "id": "doc-sample_doc_1-4895e04398d7-region-2-chunk-2",
-          "document_id": "doc-sample_doc_1-4895e04398d7",
-          "region_id": "doc-sample_doc_1-4895e04398d7-region-2",
+          "id": "doc-sample_doc_1-8a162c26e5c4-region-2-chunk-2",
+          "document_id": "doc-sample_doc_1-8a162c26e5c4",
+          "region_id": "doc-sample_doc_1-8a162c26e5c4-region-2",
           "modality": "table",
-          "text": "Table:\nRevenue by region\nRegion | Revenue\nNorth | 4.2M\nSouth | 3.7M\nWest | 4.5M",
+          "text": "Table: Revenue Summary\nQuarter | Region | Revenue\nQ1 | North America | $10M\nQ2 | Europe | $8M",
           "metadata": {
             "source_path": "sample_doc_1.txt",
             "region_type": "table",
             "modality": "table",
             "namespace": "tripath-v1",
-            "document_id": "doc-sample_doc_1-4895e04398d7",
-            "region_id": "doc-sample_doc_1-4895e04398d7-region-2"
+            "document_id": "doc-sample_doc_1-8a162c26e5c4",
+            "region_id": "doc-sample_doc_1-8a162c26e5c4-region-2",
+            "page_no": -1,
+            "layout_source": "rule"
+          }
+        },
+        {
+          "id": "doc-sample_doc_1-8a162c26e5c4-region-3-chunk-3",
+          "document_id": "doc-sample_doc_1-8a162c26e5c4",
+          "region_id": "doc-sample_doc_1-8a162c26e5c4-region-3",
+          "modality": "vision",
+          "text": "Figure: Revenue Chart\nBar chart showing quarterly revenue breakdown by region.",
+          "metadata": {
+            "source_path": "sample_doc_1.txt",
+            "region_type": "figure",
+            "modality": "vision",
+            "namespace": "tripath-v1",
+            "document_id": "doc-sample_doc_1-8a162c26e5c4",
+            "region_id": "doc-sample_doc_1-8a162c26e5c4-region-3",
+            "page_no": -1,
+            "layout_source": "rule"
           }
         }
       ],
       "metadata": {
-        "document_id": "doc-sample_doc_1-4895e04398d7",
+        "document_id": "doc-sample_doc_1-8a162c26e5c4",
         "source_path": "sample_doc_1.txt",
-        "chunk_count": 3,
+        "chunk_count": 4,
         "namespace": "tripath-v1"
       }
     },
     {
-      "id": "doc-sample_doc_2-0dbff6387dfc",
+      "id": "doc-sample_doc_2-73828f696147",
       "source": "sample_doc_2.txt",
-      "title": "Product Launch Overview",
+      "title": "Market Analysis Overview",
       "regions": [
         {
-          "id": "doc-sample_doc_2-0dbff6387dfc-region-0",
+          "id": "doc-sample_doc_2-73828f696147-region-0",
           "type": "title",
-          "text": "Product Launch Overview",
+          "text": "Market Analysis Overview",
           "start": 0,
-          "end": 23,
+          "end": 24,
+          "page_no": -1,
+          "bbox": null,
+          "layout_source": "rule",
+          "table_markdown": null,
+          "table_json": null,
           "metadata": {
             "source_path": "sample_doc_2.txt",
             "region_type": "title",
             "modality": "text",
             "namespace": "tripath-v1",
-            "document_id": "doc-sample_doc_2-0dbff6387dfc",
-            "region_id": "doc-sample_doc_2-0dbff6387dfc-region-0"
+            "document_id": "doc-sample_doc_2-73828f696147",
+            "region_id": "doc-sample_doc_2-73828f696147-region-0",
+            "page_no": -1,
+            "layout_source": "rule"
           }
         },
         {
-          "id": "doc-sample_doc_2-0dbff6387dfc-region-1",
+          "id": "doc-sample_doc_2-73828f696147-region-1",
           "type": "body",
-          "text": "The new platform launched in Europe and Asia. Customer adoption reached 68% in the first month.",
+          "text": "Executive summary of current industry trends and visual breakdown.",
           "start": 2,
-          "end": 97,
+          "end": 68,
+          "page_no": -1,
+          "bbox": null,
+          "layout_source": "rule",
+          "table_markdown": null,
+          "table_json": null,
           "metadata": {
             "source_path": "sample_doc_2.txt",
             "region_type": "body",
             "modality": "text",
             "namespace": "tripath-v1",
-            "document_id": "doc-sample_doc_2-0dbff6387dfc",
-            "region_id": "doc-sample_doc_2-0dbff6387dfc-region-1"
+            "document_id": "doc-sample_doc_2-73828f696147",
+            "region_id": "doc-sample_doc_2-73828f696147-region-1",
+            "page_no": -1,
+            "layout_source": "rule"
           }
         },
         {
-          "id": "doc-sample_doc_2-0dbff6387dfc-region-2",
+          "id": "doc-sample_doc_2-73828f696147-region-2",
           "type": "figure",
-          "text": "Figure: a bar chart showing adoption by region.",
+          "text": "Figure: Adoption Rate Chart\nBar chart illustrating customer adoption growth year over year across regions.",
           "start": 4,
-          "end": 51,
+          "end": 110,
+          "page_no": -1,
+          "bbox": null,
+          "layout_source": "rule",
+          "table_markdown": null,
+          "table_json": null,
           "metadata": {
             "source_path": "sample_doc_2.txt",
             "region_type": "figure",
             "modality": "vision",
             "namespace": "tripath-v1",
-            "document_id": "doc-sample_doc_2-0dbff6387dfc",
-            "region_id": "doc-sample_doc_2-0dbff6387dfc-region-2"
+            "document_id": "doc-sample_doc_2-73828f696147",
+            "region_id": "doc-sample_doc_2-73828f696147-region-2",
+            "page_no": -1,
+            "layout_source": "rule"
           }
         }
       ],
       "chunks": [
         {
-          "id": "doc-sample_doc_2-0dbff6387dfc-region-0-chunk-0",
-          "document_id": "doc-sample_doc_2-0dbff6387dfc",
-          "region_id": "doc-sample_doc_2-0dbff6387dfc-region-0",
+          "id": "doc-sample_doc_2-73828f696147-region-0-chunk-0",
+          "document_id": "doc-sample_doc_2-73828f696147",
+          "region_id": "doc-sample_doc_2-73828f696147-region-0",
           "modality": "text",
-          "text": "Product Launch Overview",
+          "text": "Market Analysis Overview",
           "metadata": {
             "source_path": "sample_doc_2.txt",
             "region_type": "title",
             "modality": "text",
             "namespace": "tripath-v1",
-            "document_id": "doc-sample_doc_2-0dbff6387dfc",
-            "region_id": "doc-sample_doc_2-0dbff6387dfc-region-0"
+            "document_id": "doc-sample_doc_2-73828f696147",
+            "region_id": "doc-sample_doc_2-73828f696147-region-0",
+            "page_no": -1,
+            "layout_source": "rule"
           }
         },
         {
-          "id": "doc-sample_doc_2-0dbff6387dfc-region-1-chunk-1",
-          "document_id": "doc-sample_doc_2-0dbff6387dfc",
-          "region_id": "doc-sample_doc_2-0dbff6387dfc-region-1",
+          "id": "doc-sample_doc_2-73828f696147-region-1-chunk-1",
+          "document_id": "doc-sample_doc_2-73828f696147",
+          "region_id": "doc-sample_doc_2-73828f696147-region-1",
           "modality": "text",
-          "text": "The new platform launched in Europe and Asia. Customer adoption reached 68% in the first month.",
+          "text": "Executive summary of current industry trends and visual breakdown.",
           "metadata": {
             "source_path": "sample_doc_2.txt",
             "region_type": "body",
             "modality": "text",
             "namespace": "tripath-v1",
-            "document_id": "doc-sample_doc_2-0dbff6387dfc",
-            "region_id": "doc-sample_doc_2-0dbff6387dfc-region-1"
+            "document_id": "doc-sample_doc_2-73828f696147",
+            "region_id": "doc-sample_doc_2-73828f696147-region-1",
+            "page_no": -1,
+            "layout_source": "rule"
           }
         },
         {
-          "id": "doc-sample_doc_2-0dbff6387dfc-region-2-chunk-2",
-          "document_id": "doc-sample_doc_2-0dbff6387dfc",
-          "region_id": "doc-sample_doc_2-0dbff6387dfc-region-2",
+          "id": "doc-sample_doc_2-73828f696147-region-2-chunk-2",
+          "document_id": "doc-sample_doc_2-73828f696147",
+          "region_id": "doc-sample_doc_2-73828f696147-region-2",
           "modality": "vision",
-          "text": "Figure: a bar chart showing adoption by region.",
+          "text": "Figure: Adoption Rate Chart\nBar chart illustrating customer adoption growth year over year across regions.",
           "metadata": {
             "source_path": "sample_doc_2.txt",
             "region_type": "figure",
             "modality": "vision",
             "namespace": "tripath-v1",
-            "document_id": "doc-sample_doc_2-0dbff6387dfc",
-            "region_id": "doc-sample_doc_2-0dbff6387dfc-region-2"
+            "document_id": "doc-sample_doc_2-73828f696147",
+            "region_id": "doc-sample_doc_2-73828f696147-region-2",
+            "page_no": -1,
+            "layout_source": "rule"
           }
         }
       ],
       "metadata": {
-        "document_id": "doc-sample_doc_2-0dbff6387dfc",
+        "document_id": "doc-sample_doc_2-73828f696147",
         "source_path": "sample_doc_2.txt",
         "chunk_count": 3,
         "namespace": "tripath-v1"
       }
     },
     {
-      "id": "doc-9781513563602-mod01-b7fa9e8544b1",
+      "id": "doc-9781513563602-mod01-6dd33091e454",
       "source": "9781513563602-mod01.pdf",
-      "title": "[Extracted from .pdf document] 9781513563602-mod01.pdf",
+      "title": "MODEL FINANCIAL STATEMENTS",
       "regions": [
         {
-          "id": "doc-9781513563602-mod01-b7fa9e8544b1-region-0",
+          "id": "doc-9781513563602-mod01-6dd33091e454-region-0",
           "type": "title",
-          "text": "[Extracted from .pdf document] 9781513563602-mod01.pdf",
+          "text": "MODEL FINANCIAL STATEMENTS",
           "start": 0,
-          "end": 54,
+          "end": 0,
+          "page_no": 1,
+          "bbox": [
+            72.0,
+            717.645,
+            428.031,
+            703.036295045045
+          ],
+          "layout_source": "docling",
+          "table_markdown": null,
+          "table_json": null,
           "metadata": {
             "source_path": "9781513563602-mod01.pdf",
             "region_type": "title",
             "modality": "text",
             "namespace": "tripath-v1",
-            "document_id": "doc-9781513563602-mod01-b7fa9e8544b1",
-            "region_id": "doc-9781513563602-mod01-b7fa9e8544b1-region-0"
+            "document_id": "doc-9781513563602-mod01-6dd33091e454",
+            "region_id": "doc-9781513563602-mod01-6dd33091e454-region-0",
+            "page_no": 1,
+            "layout_source": "docling"
+          }
+        },
+        {
+          "id": "doc-9781513563602-mod01-6dd33091e454-region-1",
+          "type": "title",
+          "text": "Overview",
+          "start": 0,
+          "end": 0,
+          "page_no": 1,
+          "bbox": [
+            72.0,
+            668.4549999999999,
+            131.74669999999998,
+            657.2607191392977
+          ],
+          "layout_source": "docling",
+          "table_markdown": null,
+          "table_json": null,
+          "metadata": {
+            "source_path": "9781513563602-mod01.pdf",
+            "region_type": "title",
+            "modality": "text",
+            "namespace": "tripath-v1",
+            "document_id": "doc-9781513563602-mod01-6dd33091e454",
+            "region_id": "doc-9781513563602-mod01-6dd33091e454-region-1",
+            "page_no": 1,
+            "layout_source": "docling"
+          }
+        },
+        {
+          "id": "doc-9781513563602-mod01-6dd33091e454-region-2",
+          "type": "body",
+          "text": "The model statements have been compiled based on research of financial reports prepared by IFRS compliant central banks from around the world. They are intended to assist central banks in preparing their own financial statements and in discussions with their auditors. They are not intended to be comprehensive as each central bank will have its own unique circumstances that need to be considered. They are not intended to override any legal, regulatory or other requirements. The model statements were developed only as an indicative sample; they will need to be adapted to suit the specific situation of each central bank.",
+          "start": 0,
+          "end": 0,
+          "page_no": 1,
+          "bbox": [
+            72.0,
+            648.3855,
+            310.6335000000001,
+            490.52885035389244
+          ],
+          "layout_source": "docling",
+          "table_markdown": null,
+          "table_json": null,
+          "metadata": {
+            "source_path": "9781513563602-mod01.pdf",
+            "region_type": "body",
+            "modality": "text",
+            "namespace": "tripath-v1",
+            "document_id": "doc-9781513563602-mod01-6dd33091e454",
+            "region_id": "doc-9781513563602-mod01-6dd33091e454-region-2",
+            "page_no": 1,
+            "layout_source": "docling"
+          }
+        },
+        {
+          "id": "doc-9781513563602-mod01-6dd33091e454-region-3",
+          "type": "body",
+          "text": "The statements include references to governance structures, including directors and internal committees. These are included for illustrative purposes and are not intended to be definitive or recommendations as to the appropriate structures.",
+          "start": 0,
+          "end": 0,
+          "page_no": 1,
+          "bbox": [
+            72.0,
+            477.3509999999996,
+            307.45095,
+            414.0153503538925
+          ],
+          "layout_source": "docling",
+          "table_markdown": null,
+          "table_json": null,
+          "metadata": {
+            "source_path": "9781513563602-mod01.pdf",
+            "region_type": "body",
+            "modality": "text",
+            "namespace": "tripath-v1",
+            "document_id": "doc-9781513563602-mod01-6dd33091e454",
+            "region_id": "doc-9781513563602-mod01-6dd33091e454-region-3",
+            "page_no": 1,
+            "layout_source": "docling"
+          }
+        },
+        {
+          "id": "doc-9781513563602-mod01-6dd33091e454-region-4",
+          "type": "body",
+          "text": "The financial statements have been prepared with the intention of being representative of the various activities, assets, liabilities, income and expenditure of central banks. It is unlikely that any central bank will have all the items included and may have other material items and activities that are not presented here.",
+          "start": 0,
+          "end": 0,
+          "page_no": 1,
+          "bbox": [
+            72.0,
+            400.83749999999964,
+            307.58640000000014,
+            323.9988503538925
+          ],
+          "layout_source": "docling",
+          "table_markdown": null,
+          "table_json": null,
+          "metadata": {
+            "source_path": "9781513563602-mod01.pdf",
+            "region_type": "body",
+            "modality": "text",
+            "namespace": "tripath-v1",
+            "document_id": "doc-9781513563602-mod01-6dd33091e454",
+            "region_id": "doc-9781513563602-mod01-6dd33091e454-region-4",
+            "page_no": 1,
+            "layout_source": "docling"
+          }
+        },
+        {
+          "id": "doc-9781513563602-mod01-6dd33091e454-region-5",
+          "type": "body",
+          "text": "As noted earlier, the number of digits presented in the main financial statements should be guided by materiality. The presentation should enhance the readers ability to understand the key functions of the central bank and its financial ability to fulfill its mandate. The financial statements included herein are presented in thousands of Utopian local currency to depict a broad range of conditions that a typical central bank may encounter. In practice, given the size of Utopia's balance sheet, it would have been recommended that these statements be presented in millions of Utopian local currency. Smaller central banks would choose to present the statements in thousands of local currency. The note disclosures would continue to include greater precision.",
+          "start": 0,
+          "end": 0,
+          "page_no": 1,
+          "bbox": [
+            72.0,
+            310.8209999999997,
+            310.63980000000004,
+            125.95835035389268
+          ],
+          "layout_source": "docling",
+          "table_markdown": null,
+          "table_json": null,
+          "metadata": {
+            "source_path": "9781513563602-mod01.pdf",
+            "region_type": "body",
+            "modality": "text",
+            "namespace": "tripath-v1",
+            "document_id": "doc-9781513563602-mod01-6dd33091e454",
+            "region_id": "doc-9781513563602-mod01-6dd33091e454-region-5",
+            "page_no": 1,
+            "layout_source": "docling"
+          }
+        },
+        {
+          "id": "doc-9781513563602-mod01-6dd33091e454-region-6",
+          "type": "title",
+          "text": "Statement of Financial Position As at December 31 (in thousands of Utopian local currency)",
+          "start": 0,
+          "end": 0,
+          "page_no": 2,
+          "bbox": [
+            72.0,
+            737.4022,
+            519.7646999999997,
+            726.2079191392978
+          ],
+          "layout_source": "docling",
+          "table_markdown": null,
+          "table_json": null,
+          "metadata": {
+            "source_path": "9781513563602-mod01.pdf",
+            "region_type": "title",
+            "modality": "text",
+            "namespace": "tripath-v1",
+            "document_id": "doc-9781513563602-mod01-6dd33091e454",
+            "region_id": "doc-9781513563602-mod01-6dd33091e454-region-6",
+            "page_no": 2,
+            "layout_source": "docling"
+          }
+        },
+        {
+          "id": "doc-9781513563602-mod01-6dd33091e454-region-7",
+          "type": "table",
+          "text": "| note | 2019 | 2018 | col_4 |\n| --- | --- | --- | --- |\n| ASSETS |  |  |  |\n| Foreign currency financial assets |  |  |  |\n| Cash and cash equivalents | 3.1 | 19671825 | 19067867 |\n| Deposits with banks | 3.2 | 49738005 | 42154364 |\n| Securities | 3.2 | 9605555 | 12855888 |\n| Monetary gold | 6 | 108000 | 94000 |\n| IMF related assets | 5 | 2537070 | 2337041 |\n| Derivatives | 3.2 | 120000 | 84000 |\n| Equity investments | 7.a | 8100 | 8000 |\n| Other receivables | 11 | 100273 | 270044 |\n| Total foreign currency financial assets |  | 81888828 | 76871204 |\n| Local currency financial assets |  |  |  |\n| Cash and cash equivalents | 3.1 | 657756 | 518053 |\n| Loans due from financial institutions | 3.3 (a,b) | 500000 | 550000 |\n| Securities | 3.4 (a) | 349000 | 450000 |\n| Loans to staff | 11 | 31882 | 36188 |\n| Advance to government | 3.4 (b) | 1234500 | 1100000 |\n| Other receivables | 11 | 59521 | 44125 |\n| Total local currency financial assets |  | 2832659 | 2698366 |\n| Non-financial assets |  |  |  |\n| Non-monetary gold | 11 | 16672 | 4437 |\n| Inventories | 8 | 41319 | 92116 |\n| Property, plant and equipment | 9 | 134565 | 90032 |\n| Intangible assets | 9 | 15000 | 12000 |\n| Investment properties | 9 | 14000 | 15000 |\n| Other assets | 11 | 155604 | 126142 |\n| Total non-financial assets |  | 377160 | 339727 |\n| TOTAL ASSETS |  | 85098647 | 79909298 |\n| LIABILITIES |  |  |  |\n| Foreign currency financial liabilities |  |  |  |\n| Balances of commercial banks | 3.3 (f) | 23000 | 19000 |\n| Balances of government | 3.4 (c) | 7206767 | 7164579 |\n| IMF related liabilities | 5 | 2096913 | 1933723 |\n| Derivatives | 3.2 | 8100 | 8000 |\n| Due to financial institutions | 7.b | 7662 | 25944 |\n| Due to foreign central banks | 3.5 | 10845460 | 3872190 |\n| Other liabilities | 11 | 71086 | 30655 |\n| Total foreign currency financial liabilities |  | 20258988 | 13054092 |\n| Local currency financial liabilities |  |  |  |\n| Currency in circulation | 10 | 14467118 | 13928764 |\n| Balances of commercial banks | 3.3 (f) | 23666760 | 27950888 |\n| Balances of government | 3.4 (c) | 348351 | 1835649 |\n| Certificates of deposits from Bank of Utopia | 3.3 (e) | 5000944 | 3507159 |\n| Due to financial institutions | 3.3 (c) | 557 | 557 |\n| Other liabilities | 11, 15.2 | 270700 | 1618982 |\n| Total local currency financial liabilities |  | 43754431 | 48841999 |\n| TOTAL LIABILITIES |  | 64013419 | 61896091 |\n| Equity |  |  |  |\n| Capital and general reserves | 12.1; 20 | 4385242 | 3898932 |\n| Revaluation reserves | 12.2 | 16699986 | 14114275 |\n| Total equity |  | 21085228 | 18013207 |\n| TOTAL EQUITY AND LIABILITIES |  | 85098647 | 79909298 |",
+          "start": 0,
+          "end": 0,
+          "page_no": 2,
+          "bbox": [
+            71.00875854492188,
+            720.4909744262695,
+            557.7896728515625,
+            68.72174072265625
+          ],
+          "layout_source": "docling",
+          "table_markdown": "| note | 2019 | 2018 | col_4 |\n| --- | --- | --- | --- |\n| ASSETS |  |  |  |\n| Foreign currency financial assets |  |  |  |\n| Cash and cash equivalents | 3.1 | 19671825 | 19067867 |\n| Deposits with banks | 3.2 | 49738005 | 42154364 |\n| Securities | 3.2 | 9605555 | 12855888 |\n| Monetary gold | 6 | 108000 | 94000 |\n| IMF related assets | 5 | 2537070 | 2337041 |\n| Derivatives | 3.2 | 120000 | 84000 |\n| Equity investments | 7.a | 8100 | 8000 |\n| Other receivables | 11 | 100273 | 270044 |\n| Total foreign currency financial assets |  | 81888828 | 76871204 |\n| Local currency financial assets |  |  |  |\n| Cash and cash equivalents | 3.1 | 657756 | 518053 |\n| Loans due from financial institutions | 3.3 (a,b) | 500000 | 550000 |\n| Securities | 3.4 (a) | 349000 | 450000 |\n| Loans to staff | 11 | 31882 | 36188 |\n| Advance to government | 3.4 (b) | 1234500 | 1100000 |\n| Other receivables | 11 | 59521 | 44125 |\n| Total local currency financial assets |  | 2832659 | 2698366 |\n| Non-financial assets |  |  |  |\n| Non-monetary gold | 11 | 16672 | 4437 |\n| Inventories | 8 | 41319 | 92116 |\n| Property, plant and equipment | 9 | 134565 | 90032 |\n| Intangible assets | 9 | 15000 | 12000 |\n| Investment properties | 9 | 14000 | 15000 |\n| Other assets | 11 | 155604 | 126142 |\n| Total non-financial assets |  | 377160 | 339727 |\n| TOTAL ASSETS |  | 85098647 | 79909298 |\n| LIABILITIES |  |  |  |\n| Foreign currency financial liabilities |  |  |  |\n| Balances of commercial banks | 3.3 (f) | 23000 | 19000 |\n| Balances of government | 3.4 (c) | 7206767 | 7164579 |\n| IMF related liabilities | 5 | 2096913 | 1933723 |\n| Derivatives | 3.2 | 8100 | 8000 |\n| Due to financial institutions | 7.b | 7662 | 25944 |\n| Due to foreign central banks | 3.5 | 10845460 | 3872190 |\n| Other liabilities | 11 | 71086 | 30655 |\n| Total foreign currency financial liabilities |  | 20258988 | 13054092 |\n| Local currency financial liabilities |  |  |  |\n| Currency in circulation | 10 | 14467118 | 13928764 |\n| Balances of commercial banks | 3.3 (f) | 23666760 | 27950888 |\n| Balances of government | 3.4 (c) | 348351 | 1835649 |\n| Certificates of deposits from Bank of Utopia | 3.3 (e) | 5000944 | 3507159 |\n| Due to financial institutions | 3.3 (c) | 557 | 557 |\n| Other liabilities | 11, 15.2 | 270700 | 1618982 |\n| Total local currency financial liabilities |  | 43754431 | 48841999 |\n| TOTAL LIABILITIES |  | 64013419 | 61896091 |\n| Equity |  |  |  |\n| Capital and general reserves | 12.1; 20 | 4385242 | 3898932 |\n| Revaluation reserves | 12.2 | 16699986 | 14114275 |\n| Total equity |  | 21085228 | 18013207 |\n| TOTAL EQUITY AND LIABILITIES |  | 85098647 | 79909298 |",
+          "table_json": {
+            "columns": [
+              "note",
+              "2019",
+              "2018",
+              "col_4"
+            ],
+            "header_paths": [
+              [
+                "Note"
+              ],
+              [
+                "2019"
+              ],
+              [
+                "2018"
+              ],
+              [
+                "col_4"
+              ]
+            ],
+            "rows": [
+              [
+                "ASSETS",
+                "",
+                "",
+                ""
+              ],
+              [
+                "Foreign currency financial assets",
+                "",
+                "",
+                ""
+              ],
+              [
+                "Cash and cash equivalents",
+                3.1,
+                19671825,
+                19067867
+              ],
+              [
+                "Deposits with banks",
+                3.2,
+                49738005,
+                42154364
+              ],
+              [
+                "Securities",
+                3.2,
+                9605555,
+                12855888
+              ],
+              [
+                "Monetary gold",
+                6,
+                108000,
+                94000
+              ],
+              [
+                "IMF related assets",
+                5,
+                2537070,
+                2337041
+              ],
+              [
+                "Derivatives",
+                3.2,
+                120000,
+                84000
+              ],
+              [
+                "Equity investments",
+                "7.a",
+                8100,
+                8000
+              ],
+              [
+                "Other receivables",
+                11,
+                100273,
+                270044
+              ],
+              [
+                "Total foreign currency financial assets",
+                "",
+                81888828,
+                76871204
+              ],
+              [
+                "Local currency financial assets",
+                "",
+                "",
+                ""
+              ],
+              [
+                "Cash and cash equivalents",
+                3.1,
+                657756,
+                518053
+              ],
+              [
+                "Loans due from financial institutions",
+                "3.3 (a,b)",
+                500000,
+                550000
+              ],
+              [
+                "Securities",
+                "3.4 (a)",
+                349000,
+                450000
+              ],
+              [
+                "Loans to staff",
+                11,
+                31882,
+                36188
+              ],
+              [
+                "Advance to government",
+                "3.4 (b)",
+                1234500,
+                1100000
+              ],
+              [
+                "Other receivables",
+                11,
+                59521,
+                44125
+              ],
+              [
+                "Total local currency financial assets",
+                "",
+                2832659,
+                2698366
+              ],
+              [
+                "Non-financial assets",
+                "",
+                "",
+                ""
+              ],
+              [
+                "Non-monetary gold",
+                11,
+                16672,
+                4437
+              ],
+              [
+                "Inventories",
+                8,
+                41319,
+                92116
+              ],
+              [
+                "Property, plant and equipment",
+                9,
+                134565,
+                90032
+              ],
+              [
+                "Intangible assets",
+                9,
+                15000,
+                12000
+              ],
+              [
+                "Investment properties",
+                9,
+                14000,
+                15000
+              ],
+              [
+                "Other assets",
+                11,
+                155604,
+                126142
+              ],
+              [
+                "Total non-financial assets",
+                "",
+                377160,
+                339727
+              ],
+              [
+                "TOTAL ASSETS",
+                "",
+                85098647,
+                79909298
+              ],
+              [
+                "LIABILITIES",
+                "",
+                "",
+                ""
+              ],
+              [
+                "Foreign currency financial liabilities",
+                "",
+                "",
+                ""
+              ],
+              [
+                "Balances of commercial banks",
+                "3.3 (f)",
+                23000,
+                19000
+              ],
+              [
+                "Balances of government",
+                "3.4 (c)",
+                7206767,
+                7164579
+              ],
+              [
+                "IMF related liabilities",
+                5,
+                2096913,
+                1933723
+              ],
+              [
+                "Derivatives",
+                3.2,
+                8100,
+                8000
+              ],
+              [
+                "Due to financial institutions",
+                "7.b",
+                7662,
+                25944
+              ],
+              [
+                "Due to foreign central banks",
+                3.5,
+                10845460,
+                3872190
+              ],
+              [
+                "Other liabilities",
+                11,
+                71086,
+                30655
+              ],
+              [
+                "Total foreign currency financial liabilities",
+                "",
+                20258988,
+                13054092
+              ],
+              [
+                "Local currency financial liabilities",
+                "",
+                "",
+                ""
+              ],
+              [
+                "Currency in circulation",
+                10,
+                14467118,
+                13928764
+              ],
+              [
+                "Balances of commercial banks",
+                "3.3 (f)",
+                23666760,
+                27950888
+              ],
+              [
+                "Balances of government",
+                "3.4 (c)",
+                348351,
+                1835649
+              ],
+              [
+                "Certificates of deposits from Bank of Utopia",
+                "3.3 (e)",
+                5000944,
+                3507159
+              ],
+              [
+                "Due to financial institutions",
+                "3.3 (c)",
+                557,
+                557
+              ],
+              [
+                "Other liabilities",
+                "11, 15.2",
+                270700,
+                1618982
+              ],
+              [
+                "Total local currency financial liabilities",
+                "",
+                43754431,
+                48841999
+              ],
+              [
+                "TOTAL LIABILITIES",
+                "",
+                64013419,
+                61896091
+              ],
+              [
+                "Equity",
+                "",
+                "",
+                ""
+              ],
+              [
+                "Capital and general reserves",
+                "12.1; 20",
+                4385242,
+                3898932
+              ],
+              [
+                "Revaluation reserves",
+                12.2,
+                16699986,
+                14114275
+              ],
+              [
+                "Total equity",
+                "",
+                21085228,
+                18013207
+              ],
+              [
+                "TOTAL EQUITY AND LIABILITIES",
+                "",
+                85098647,
+                79909298
+              ]
+            ],
+            "unit_multiplier": 1,
+            "is_valid_structure": true
+          },
+          "metadata": {
+            "source_path": "9781513563602-mod01.pdf",
+            "region_type": "table",
+            "modality": "table",
+            "namespace": "tripath-v1",
+            "document_id": "doc-9781513563602-mod01-6dd33091e454",
+            "region_id": "doc-9781513563602-mod01-6dd33091e454-region-7",
+            "page_no": 2,
+            "layout_source": "docling",
+            "table_markdown": "| note | 2019 | 2018 | col_4 |\n| --- | --- | --- | --- |\n| ASSETS |  |  |  |\n| Foreign currency financial assets |  |  |  |\n| Cash and cash equivalents | 3.1 | 19671825 | 19067867 |\n| Deposits with banks | 3.2 | 49738005 | 42154364 |\n| Securities | 3.2 | 9605555 | 12855888 |\n| Monetary gold | 6 | 108000 | 94000 |\n| IMF related assets | 5 | 2537070 | 2337041 |\n| Derivatives | 3.2 | 120000 | 84000 |\n| Equity investments | 7.a | 8100 | 8000 |\n| Other receivables | 11 | 100273 | 270044 |\n| Total foreign currency financial assets |  | 81888828 | 76871204 |\n| Local currency financial assets |  |  |  |\n| Cash and cash equivalents | 3.1 | 657756 | 518053 |\n| Loans due from financial institutions | 3.3 (a,b) | 500000 | 550000 |\n| Securities | 3.4 (a) | 349000 | 450000 |\n| Loans to staff | 11 | 31882 | 36188 |\n| Advance to government | 3.4 (b) | 1234500 | 1100000 |\n| Other receivables | 11 | 59521 | 44125 |\n| Total local currency financial assets |  | 2832659 | 2698366 |\n| Non-financial assets |  |  |  |\n| Non-monetary gold | 11 | 16672 | 4437 |\n| Inventories | 8 | 41319 | 92116 |\n| Property, plant and equipment | 9 | 134565 | 90032 |\n| Intangible assets | 9 | 15000 | 12000 |\n| Investment properties | 9 | 14000 | 15000 |\n| Other assets | 11 | 155604 | 126142 |\n| Total non-financial assets |  | 377160 | 339727 |\n| TOTAL ASSETS |  | 85098647 | 79909298 |\n| LIABILITIES |  |  |  |\n| Foreign currency financial liabilities |  |  |  |\n| Balances of commercial banks | 3.3 (f) | 23000 | 19000 |\n| Balances of government | 3.4 (c) | 7206767 | 7164579 |\n| IMF related liabilities | 5 | 2096913 | 1933723 |\n| Derivatives | 3.2 | 8100 | 8000 |\n| Due to financial institutions | 7.b | 7662 | 25944 |\n| Due to foreign central banks | 3.5 | 10845460 | 3872190 |\n| Other liabilities | 11 | 71086 | 30655 |\n| Total foreign currency financial liabilities |  | 20258988 | 13054092 |\n| Local currency financial liabilities |  |  |  |\n| Currency in circulation | 10 | 14467118 | 13928764 |\n| Balances of commercial banks | 3.3 (f) | 23666760 | 27950888 |\n| Balances of government | 3.4 (c) | 348351 | 1835649 |\n| Certificates of deposits from Bank of Utopia | 3.3 (e) | 5000944 | 3507159 |\n| Due to financial institutions | 3.3 (c) | 557 | 557 |\n| Other liabilities | 11, 15.2 | 270700 | 1618982 |\n| Total local currency financial liabilities |  | 43754431 | 48841999 |\n| TOTAL LIABILITIES |  | 64013419 | 61896091 |\n| Equity |  |  |  |\n| Capital and general reserves | 12.1; 20 | 4385242 | 3898932 |\n| Revaluation reserves | 12.2 | 16699986 | 14114275 |\n| Total equity |  | 21085228 | 18013207 |\n| TOTAL EQUITY AND LIABILITIES |  | 85098647 | 79909298 |",
+            "table_json": "{\"columns\": [\"note\", \"2019\", \"2018\", \"col_4\"], \"header_paths\": [[\"Note\"], [\"2019\"], [\"2018\"], [\"col_4\"]], \"rows\": [[\"ASSETS\", \"\", \"\", \"\"], [\"Foreign currency financial assets\", \"\", \"\", \"\"], [\"Cash and cash equivalents\", 3.1, 19671825, 19067867], [\"Deposits with banks\", 3.2, 49738005, 42154364], [\"Securities\", 3.2, 9605555, 12855888], [\"Monetary gold\", 6, 108000, 94000], [\"IMF related assets\", 5, 2537070, 2337041], [\"Derivatives\", 3.2, 120000, 84000], [\"Equity investments\", \"7.a\", 8100, 8000], [\"Other receivables\", 11, 100273, 270044], [\"Total foreign currency financial assets\", \"\", 81888828, 76871204], [\"Local currency financial assets\", \"\", \"\", \"\"], [\"Cash and cash equivalents\", 3.1, 657756, 518053], [\"Loans due from financial institutions\", \"3.3 (a,b)\", 500000, 550000], [\"Securities\", \"3.4 (a)\", 349000, 450000], [\"Loans to staff\", 11, 31882, 36188], [\"Advance to government\", \"3.4 (b)\", 1234500, 1100000], [\"Other receivables\", 11, 59521, 44125], [\"Total local currency financial assets\", \"\", 2832659, 2698366], [\"Non-financial assets\", \"\", \"\", \"\"], [\"Non-monetary gold\", 11, 16672, 4437], [\"Inventories\", 8, 41319, 92116], [\"Property, plant and equipment\", 9, 134565, 90032], [\"Intangible assets\", 9, 15000, 12000], [\"Investment properties\", 9, 14000, 15000], [\"Other assets\", 11, 155604, 126142], [\"Total non-financial assets\", \"\", 377160, 339727], [\"TOTAL ASSETS\", \"\", 85098647, 79909298], [\"LIABILITIES\", \"\", \"\", \"\"], [\"Foreign currency financial liabilities\", \"\", \"\", \"\"], [\"Balances of commercial banks\", \"3.3 (f)\", 23000, 19000], [\"Balances of government\", \"3.4 (c)\", 7206767, 7164579], [\"IMF related liabilities\", 5, 2096913, 1933723], [\"Derivatives\", 3.2, 8100, 8000], [\"Due to financial institutions\", \"7.b\", 7662, 25944], [\"Due to foreign central banks\", 3.5, 10845460, 3872190], [\"Other liabilities\", 11, 71086, 30655], [\"Total foreign currency financial liabilities\", \"\", 20258988, 13054092], [\"Local currency financial liabilities\", \"\", \"\", \"\"], [\"Currency in circulation\", 10, 14467118, 13928764], [\"Balances of commercial banks\", \"3.3 (f)\", 23666760, 27950888], [\"Balances of government\", \"3.4 (c)\", 348351, 1835649], [\"Certificates of deposits from Bank of Utopia\", \"3.3 (e)\", 5000944, 3507159], [\"Due to financial institutions\", \"3.3 (c)\", 557, 557], [\"Other liabilities\", \"11, 15.2\", 270700, 1618982], [\"Total local currency financial liabilities\", \"\", 43754431, 48841999], [\"TOTAL LIABILITIES\", \"\", 64013419, 61896091], [\"Equity\", \"\", \"\", \"\"], [\"Capital and general reserves\", \"12.1; 20\", 4385242, 3898932], [\"Revaluation reserves\", 12.2, 16699986, 14114275], [\"Total equity\", \"\", 21085228, 18013207], [\"TOTAL EQUITY AND LIABILITIES\", \"\", 85098647, 79909298]], \"unit_multiplier\": 1, \"is_valid_structure\": true}",
+            "table_html": "<table>\n  <thead><tr>\n    <th>note</th>\n    <th>2019</th>\n    <th>2018</th>\n    <th>col_4</th>\n  </tr></thead>\n  <tbody>\n  <tr>\n    <td>ASSETS</td>\n    <td></td>\n    <td></td>\n    <td></td>\n  </tr>\n  <tr>\n    <td>Foreign currency financial assets</td>\n    <td></td>\n    <td></td>\n    <td></td>\n  </tr>\n  <tr>\n    <td>Cash and cash equivalents</td>\n    <td>3.1</td>\n    <td>19671825</td>\n    <td>19067867</td>\n  </tr>\n  <tr>\n    <td>Deposits with banks</td>\n    <td>3.2</td>\n    <td>49738005</td>\n    <td>42154364</td>\n  </tr>\n  <tr>\n    <td>Securities</td>\n    <td>3.2</td>\n    <td>9605555</td>\n    <td>12855888</td>\n  </tr>\n  <tr>\n    <td>Monetary gold</td>\n    <td>6</td>\n    <td>108000</td>\n    <td>94000</td>\n  </tr>\n  <tr>\n    <td>IMF related assets</td>\n    <td>5</td>\n    <td>2537070</td>\n    <td>2337041</td>\n  </tr>\n  <tr>\n    <td>Derivatives</td>\n    <td>3.2</td>\n    <td>120000</td>\n    <td>84000</td>\n  </tr>\n  <tr>\n    <td>Equity investments</td>\n    <td>7.a</td>\n    <td>8100</td>\n    <td>8000</td>\n  </tr>\n  <tr>\n    <td>Other receivables</td>\n    <td>11</td>\n    <td>100273</td>\n    <td>270044</td>\n  </tr>\n  <tr>\n    <td>Total foreign currency financial assets</td>\n    <td></td>\n    <td>81888828</td>\n    <td>76871204</td>\n  </tr>\n  <tr>\n    <td>Local currency financial assets</td>\n    <td></td>\n    <td></td>\n    <td></td>\n  </tr>\n  <tr>\n    <td>Cash and cash equivalents</td>\n    <td>3.1</td>\n    <td>657756</td>\n    <td>518053</td>\n  </tr>\n  <tr>\n    <td>Loans due from financial institutions</td>\n    <td>3.3 (a,b)</td>\n    <td>500000</td>\n    <td>550000</td>\n  </tr>\n  <tr>\n    <td>Securities</td>\n    <td>3.4 (a)</td>\n    <td>349000</td>\n    <td>450000</td>\n  </tr>\n  <tr>\n    <td>Loans to staff</td>\n    <td>11</td>\n    <td>31882</td>\n    <td>36188</td>\n  </tr>\n  <tr>\n    <td>Advance to government</td>\n    <td>3.4 (b)</td>\n    <td>1234500</td>\n    <td>1100000</td>\n  </tr>\n  <tr>\n    <td>Other receivables</td>\n    <td>11</td>\n    <td>59521</td>\n    <td>44125</td>\n  </tr>\n  <tr>\n    <td>Total local currency financial assets</td>\n    <td></td>\n    <td>2832659</td>\n    <td>2698366</td>\n  </tr>\n  <tr>\n    <td>Non-financial assets</td>\n    <td></td>\n    <td></td>\n    <td></td>\n  </tr>\n  <tr>\n    <td>Non-monetary gold</td>\n    <td>11</td>\n    <td>16672</td>\n    <td>4437</td>\n  </tr>\n  <tr>\n    <td>Inventories</td>\n    <td>8</td>\n    <td>41319</td>\n    <td>92116</td>\n  </tr>\n  <tr>\n    <td>Property, plant and equipment</td>\n    <td>9</td>\n    <td>134565</td>\n    <td>90032</td>\n  </tr>\n  <tr>\n    <td>Intangible assets</td>\n    <td>9</td>\n    <td>15000</td>\n    <td>12000</td>\n  </tr>\n  <tr>\n    <td>Investment properties</td>\n    <td>9</td>\n    <td>14000</td>\n    <td>15000</td>\n  </tr>\n  <tr>\n    <td>Other assets</td>\n    <td>11</td>\n    <td>155604</td>\n    <td>126142</td>\n  </tr>\n  <tr>\n    <td>Total non-financial assets</td>\n    <td></td>\n    <td>377160</td>\n    <td>339727</td>\n  </tr>\n  <tr>\n    <td>TOTAL ASSETS</td>\n    <td></td>\n    <td>85098647</td>\n    <td>79909298</td>\n  </tr>\n  <tr>\n    <td>LIABILITIES</td>\n    <td></td>\n    <td></td>\n    <td></td>\n  </tr>\n  <tr>\n    <td>Foreign currency financial liabilities</td>\n    <td></td>\n    <td></td>\n    <td></td>\n  </tr>\n  <tr>\n    <td>Balances of commercial banks</td>\n    <td>3.3 (f)</td>\n    <td>23000</td>\n    <td>19000</td>\n  </tr>\n  <tr>\n    <td>Balances of government</td>\n    <td>3.4 (c)</td>\n    <td>7206767</td>\n    <td>7164579</td>\n  </tr>\n  <tr>\n    <td>IMF related liabilities</td>\n    <td>5</td>\n    <td>2096913</td>\n    <td>1933723</td>\n  </tr>\n  <tr>\n    <td>Derivatives</td>\n    <td>3.2</td>\n    <td>8100</td>\n    <td>8000</td>\n  </tr>\n  <tr>\n    <td>Due to financial institutions</td>\n    <td>7.b</td>\n    <td>7662</td>\n    <td>25944</td>\n  </tr>\n  <tr>\n    <td>Due to foreign central banks</td>\n    <td>3.5</td>\n    <td>10845460</td>\n    <td>3872190</td>\n  </tr>\n  <tr>\n    <td>Other liabilities</td>\n    <td>11</td>\n    <td>71086</td>\n    <td>30655</td>\n  </tr>\n  <tr>\n    <td>Total foreign currency financial liabilities</td>\n    <td></td>\n    <td>20258988</td>\n    <td>13054092</td>\n  </tr>\n  <tr>\n    <td>Local currency financial liabilities</td>\n    <td></td>\n    <td></td>\n    <td></td>\n  </tr>\n  <tr>\n    <td>Currency in circulation</td>\n    <td>10</td>\n    <td>14467118</td>\n    <td>13928764</td>\n  </tr>\n  <tr>\n    <td>Balances of commercial banks</td>\n    <td>3.3 (f)</td>\n    <td>23666760</td>\n    <td>27950888</td>\n  </tr>\n  <tr>\n    <td>Balances of government</td>\n    <td>3.4 (c)</td>\n    <td>348351</td>\n    <td>1835649</td>\n  </tr>\n  <tr>\n    <td>Certificates of deposits from Bank of Utopia</td>\n    <td>3.3 (e)</td>\n    <td>5000944</td>\n    <td>3507159</td>\n  </tr>\n  <tr>\n    <td>Due to financial institutions</td>\n    <td>3.3 (c)</td>\n    <td>557</td>\n    <td>557</td>\n  </tr>\n  <tr>\n    <td>Other liabilities</td>\n    <td>11, 15.2</td>\n    <td>270700</td>\n    <td>1618982</td>\n  </tr>\n  <tr>\n    <td>Total local currency financial liabilities</td>\n    <td></td>\n    <td>43754431</td>\n    <td>48841999</td>\n  </tr>\n  <tr>\n    <td>TOTAL LIABILITIES</td>\n    <td></td>\n    <td>64013419</td>\n    <td>61896091</td>\n  </tr>\n  <tr>\n    <td>Equity</td>\n    <td></td>\n    <td></td>\n    <td></td>\n  </tr>\n  <tr>\n    <td>Capital and general reserves</td>\n    <td>12.1; 20</td>\n    <td>4385242</td>\n    <td>3898932</td>\n  </tr>\n  <tr>\n    <td>Revaluation reserves</td>\n    <td>12.2</td>\n    <td>16699986</td>\n    <td>14114275</td>\n  </tr>\n  <tr>\n    <td>Total equity</td>\n    <td></td>\n    <td>21085228</td>\n    <td>18013207</td>\n  </tr>\n  <tr>\n    <td>TOTAL EQUITY AND LIABILITIES</td>\n    <td></td>\n    <td>85098647</td>\n    <td>79909298</td>\n  </tr>\n  </tbody>\n</table>"
           }
         }
       ],
       "chunks": [
         {
-          "id": "doc-9781513563602-mod01-b7fa9e8544b1-region-0-chunk-0",
-          "document_id": "doc-9781513563602-mod01-b7fa9e8544b1",
-          "region_id": "doc-9781513563602-mod01-b7fa9e8544b1-region-0",
+          "id": "doc-9781513563602-mod01-6dd33091e454-region-0-chunk-0",
+          "document_id": "doc-9781513563602-mod01-6dd33091e454",
+          "region_id": "doc-9781513563602-mod01-6dd33091e454-region-0",
           "modality": "text",
-          "text": "[Extracted from .pdf document] 9781513563602-mod01.pdf",
+          "text": "MODEL FINANCIAL STATEMENTS",
           "metadata": {
             "source_path": "9781513563602-mod01.pdf",
             "region_type": "title",
             "modality": "text",
             "namespace": "tripath-v1",
-            "document_id": "doc-9781513563602-mod01-b7fa9e8544b1",
-            "region_id": "doc-9781513563602-mod01-b7fa9e8544b1-region-0"
+            "document_id": "doc-9781513563602-mod01-6dd33091e454",
+            "region_id": "doc-9781513563602-mod01-6dd33091e454-region-0",
+            "page_no": 1,
+            "layout_source": "docling"
+          }
+        },
+        {
+          "id": "doc-9781513563602-mod01-6dd33091e454-region-1-chunk-1",
+          "document_id": "doc-9781513563602-mod01-6dd33091e454",
+          "region_id": "doc-9781513563602-mod01-6dd33091e454-region-1",
+          "modality": "text",
+          "text": "Overview",
+          "metadata": {
+            "source_path": "9781513563602-mod01.pdf",
+            "region_type": "title",
+            "modality": "text",
+            "namespace": "tripath-v1",
+            "document_id": "doc-9781513563602-mod01-6dd33091e454",
+            "region_id": "doc-9781513563602-mod01-6dd33091e454-region-1",
+            "page_no": 1,
+            "layout_source": "docling"
+          }
+        },
+        {
+          "id": "doc-9781513563602-mod01-6dd33091e454-region-2-chunk-2",
+          "document_id": "doc-9781513563602-mod01-6dd33091e454",
+          "region_id": "doc-9781513563602-mod01-6dd33091e454-region-2",
+          "modality": "text",
+          "text": "The model statements have been compiled based on research of financial reports prepared by IFRS compliant central banks from around the world. They are intended to assist central banks in preparing their own financial statements and in discussions with their auditors. They are not intended to be comprehensive as each central bank will have its own unique circumstances that need to be considered. They are not intended to override any legal, regulatory or other requirements. The model statements were developed only as an indicative sample; they will need to be adapted to suit the specific situation of each central bank.",
+          "metadata": {
+            "source_path": "9781513563602-mod01.pdf",
+            "region_type": "body",
+            "modality": "text",
+            "namespace": "tripath-v1",
+            "document_id": "doc-9781513563602-mod01-6dd33091e454",
+            "region_id": "doc-9781513563602-mod01-6dd33091e454-region-2",
+            "page_no": 1,
+            "layout_source": "docling"
+          }
+        },
+        {
+          "id": "doc-9781513563602-mod01-6dd33091e454-region-3-chunk-3",
+          "document_id": "doc-9781513563602-mod01-6dd33091e454",
+          "region_id": "doc-9781513563602-mod01-6dd33091e454-region-3",
+          "modality": "text",
+          "text": "The statements include references to governance structures, including directors and internal committees. These are included for illustrative purposes and are not intended to be definitive or recommendations as to the appropriate structures.",
+          "metadata": {
+            "source_path": "9781513563602-mod01.pdf",
+            "region_type": "body",
+            "modality": "text",
+            "namespace": "tripath-v1",
+            "document_id": "doc-9781513563602-mod01-6dd33091e454",
+            "region_id": "doc-9781513563602-mod01-6dd33091e454-region-3",
+            "page_no": 1,
+            "layout_source": "docling"
+          }
+        },
+        {
+          "id": "doc-9781513563602-mod01-6dd33091e454-region-4-chunk-4",
+          "document_id": "doc-9781513563602-mod01-6dd33091e454",
+          "region_id": "doc-9781513563602-mod01-6dd33091e454-region-4",
+          "modality": "text",
+          "text": "The financial statements have been prepared with the intention of being representative of the various activities, assets, liabilities, income and expenditure of central banks. It is unlikely that any central bank will have all the items included and may have other material items and activities that are not presented here.",
+          "metadata": {
+            "source_path": "9781513563602-mod01.pdf",
+            "region_type": "body",
+            "modality": "text",
+            "namespace": "tripath-v1",
+            "document_id": "doc-9781513563602-mod01-6dd33091e454",
+            "region_id": "doc-9781513563602-mod01-6dd33091e454-region-4",
+            "page_no": 1,
+            "layout_source": "docling"
+          }
+        },
+        {
+          "id": "doc-9781513563602-mod01-6dd33091e454-region-5-chunk-5",
+          "document_id": "doc-9781513563602-mod01-6dd33091e454",
+          "region_id": "doc-9781513563602-mod01-6dd33091e454-region-5",
+          "modality": "text",
+          "text": "As noted earlier, the number of digits presented in the main financial statements should be guided by materiality. The presentation should enhance the readers ability to understand the key functions of the central bank and its financial ability to fulfill its mandate. The financial statements included herein are presented in thousands of Utopian local currency to depict a broad range of conditions that a typical central bank may encounter. In practice, given the size of Utopia's balance sheet, it would have been recommended that these statements be presented in millions of Utopian local currency. Smaller central banks would choose to present the statements in thousands of local currency. The note disclosures would continue to include greater precision.",
+          "metadata": {
+            "source_path": "9781513563602-mod01.pdf",
+            "region_type": "body",
+            "modality": "text",
+            "namespace": "tripath-v1",
+            "document_id": "doc-9781513563602-mod01-6dd33091e454",
+            "region_id": "doc-9781513563602-mod01-6dd33091e454-region-5",
+            "page_no": 1,
+            "layout_source": "docling"
+          }
+        },
+        {
+          "id": "doc-9781513563602-mod01-6dd33091e454-region-6-chunk-6",
+          "document_id": "doc-9781513563602-mod01-6dd33091e454",
+          "region_id": "doc-9781513563602-mod01-6dd33091e454-region-6",
+          "modality": "text",
+          "text": "Statement of Financial Position As at December 31 (in thousands of Utopian local currency)",
+          "metadata": {
+            "source_path": "9781513563602-mod01.pdf",
+            "region_type": "title",
+            "modality": "text",
+            "namespace": "tripath-v1",
+            "document_id": "doc-9781513563602-mod01-6dd33091e454",
+            "region_id": "doc-9781513563602-mod01-6dd33091e454-region-6",
+            "page_no": 2,
+            "layout_source": "docling"
+          }
+        },
+        {
+          "id": "doc-9781513563602-mod01-6dd33091e454-region-7-chunk-7",
+          "document_id": "doc-9781513563602-mod01-6dd33091e454",
+          "region_id": "doc-9781513563602-mod01-6dd33091e454-region-7",
+          "modality": "table",
+          "text": "| note | 2019 | 2018 | col_4 |\n| --- | --- | --- | --- |\n| ASSETS |  |  |  |\n| Foreign currency financial assets |  |  |  |\n| Cash and cash equivalents | 3.1 | 19671825 | 19067867 |\n| Deposits with banks | 3.2 | 49738005 | 42154364 |\n| Securities | 3.2 | 9605555 | 12855888 |\n| Monetary gold | 6 | 108000 | 94000 |\n| IMF related assets | 5 | 2537070 | 2337041 |\n| Derivatives | 3.2 | 120000 | 84000 |\n| Equity investments | 7.a | 8100 | 8000 |\n| Other receivables | 11 | 100273 | 270044 |\n| Total foreign currency financial assets |  | 81888828 | 76871204 |\n| Local currency financial assets |  |  |  |\n| Cash and cash equivalents | 3.1 | 657756 | 518053 |\n| Loans due from financial institutions | 3.3 (a,b) | 500000 | 550000 |\n| Securities | 3.4 (a) | 349000 | 450000 |\n| Loans to staff | 11 | 31882 | 36188 |\n| Advance to government | 3.4 (b) | 1234500 | 1100000 |\n| Other receivables | 11 | 59521 | 44125 |\n| Total local currency financial assets |  | 2832659 | 2698366 |\n| Non-financial assets |  |  |  |\n| Non-monetary gold | 11 | 16672 | 4437 |\n| Inventories | 8 | 41319 | 92116 |\n| Property, plant and equipment | 9 | 134565 | 90032 |\n| Intangible assets | 9 | 15000 | 12000 |\n| Investment properties | 9 | 14000 | 15000 |\n| Other assets | 11 | 155604 | 126142 |\n| Total non-financial assets |  | 377160 | 339727 |\n| TOTAL ASSETS |  | 85098647 | 79909298 |\n| LIABILITIES |  |  |  |\n| Foreign currency financial liabilities |  |  |  |\n| Balances of commercial banks | 3.3 (f) | 23000 | 19000 |\n| Balances of government | 3.4 (c) | 7206767 | 7164579 |\n| IMF related liabilities | 5 | 2096913 | 1933723 |\n| Derivatives | 3.2 | 8100 | 8000 |\n| Due to financial institutions | 7.b | 7662 | 25944 |\n| Due to foreign central banks | 3.5 | 10845460 | 3872190 |\n| Other liabilities | 11 | 71086 | 30655 |\n| Total foreign currency financial liabilities |  | 20258988 | 13054092 |\n| Local currency financial liabilities |  |  |  |\n| Currency in circulation | 10 | 14467118 | 13928764 |\n| Balances of commercial banks | 3.3 (f) | 23666760 | 27950888 |\n| Balances of government | 3.4 (c) | 348351 | 1835649 |\n| Certificates of deposits from Bank of Utopia | 3.3 (e) | 5000944 | 3507159 |\n| Due to financial institutions | 3.3 (c) | 557 | 557 |\n| Other liabilities | 11, 15.2 | 270700 | 1618982 |\n| Total local currency financial liabilities |  | 43754431 | 48841999 |\n| TOTAL LIABILITIES |  | 64013419 | 61896091 |\n| Equity |  |  |  |\n| Capital and general reserves | 12.1; 20 | 4385242 | 3898932 |\n| Revaluation reserves | 12.2 | 16699986 | 14114275 |\n| Total equity |  | 21085228 | 18013207 |\n| TOTAL EQUITY AND LIABILITIES |  | 85098647 | 79909298 |",
+          "metadata": {
+            "source_path": "9781513563602-mod01.pdf",
+            "region_type": "table",
+            "modality": "table",
+            "namespace": "tripath-v1",
+            "document_id": "doc-9781513563602-mod01-6dd33091e454",
+            "region_id": "doc-9781513563602-mod01-6dd33091e454-region-7",
+            "page_no": 2,
+            "layout_source": "docling",
+            "table_markdown": "| note | 2019 | 2018 | col_4 |\n| --- | --- | --- | --- |\n| ASSETS |  |  |  |\n| Foreign currency financial assets |  |  |  |\n| Cash and cash equivalents | 3.1 | 19671825 | 19067867 |\n| Deposits with banks | 3.2 | 49738005 | 42154364 |\n| Securities | 3.2 | 9605555 | 12855888 |\n| Monetary gold | 6 | 108000 | 94000 |\n| IMF related assets | 5 | 2537070 | 2337041 |\n| Derivatives | 3.2 | 120000 | 84000 |\n| Equity investments | 7.a | 8100 | 8000 |\n| Other receivables | 11 | 100273 | 270044 |\n| Total foreign currency financial assets |  | 81888828 | 76871204 |\n| Local currency financial assets |  |  |  |\n| Cash and cash equivalents | 3.1 | 657756 | 518053 |\n| Loans due from financial institutions | 3.3 (a,b) | 500000 | 550000 |\n| Securities | 3.4 (a) | 349000 | 450000 |\n| Loans to staff | 11 | 31882 | 36188 |\n| Advance to government | 3.4 (b) | 1234500 | 1100000 |\n| Other receivables | 11 | 59521 | 44125 |\n| Total local currency financial assets |  | 2832659 | 2698366 |\n| Non-financial assets |  |  |  |\n| Non-monetary gold | 11 | 16672 | 4437 |\n| Inventories | 8 | 41319 | 92116 |\n| Property, plant and equipment | 9 | 134565 | 90032 |\n| Intangible assets | 9 | 15000 | 12000 |\n| Investment properties | 9 | 14000 | 15000 |\n| Other assets | 11 | 155604 | 126142 |\n| Total non-financial assets |  | 377160 | 339727 |\n| TOTAL ASSETS |  | 85098647 | 79909298 |\n| LIABILITIES |  |  |  |\n| Foreign currency financial liabilities |  |  |  |\n| Balances of commercial banks | 3.3 (f) | 23000 | 19000 |\n| Balances of government | 3.4 (c) | 7206767 | 7164579 |\n| IMF related liabilities | 5 | 2096913 | 1933723 |\n| Derivatives | 3.2 | 8100 | 8000 |\n| Due to financial institutions | 7.b | 7662 | 25944 |\n| Due to foreign central banks | 3.5 | 10845460 | 3872190 |\n| Other liabilities | 11 | 71086 | 30655 |\n| Total foreign currency financial liabilities |  | 20258988 | 13054092 |\n| Local currency financial liabilities |  |  |  |\n| Currency in circulation | 10 | 14467118 | 13928764 |\n| Balances of commercial banks | 3.3 (f) | 23666760 | 27950888 |\n| Balances of government | 3.4 (c) | 348351 | 1835649 |\n| Certificates of deposits from Bank of Utopia | 3.3 (e) | 5000944 | 3507159 |\n| Due to financial institutions | 3.3 (c) | 557 | 557 |\n| Other liabilities | 11, 15.2 | 270700 | 1618982 |\n| Total local currency financial liabilities |  | 43754431 | 48841999 |\n| TOTAL LIABILITIES |  | 64013419 | 61896091 |\n| Equity |  |  |  |\n| Capital and general reserves | 12.1; 20 | 4385242 | 3898932 |\n| Revaluation reserves | 12.2 | 16699986 | 14114275 |\n| Total equity |  | 21085228 | 18013207 |\n| TOTAL EQUITY AND LIABILITIES |  | 85098647 | 79909298 |",
+            "table_json": "{\"columns\": [\"note\", \"2019\", \"2018\", \"col_4\"], \"header_paths\": [[\"Note\"], [\"2019\"], [\"2018\"], [\"col_4\"]], \"rows\": [[\"ASSETS\", \"\", \"\", \"\"], [\"Foreign currency financial assets\", \"\", \"\", \"\"], [\"Cash and cash equivalents\", 3.1, 19671825, 19067867], [\"Deposits with banks\", 3.2, 49738005, 42154364], [\"Securities\", 3.2, 9605555, 12855888], [\"Monetary gold\", 6, 108000, 94000], [\"IMF related assets\", 5, 2537070, 2337041], [\"Derivatives\", 3.2, 120000, 84000], [\"Equity investments\", \"7.a\", 8100, 8000], [\"Other receivables\", 11, 100273, 270044], [\"Total foreign currency financial assets\", \"\", 81888828, 76871204], [\"Local currency financial assets\", \"\", \"\", \"\"], [\"Cash and cash equivalents\", 3.1, 657756, 518053], [\"Loans due from financial institutions\", \"3.3 (a,b)\", 500000, 550000], [\"Securities\", \"3.4 (a)\", 349000, 450000], [\"Loans to staff\", 11, 31882, 36188], [\"Advance to government\", \"3.4 (b)\", 1234500, 1100000], [\"Other receivables\", 11, 59521, 44125], [\"Total local currency financial assets\", \"\", 2832659, 2698366], [\"Non-financial assets\", \"\", \"\", \"\"], [\"Non-monetary gold\", 11, 16672, 4437], [\"Inventories\", 8, 41319, 92116], [\"Property, plant and equipment\", 9, 134565, 90032], [\"Intangible assets\", 9, 15000, 12000], [\"Investment properties\", 9, 14000, 15000], [\"Other assets\", 11, 155604, 126142], [\"Total non-financial assets\", \"\", 377160, 339727], [\"TOTAL ASSETS\", \"\", 85098647, 79909298], [\"LIABILITIES\", \"\", \"\", \"\"], [\"Foreign currency financial liabilities\", \"\", \"\", \"\"], [\"Balances of commercial banks\", \"3.3 (f)\", 23000, 19000], [\"Balances of government\", \"3.4 (c)\", 7206767, 7164579], [\"IMF related liabilities\", 5, 2096913, 1933723], [\"Derivatives\", 3.2, 8100, 8000], [\"Due to financial institutions\", \"7.b\", 7662, 25944], [\"Due to foreign central banks\", 3.5, 10845460, 3872190], [\"Other liabilities\", 11, 71086, 30655], [\"Total foreign currency financial liabilities\", \"\", 20258988, 13054092], [\"Local currency financial liabilities\", \"\", \"\", \"\"], [\"Currency in circulation\", 10, 14467118, 13928764], [\"Balances of commercial banks\", \"3.3 (f)\", 23666760, 27950888], [\"Balances of government\", \"3.4 (c)\", 348351, 1835649], [\"Certificates of deposits from Bank of Utopia\", \"3.3 (e)\", 5000944, 3507159], [\"Due to financial institutions\", \"3.3 (c)\", 557, 557], [\"Other liabilities\", \"11, 15.2\", 270700, 1618982], [\"Total local currency financial liabilities\", \"\", 43754431, 48841999], [\"TOTAL LIABILITIES\", \"\", 64013419, 61896091], [\"Equity\", \"\", \"\", \"\"], [\"Capital and general reserves\", \"12.1; 20\", 4385242, 3898932], [\"Revaluation reserves\", 12.2, 16699986, 14114275], [\"Total equity\", \"\", 21085228, 18013207], [\"TOTAL EQUITY AND LIABILITIES\", \"\", 85098647, 79909298]], \"unit_multiplier\": 1, \"is_valid_structure\": true}",
+            "table_html": "<table>\n  <thead><tr>\n    <th>note</th>\n    <th>2019</th>\n    <th>2018</th>\n    <th>col_4</th>\n  </tr></thead>\n  <tbody>\n  <tr>\n    <td>ASSETS</td>\n    <td></td>\n    <td></td>\n    <td></td>\n  </tr>\n  <tr>\n    <td>Foreign currency financial assets</td>\n    <td></td>\n    <td></td>\n    <td></td>\n  </tr>\n  <tr>\n    <td>Cash and cash equivalents</td>\n    <td>3.1</td>\n    <td>19671825</td>\n    <td>19067867</td>\n  </tr>\n  <tr>\n    <td>Deposits with banks</td>\n    <td>3.2</td>\n    <td>49738005</td>\n    <td>42154364</td>\n  </tr>\n  <tr>\n    <td>Securities</td>\n    <td>3.2</td>\n    <td>9605555</td>\n    <td>12855888</td>\n  </tr>\n  <tr>\n    <td>Monetary gold</td>\n    <td>6</td>\n    <td>108000</td>\n    <td>94000</td>\n  </tr>\n  <tr>\n    <td>IMF related assets</td>\n    <td>5</td>\n    <td>2537070</td>\n    <td>2337041</td>\n  </tr>\n  <tr>\n    <td>Derivatives</td>\n    <td>3.2</td>\n    <td>120000</td>\n    <td>84000</td>\n  </tr>\n  <tr>\n    <td>Equity investments</td>\n    <td>7.a</td>\n    <td>8100</td>\n    <td>8000</td>\n  </tr>\n  <tr>\n    <td>Other receivables</td>\n    <td>11</td>\n    <td>100273</td>\n    <td>270044</td>\n  </tr>\n  <tr>\n    <td>Total foreign currency financial assets</td>\n    <td></td>\n    <td>81888828</td>\n    <td>76871204</td>\n  </tr>\n  <tr>\n    <td>Local currency financial assets</td>\n    <td></td>\n    <td></td>\n    <td></td>\n  </tr>\n  <tr>\n    <td>Cash and cash equivalents</td>\n    <td>3.1</td>\n    <td>657756</td>\n    <td>518053</td>\n  </tr>\n  <tr>\n    <td>Loans due from financial institutions</td>\n    <td>3.3 (a,b)</td>\n    <td>500000</td>\n    <td>550000</td>\n  </tr>\n  <tr>\n    <td>Securities</td>\n    <td>3.4 (a)</td>\n    <td>349000</td>\n    <td>450000</td>\n  </tr>\n  <tr>\n    <td>Loans to staff</td>\n    <td>11</td>\n    <td>31882</td>\n    <td>36188</td>\n  </tr>\n  <tr>\n    <td>Advance to government</td>\n    <td>3.4 (b)</td>\n    <td>1234500</td>\n    <td>1100000</td>\n  </tr>\n  <tr>\n    <td>Other receivables</td>\n    <td>11</td>\n    <td>59521</td>\n    <td>44125</td>\n  </tr>\n  <tr>\n    <td>Total local currency financial assets</td>\n    <td></td>\n    <td>2832659</td>\n    <td>2698366</td>\n  </tr>\n  <tr>\n    <td>Non-financial assets</td>\n    <td></td>\n    <td></td>\n    <td></td>\n  </tr>\n  <tr>\n    <td>Non-monetary gold</td>\n    <td>11</td>\n    <td>16672</td>\n    <td>4437</td>\n  </tr>\n  <tr>\n    <td>Inventories</td>\n    <td>8</td>\n    <td>41319</td>\n    <td>92116</td>\n  </tr>\n  <tr>\n    <td>Property, plant and equipment</td>\n    <td>9</td>\n    <td>134565</td>\n    <td>90032</td>\n  </tr>\n  <tr>\n    <td>Intangible assets</td>\n    <td>9</td>\n    <td>15000</td>\n    <td>12000</td>\n  </tr>\n  <tr>\n    <td>Investment properties</td>\n    <td>9</td>\n    <td>14000</td>\n    <td>15000</td>\n  </tr>\n  <tr>\n    <td>Other assets</td>\n    <td>11</td>\n    <td>155604</td>\n    <td>126142</td>\n  </tr>\n  <tr>\n    <td>Total non-financial assets</td>\n    <td></td>\n    <td>377160</td>\n    <td>339727</td>\n  </tr>\n  <tr>\n    <td>TOTAL ASSETS</td>\n    <td></td>\n    <td>85098647</td>\n    <td>79909298</td>\n  </tr>\n  <tr>\n    <td>LIABILITIES</td>\n    <td></td>\n    <td></td>\n    <td></td>\n  </tr>\n  <tr>\n    <td>Foreign currency financial liabilities</td>\n    <td></td>\n    <td></td>\n    <td></td>\n  </tr>\n  <tr>\n    <td>Balances of commercial banks</td>\n    <td>3.3 (f)</td>\n    <td>23000</td>\n    <td>19000</td>\n  </tr>\n  <tr>\n    <td>Balances of government</td>\n    <td>3.4 (c)</td>\n    <td>7206767</td>\n    <td>7164579</td>\n  </tr>\n  <tr>\n    <td>IMF related liabilities</td>\n    <td>5</td>\n    <td>2096913</td>\n    <td>1933723</td>\n  </tr>\n  <tr>\n    <td>Derivatives</td>\n    <td>3.2</td>\n    <td>8100</td>\n    <td>8000</td>\n  </tr>\n  <tr>\n    <td>Due to financial institutions</td>\n    <td>7.b</td>\n    <td>7662</td>\n    <td>25944</td>\n  </tr>\n  <tr>\n    <td>Due to foreign central banks</td>\n    <td>3.5</td>\n    <td>10845460</td>\n    <td>3872190</td>\n  </tr>\n  <tr>\n    <td>Other liabilities</td>\n    <td>11</td>\n    <td>71086</td>\n    <td>30655</td>\n  </tr>\n  <tr>\n    <td>Total foreign currency financial liabilities</td>\n    <td></td>\n    <td>20258988</td>\n    <td>13054092</td>\n  </tr>\n  <tr>\n    <td>Local currency financial liabilities</td>\n    <td></td>\n    <td></td>\n    <td></td>\n  </tr>\n  <tr>\n    <td>Currency in circulation</td>\n    <td>10</td>\n    <td>14467118</td>\n    <td>13928764</td>\n  </tr>\n  <tr>\n    <td>Balances of commercial banks</td>\n    <td>3.3 (f)</td>\n    <td>23666760</td>\n    <td>27950888</td>\n  </tr>\n  <tr>\n    <td>Balances of government</td>\n    <td>3.4 (c)</td>\n    <td>348351</td>\n    <td>1835649</td>\n  </tr>\n  <tr>\n    <td>Certificates of deposits from Bank of Utopia</td>\n    <td>3.3 (e)</td>\n    <td>5000944</td>\n    <td>3507159</td>\n  </tr>\n  <tr>\n    <td>Due to financial institutions</td>\n    <td>3.3 (c)</td>\n    <td>557</td>\n    <td>557</td>\n  </tr>\n  <tr>\n    <td>Other liabilities</td>\n    <td>11, 15.2</td>\n    <td>270700</td>\n    <td>1618982</td>\n  </tr>\n  <tr>\n    <td>Total local currency financial liabilities</td>\n    <td></td>\n    <td>43754431</td>\n    <td>48841999</td>\n  </tr>\n  <tr>\n    <td>TOTAL LIABILITIES</td>\n    <td></td>\n    <td>64013419</td>\n    <td>61896091</td>\n  </tr>\n  <tr>\n    <td>Equity</td>\n    <td></td>\n    <td></td>\n    <td></td>\n  </tr>\n  <tr>\n    <td>Capital and general reserves</td>\n    <td>12.1; 20</td>\n    <td>4385242</td>\n    <td>3898932</td>\n  </tr>\n  <tr>\n    <td>Revaluation reserves</td>\n    <td>12.2</td>\n    <td>16699986</td>\n    <td>14114275</td>\n  </tr>\n  <tr>\n    <td>Total equity</td>\n    <td></td>\n    <td>21085228</td>\n    <td>18013207</td>\n  </tr>\n  <tr>\n    <td>TOTAL EQUITY AND LIABILITIES</td>\n    <td></td>\n    <td>85098647</td>\n    <td>79909298</td>\n  </tr>\n  </tbody>\n</table>"
           }
         }
       ],
       "metadata": {
-        "document_id": "doc-9781513563602-mod01-b7fa9e8544b1",
+        "document_id": "doc-9781513563602-mod01-6dd33091e454",
         "source_path": "9781513563602-mod01.pdf",
-        "chunk_count": 1,
+        "chunk_count": 8,
         "namespace": "tripath-v1"
       }
     }
