@@ -153,6 +153,19 @@ function renderAssistantResponse(groupId, query, data) {
           </span>
         </div>
 
+        ${data.reasoning_chain ? `
+        <!-- Collapsible Card: DeepSeek-R1 Chain-of-Thought Reasoning -->
+        <div class="collapsible-card">
+          <div class="collapsible-header" onclick="toggleCollapsible(this)">
+            <span>🧠 DeepSeek-R1 Reasoning Chain (&lt;think&gt;)</span>
+            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="collapsible-body">
+            <pre style="font-size:12px; color:#cbd5e1; white-space:pre-wrap;"><code>${escapeHtml(data.reasoning_chain)}</code></pre>
+          </div>
+        </div>
+        ` : ''}
+
         <!-- Collapsible Card: Soft Multi-Label Router Confidence (Block B2) -->
         <div class="collapsible-card">
           <div class="collapsible-header" onclick="toggleCollapsible(this)">

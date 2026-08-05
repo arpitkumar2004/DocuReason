@@ -121,12 +121,20 @@ def query_endpoint(payload: QueryPayload) -> Dict[str, Any]:
     else:
         sql_results = []
 
-    # 4. LLM Generation & NLI Attribution Verification
+    # 4. Multi-Modal SLM/LLM Generation & NLI Attribution Verification
     generator = GenerationModule()
-    answer = generator.generate(query_text, retrieved_candidates)
+    sql_payload = {
+        "executed": is_table_active and len(sql_results) > 0,
+        "sql_query": sql_results[0].get("sql_query", "") if (is_table_active and sql_results) else "N/A",
+        "sql_results": sql_results[0].get("sql_result", []) if (is_table_active and sql_results) else [],
+    }
+    gen_result = generator.generate(query_text, retrieved_candidates, sql_payload)
+    answer_text = gen_result.get("answer", "")
+    reasoning_chain = gen_result.get("reasoning_chain")
+    citations = gen_result.get("citations", [])
 
     attributor = NLIFaithfulnessAttributor()
-    attribution = attributor.attribute(answer, retrieved_candidates)
+    attribution = attributor.attribute(answer_text, retrieved_candidates)
 
     return {
         "query": query_text,
@@ -136,15 +144,18 @@ def query_endpoint(payload: QueryPayload) -> Dict[str, Any]:
             "weights": weights,
         },
         "sql_execution": {
-            "executed": is_table_active and len(sql_results) > 0,
+            "executed": sql_payload["executed"],
             "route_active": is_table_active,
             "reason": "Table route active" if is_table_active else f"Table route inactive (P(table)={probs.get('table', 0.0)} < threshold 0.35)",
-            "sql_query": sql_results[0].get("sql_query", "") if (is_table_active and sql_results) else "N/A",
-            "sql_results": sql_results[0].get("sql_result", []) if (is_table_active and sql_results) else [],
+            "sql_query": sql_payload["sql_query"],
+            "sql_results": sql_payload["sql_results"],
         },
         "results": retrieved_candidates,
         "retrieved_evidence": retrieved_candidates[:6],
-        "answer": answer,
+        "answer": answer_text,
+        "reasoning_chain": reasoning_chain,
+        "citations": citations,
+        "generation_engine": gen_result.get("engine", "unknown"),
         "attribution": attribution,
     }
 
