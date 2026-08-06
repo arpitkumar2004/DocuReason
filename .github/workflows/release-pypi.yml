@@ -58,7 +58,7 @@ jobs:
 
       - name: Upload Artifacts to GitHub Release
         if: ${{ github.event_name == 'release' && !inputs.dry_run }}
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: dist/*
         env:
