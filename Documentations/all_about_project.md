@@ -1,4 +1,4 @@
-# DocuReason v1.1.0 — Enterprise-Grade Tri-Path Multimodal RAG Framework
+# DocuReason v1.1.1 — Enterprise-Grade Tri-Path Multimodal RAG Framework
 ## Complete Architecture & Senior ML Engineering Technical Report
 
 ---

@@ -4,6 +4,19 @@ All notable changes to the **DocuReason** framework (`docureason-framework`) wil
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2026-08-07
+
+### Production Release — Enterprise CI/CD Pipeline & PyPI Release Engineering
+
+#### Added
+- **GitHub Actions CI Pipeline (`.github/workflows/ci.yml`)**: Automated multi-stage CI featuring linting (`ruff`), static typing (`mypy`), vulnerability auditing (`pip-audit`), multi-python test matrix (**Python 3.10, 3.11, 3.12** via `pytest`), and PyPI package build verification (`build` + `twine check --strict`).
+- **PyPI Release Pipeline (`.github/workflows/release-pypi.yml`)**: Production deployment pipeline supporting PyPI **OIDC Trusted Publishing** (`pypa/gh-action-pypi-publish@release/v1`) with automated GitHub Release binary artifact attachments (`.tar.gz`, `.whl`).
+- **TestPyPI Staging Pipeline (`.github/workflows/testpypi-publish.yml`)**: Pre-release staging workflow for deploying and verifying package releases on TestPyPI.
+- **Automated Dependabot Updates (`.github/dependabot.yml`)**: Weekly tracking for Python package and GitHub Actions updates.
+- **Packaging Extras (`pyproject.toml`)**: Modular optional dependency extras (`dev`, `test`, `lint`, `build`) for easy developer environment bootstrap via `pip install -e ".[dev]"`.
+- **Local Packaging Verification Utility (`scripts/verify_pypi_package.py`)**: Local verification script to build `.tar.gz` and `.whl` distributions, validate metadata strictness with `twine check`, and test importing installed wheel packages in isolated sandboxes.
+- **CI/CD Architectural Specification (`Documentations/cicd_pipeline.md`)**: Comprehensive release engineering documentation detailing workflow triggers, OIDC security model, matrix testing strategy, and maintainer release checklists.
+
 ---
 
 ## [1.1.0] - 2026-08-07

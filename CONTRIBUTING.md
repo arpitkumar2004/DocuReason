@@ -23,21 +23,43 @@ DocuReason is an open-source, enterprise-grade Tri-Path Multimodal RAG framework
    source .venv/bin/activate
    ```
 
-3. **Install Package in Editable Mode**:
+3. **Install Package with Developer Extras**:
    ```bash
+   pip install --upgrade pip
    pip install -e ".[dev]"
-   pip install build twine pytest
    ```
 
 ---
 
-## Running Tests
+## Code Quality & Verification Suite
 
-Before submitting a Pull Request, verify that all pytest unit and integration tests pass:
+Before submitting a Pull Request, run the local verification suite:
 
-```bash
-python -m pytest -q
-```
+1. **Unit & Integration Tests**:
+   ```bash
+   python -m pytest -v
+   ```
+
+2. **Linting & Code Formatting**:
+   ```bash
+   ruff check .
+   ruff format --check .
+   ```
+
+3. **Type Check**:
+   ```bash
+   mypy src docureason
+   ```
+
+4. **Security Vulnerability Audit**:
+   ```bash
+   pip-audit
+   ```
+
+5. **PyPI Package Verification**:
+   ```bash
+   python scripts/verify_pypi_package.py
+   ```
 
 ---
 
@@ -46,4 +68,5 @@ python -m pytest -q
 1. **Modular Architecture**: Ensure new retrievers, routers, or encoders adhere to the `src/tripath/` modular folder structure.
 2. **Type Annotations & Docstrings**: Include type hints (`typing`) and clear docstrings for all new classes and methods.
 3. **No Breaking Changes**: Maintain backward compatibility with the high-level `docureason` package interface (`DocuReasonPipeline`, `QueryService`).
-4. **Clean Code Style**: Format code using `black` and adhere to PEP 8 standards.
+4. **Clean Code Style**: Format code using `ruff` and adhere to PEP 8 standards.
+5. **CI Pipeline Pass**: Ensure all GitHub Actions CI checks (`.github/workflows/ci.yml`) pass on your pull request.

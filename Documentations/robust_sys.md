@@ -1,8 +1,8 @@
-# DocuReason v1.1.0 — RAG Failure Modes & System Robustness Technical Report
+# DocuReason v1.1.1 — RAG Failure Modes & System Robustness Technical Report
 
 ## Executive Summary
 
-This report presents a comprehensive audit of **DocuReason v1.1.0** against **16 major RAG failure categories**, encompassing over **70 specific sub-problems** and **14 hidden failure modes** commonly encountered in enterprise document retrieval systems.
+This report presents a comprehensive audit of **DocuReason v1.1.1** against **16 major RAG failure categories**, encompassing over **70 specific sub-problems** and **14 hidden failure modes** commonly encountered in enterprise document retrieval systems.
 
 With the latest implementation of:
 1. **Domain-Specific Embedding Selection** (`DenseIndexBuilder` presets for General, Biomedical, Legal, Financial, Code, and Multilingual domains).

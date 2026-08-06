@@ -1,4 +1,4 @@
-# DocuReason v1.1.0 — Comprehensive RAG Evaluation Framework & Mathematical Specification
+# DocuReason v1.1.1 — Comprehensive RAG Evaluation Framework & Mathematical Specification
 
 > **The Definitive Industry & Research Benchmark Manual**  
 > *An Authoritative Reference Guide for Evaluating Retrieval Accuracy, Computational Overhead, Resource Utilization, Scalability, Cost Efficiency, Context Quality, LLM Groundedness, and Pipeline Robustness across Enterprise Multimodal Document Collections.*

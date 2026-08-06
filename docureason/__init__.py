@@ -8,7 +8,7 @@ from src.tripath.evaluation.artifact_quality import ArtifactQualityAuditor
 from src.tripath.evaluation.dataset_exporter import DatasetExporter
 from src.tripath.attribution.nli_attributor import NLIFaithfulnessAttributor
 
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 
 __all__ = [
     "DocuReasonPipeline",

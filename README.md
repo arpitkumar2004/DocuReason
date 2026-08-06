@@ -1,4 +1,4 @@
-# DocuReason v1.1.0 — Enterprise-Grade Tri-Path Multimodal RAG Framework
+# DocuReason v1.1.1 — Enterprise-Grade Tri-Path Multimodal RAG Framework
 
 [![CI Pipeline](https://github.com/arpitkumar2004/DocuReason/actions/workflows/ci.yml/badge.svg)](https://github.com/arpitkumar2004/DocuReason/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/docureason-framework.svg)](https://pypi.org/project/docureason-framework/)
@@ -36,7 +36,8 @@
 9. [REST API Endpoint Reference](#rest-api-endpoint-reference)
 10. [Configuration Guide](#configuration-guide)
 11. [Running Tests & Validation](#running-tests--validation)
-12. [License](#license)
+12. [CI/CD & PyPI Release Engineering](#cicd--pypi-release-engineering)
+13. [License](#license)
 
 ---
 
@@ -44,7 +45,7 @@
 
 Enterprise document collections contain a mix of prose, multi-row financial tables, and embedded diagrams or charts. Standard RAG systems treat all content as plain text, leading to severe accuracy degradation on tabular data and visual figures.
 
-**DocuReason 1.1.0** addresses this via a **Tri-Path Multimodal RAG Architecture**:
+**DocuReason 1.1.1** addresses this via a **Tri-Path Multimodal RAG Architecture**:
 1. **Text Path**: Combines dense vector embeddings ([SentenceTransformers](https://www.sbert.net/) / [Qdrant](https://qdrant.tech/)) with sparse keyword retrieval ([BM25S](https://github.com/xhluca/bm25s)).
 2. **Table / Text-to-SQL Path**: Extracts tabular regions, serializes to Markdown/HTML/JSON schemas, and executes SQL aggregations using [DuckDB](https://duckdb.org/).
 3. **Vision / Chart Path**: Uses visual feature extractors ([ColPali](https://github.com/illuin-tech/colpali) / [CLIP](https://huggingface.co/docs/transformers/model_doc/clip)) and [BLIP-2](https://huggingface.co/docs/transformers/model_doc/blip-2) figure captioning for visual chart understanding.
@@ -58,12 +59,6 @@ Incoming queries are dynamically routed using soft probability scoring, retrieve
 * **Multi-Format Document Parsing**: Native support for `.pdf`, `.docx`, `.pptx`, `.xlsx`, `.html`, `.csv`, `.md`, and `.txt`.
 * **Deep Layout Segmentation**: Uses TableFormer + DocLayNet via [Docling](https://ds4sd.github.io/docling/) to separate text blocks, data tables, and figures.
 * **EasyOCR Fallback**: Automatic scan detection and optical character recognition for scanned PDFs or image-only document pages using [EasyOCR](https://github.com/JaidedAI/EasyOCR).
-* **Figure Captioning & Embeddings**: Visual caption generation using [BLIP-2](https://huggingface.co/docs/transformers/model_doc/blip-2) and feature encoding via CLIP / [ColPali](https://github.com/illuin-tech/colpali) engines.
-* **Intent-Based Query Routing**: Keyword match density scaling with sigmoid normalization for text, table, and vision paths.
-* **Reciprocal Rank Fusion & Reranking**: Late score fusion combining multi-path rankings with parent-child chunk expansion.
-* **Attribution & Claim Verification**: Sentence-level NLI entailment checking via [DeBERTa-v3](https://huggingface.co/cross-encoder/nli-deberta-v3-small) to verify citations and ground LLM answers.
-* **Production Evaluation Harness**: Built-in benchmark runners measuring Recall@K, nDCG@K, table TEDS accuracy, and ablation metrics.
-* **Fine-Tuning Exporter**: Export processed interaction traces directly into HuggingFace dataset formats for training custom RAG models.
 * **FastAPI Serving & Visualization Dashboard**: Production REST API endpoints and an interactive local HTML pipeline dashboard.
 
 ---
@@ -127,7 +122,7 @@ print(docureason.__version__)  # Output: 1.0.1
 To install in Kaggle or offline environments without internet access, upload the `.whl` package file as a Kaggle Dataset and install:
 
 ```python
-!pip install /kaggle/input/your-dataset-name/docureason_framework-1.0.1-py3-none-any.whl
+!pip install /kaggle/input/your-dataset-name/docureason_framework-1.1.1-py3-none-any.whl
 ```
 
 Or install directly from GitHub:
@@ -381,9 +376,38 @@ retrieval:
 DocuReason maintains a comprehensive test suite covering all modules:
 
 ```bash
-# Run pytest across all test modules
-python -m pytest -q
+# 1. Install development & testing extras
+pip install -e ".[dev]"
+
+# 2. Run pytest across all test modules
+python -m pytest -v
+
+# 3. Run Ruff code quality check
+ruff check .
+
+# 4. Verify local PyPI package build and metadata
+python scripts/verify_pypi_package.py
 ```
+
+---
+
+## CI/CD & PyPI Release Engineering
+
+DocuReason incorporates an enterprise-grade CI/CD pipeline powered by **GitHub Actions** and PyPI **OIDC Trusted Publishing**:
+
+- **Continuous Integration (`.github/workflows/ci.yml`)**:
+  - Triggers on all pushes and pull requests targeting `main`.
+  - Runs syntax linting (`ruff`), static type checking (`mypy`), and vulnerability audits (`pip-audit`).
+  - Executes unit and integration test matrix across **Python 3.10, 3.11, and 3.12**.
+  - Validates package metadata using PyPA `build` and `twine check --strict`.
+- **PyPI Release Pipeline (`.github/workflows/release-pypi.yml`)**:
+  - Automatically triggered upon creating a published release on GitHub.
+  - Deploys `docureason-framework` directly to PyPI using secure OIDC token authentication.
+  - Automatically attaches `.tar.gz` and `.whl` distribution binaries to the GitHub Release.
+- **Automated Maintenance (`.github/dependabot.yml`)**:
+  - Checks weekly for dependency upgrades across Python packages and GitHub Actions.
+
+For a full technical architectural deep dive into the CI/CD pipeline, see the [CI/CD Specification Document](Documentations/cicd_pipeline.md).
 
 ---
 

@@ -1,4 +1,4 @@
-# DocuReason v1.1.0 — Multimodal Benchmark Dataset Evaluation Specification
+# DocuReason v1.1.1 — Multimodal Benchmark Dataset Evaluation Specification
 
 > **The Authoritative Benchmark Dataset & Testing Specification Manual**  
 > *A Comprehensive Reference Guide Detailing Dataset Contents, Subsystem Mappings, Mathematical Formulations, Automated Metric Counts, Kaggle GPU Time Estimates, and Framework Code Implementations.*
@@ -9,7 +9,7 @@
 
 Evaluating an enterprise-grade multimodal Retrieval-Augmented Generation (RAG) framework requires testing against diverse, real-world document collections. Single-domain datasets (e.g., plain-text news articles) fail to stress-test complex RAG subsystems such as Text-to-SQL execution, OCR rendering, or chart figure understanding.
 
-**DocuReason v1.1.0** features an automated benchmark dataset evaluation suite integrated into [`src/tripath/evaluation/benchmark_dataset.py`](file:///d:/DocuReason/src/tripath/evaluation/benchmark_dataset.py) and [`src/tripath/evaluation/eval_harness.py`](file:///d:/DocuReason/src/tripath/evaluation/eval_harness.py).
+**DocuReason v1.1.1** features an automated benchmark dataset evaluation suite integrated into [`src/tripath/evaluation/benchmark_dataset.py`](file:///d:/DocuReason/src/tripath/evaluation/benchmark_dataset.py) and [`src/tripath/evaluation/eval_harness.py`](file:///d:/DocuReason/src/tripath/evaluation/eval_harness.py).
 
 This specification details all **6 Primary Benchmark Datasets** that form the system testing suite, explaining:
 1. **Dataset Contents & Modality Breakdown**
@@ -237,7 +237,7 @@ The DocuReason framework **completely automates** dataset loading, preprocessing
 
 ```python
 # ==============================================================================
-# DocuReason v1.1.0 — Automated Kaggle Benchmark Evaluation Notebook Cell
+# DocuReason v1.1.1 — Automated Kaggle Benchmark Evaluation Notebook Cell
 # ==============================================================================
 
 # 1. Install framework in Kaggle environment
@@ -248,7 +248,7 @@ from src.tripath.evaluation.benchmark_dataset import BenchmarkDataset
 from src.tripath.evaluation.eval_harness import EvaluationHarness
 
 print("=" * 70)
-print("DocuReason v1.1.0 — Kaggle Multimodal Dataset Evaluation Suite")
+print("DocuReason v1.1.1 — Kaggle Multimodal Dataset Evaluation Suite")
 print("=" * 70)
 
 # 2. Build multi-modal benchmark suite (FinQA, TAT-QA, DocVQA, ChartQA, WikiTable)

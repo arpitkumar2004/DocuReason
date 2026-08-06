@@ -1,5 +1,5 @@
 # ==============================================================================
-# DocuReason v1.1.0 — Enterprise Tri-Path Multimodal RAG Configuration File
+# DocuReason v1.1.1 — Enterprise Tri-Path Multimodal RAG Configuration File
 # ==============================================================================
 # Master configuration file located in the centralized `configs/` directory.
 # Overrides can be applied via:
