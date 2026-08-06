@@ -1,0 +1,65 @@
+name: PyPI Publishing Pipeline
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (Build & verify only, do not upload)"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-publish:
+    name: Build & Publish to PyPI
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write      # Required for PyPI OIDC Trusted Publishing
+      contents: write      # Required to upload assets to GitHub Release
+
+    environment:
+      name: pypi
+      url: https://pypi.org/p/docureason-framework
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install build tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine check-wheel-contents
+
+      - name: Build Source and Wheel Distributions
+        run: python -m build
+
+      - name: Verify package metadata with Twine
+        run: twine check --strict dist/*
+
+      - name: Verify Wheel Contents
+        run: check-wheel-contents dist/*.whl
+
+      - name: Publish Package to PyPI (OIDC Trusted Publisher)
+        if: ${{ !inputs.dry_run }}
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://upload.pypi.org/legacy/
+          skip-existing: true
+
+      - name: Upload Artifacts to GitHub Release
+        if: ${{ github.event_name == 'release' && !inputs.dry_run }}
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

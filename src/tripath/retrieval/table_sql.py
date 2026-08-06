@@ -88,7 +88,8 @@ def log_sql_failure(query: str, generated_sql: str, error: str, table_data: Dict
 class TableSQLRetriever:
     """Advanced DuckDB SQL execution engine with typed schemas and self-consistency."""
 
-    def __init__(self) -> None:
+    def __init__(self, config: Optional[Any] = None) -> None:
+        self.config = config
         self._duckdb_available: Optional[bool] = None
 
     def _has_duckdb(self) -> bool:

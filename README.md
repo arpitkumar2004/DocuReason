@@ -1,10 +1,10 @@
 # DocuReason v1.1.0 — Enterprise-Grade Tri-Path Multimodal RAG Framework
 
+[![CI Pipeline](https://github.com/arpitkumar2004/DocuReason/actions/workflows/ci.yml/badge.svg)](https://github.com/arpitkumar2004/DocuReason/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/docureason-framework.svg)](https://pypi.org/project/docureason-framework/)
-[![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)]()
-[![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 **DocuReason** (`docureason-framework`) is an enterprise-grade, multimodal Retrieval-Augmented Generation (RAG) framework for Python. Built for multi-format enterprise document processing, DocuReason ingests, parses, segments, indexes, routes, retrieves, synthesizes grounded answers, and evaluates document corpora across text, tabular, and visual modalities.
 
