@@ -26,7 +26,7 @@ from src.tripath.utils import (
 logger = setup_logger("docureason.pipeline")
 
 
-class Phase1Pipeline:
+class DocuReasonPipeline:
     """Build a corpus and index artifact from documents using vision-based layout parsing.
 
     Processing order for each document
@@ -45,7 +45,7 @@ class Phase1Pipeline:
         self.input_dir = Path(input_dir)
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
-        logger.info("Initializing Phase1Pipeline: input_dir=%s, output_dir=%s", self.input_dir, self.output_dir)
+        logger.info("Initializing DocuReasonPipeline: input_dir=%s, output_dir=%s", self.input_dir, self.output_dir)
 
         self.identity = IdentityManager()
         self.artifact_writer = ArtifactWriter(self.output_dir)
@@ -66,7 +66,7 @@ class Phase1Pipeline:
         self.dense_index = DenseIndexBuilder(output_dir=self.output_dir)
         self.sparse_index = BM25SIndexBuilder(output_dir=self.output_dir)
 
-    @trace_pipeline_stage("Phase 1 Document Ingestion & Indexing Pipeline")
+    @trace_pipeline_stage("Document Ingestion & Indexing Pipeline")
     def run(self) -> Dict[str, object]:
         documents: List[Dict[str, object]] = []
         chunks: List[Dict[str, object]] = []
@@ -179,7 +179,7 @@ class Phase1Pipeline:
     # Index construction
     # ------------------------------------------------------------------
 
-    @trace_execution(level=logging.INFO, name="Phase1Pipeline._build_indices")
+    @trace_execution(level=logging.INFO, name="DocuReasonPipeline._build_indices")
     def _build_indices(self, chunks: List[Dict[str, Any]]) -> None:
         """Build FAISS and BM25S indices from the chunk list.
 
@@ -223,7 +223,7 @@ class Phase1Pipeline:
     # Region construction — replaces the old heuristic _segment_regions()
     # ------------------------------------------------------------------
 
-    @trace_execution(level=logging.INFO, name="Phase1Pipeline._build_regions")
+    @trace_execution(level=logging.INFO, name="DocuReasonPipeline._build_regions")
     def _build_regions(self, path: Path) -> List[Region]:
         """Parse *path* into typed regions using the vision pipeline.
 
@@ -398,3 +398,8 @@ class Phase1Pipeline:
         if region_type == "figure":
             return "vision"
         return "text"
+
+
+# Backward compatibility alias
+Phase1Pipeline = DocuReasonPipeline
+

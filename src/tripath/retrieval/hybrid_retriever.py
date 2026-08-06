@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 from src.tripath.utils import get_logger, trace_execution
+from src.tripath.config import DocuReasonConfig
 from ..ingestion.schema import Document
 from ..router.configurable_router import ConfigurableRouter
 from .text_retrieval import TextRetrieval
@@ -19,15 +20,16 @@ logger = get_logger(__name__)
 class HybridRetriever:
     """Hybrid Retriever with Step 2 Parent-Child Expansion and Step 4 Agent Reranking."""
 
-    def __init__(self) -> None:
-        self.router = ConfigurableRouter()
+    def __init__(self, config: Optional[DocuReasonConfig] = None) -> None:
+        self.config = config or DocuReasonConfig.load_preset("balanced")
+        self.router = ConfigurableRouter(config=self.config)
         self.text_retrieval = TextRetrieval()
         self.table_retrieval = TableRetrieval()
         self.vision_retrieval = VisionRetrieval()
         self.table_sql_retrieval = TableSQLRetriever()
         self.chart_module = ChartUnderstandingModule()
-        self.fuser = Fuser(rrf_k=60)
-        self.ranker = Ranker()
+        self.fuser = Fuser(rrf_k=self.config.retrieval.rrf_k)
+        self.ranker = Ranker(config=self.config)
 
     @trace_execution(logger=logger)
     def retrieve(self, query: str, documents: List[Document]) -> List[Dict[str, Any]]:
@@ -69,4 +71,5 @@ class HybridRetriever:
 
         # Step 4: Cross-Encoder Agent Reranking
         reranked = self.ranker.rank(query, expanded_candidates)
-        return reranked
+        top_k = self.config.reranker.final_top_k
+        return reranked[:top_k] if top_k > 0 else reranked

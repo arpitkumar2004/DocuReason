@@ -85,10 +85,10 @@ def test_cross_encoder_ranker():
     assert reranked[0]["id"] == "c2"
 
 
-def test_hybrid_retriever_phase2_flow():
+def test_hybrid_retriever_end_to_end_flow():
     retriever = HybridRetriever()
     doc = Document(
-        id="doc-phase2-test",
+        id="doc-retrieval-test",
         source="test.pdf",
         title="Quarterly Report",
         regions=[
@@ -105,5 +105,5 @@ def test_hybrid_retriever_phase2_flow():
 
     results = retriever.retrieve("revenue by region", [doc])
     assert len(results) >= 1
-    assert results[0]["document_id"] == "doc-phase2-test"
+    assert results[0]["document_id"] == "doc-retrieval-test"
     assert "rank_score" in results[0]

@@ -1,0 +1,23 @@
+# Preset Profile: High Throughput / Low Latency
+preset: "latency_optimized"
+output_dir: "artifacts"
+
+indexing:
+  index_type: "hnsw"
+  hnsw_m: 16
+  hnsw_ef_construction: 100
+  hnsw_ef_search: 32
+
+retrieval:
+  top_k_text: 10
+  top_k_table: 10
+  top_k_vision: 10
+
+reranker:
+  final_top_k: 3
+
+generation:
+  max_context_tokens: 2048
+
+attribution:
+  enable_nli: false

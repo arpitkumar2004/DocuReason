@@ -4,8 +4,8 @@ from src.tripath.evaluation.ablation import AblationStudy
 from src.tripath.evaluation.benchmark_runner import BenchmarkRunner
 
 
-def test_phase4_benchmark_and_ablation(tmp_path):
-    runner = BenchmarkRunner(input_dir=Path("samples"), output_dir=tmp_path / "phase4-output")
+def test_benchmark_and_ablation(tmp_path):
+    runner = BenchmarkRunner(input_dir=Path("samples"), output_dir=tmp_path / "eval-output")
     payload = runner.run_suite(["revenue by region", "adoption chart"])
 
     assert payload["query_count"] == 2

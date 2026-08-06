@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from docureason.pipeline import Phase1Pipeline
+from docureason.pipeline import DocuReasonPipeline
 from src.tripath.evaluation.mlflow_tracker import MLflowTracker
 from src.tripath.serving.query_service import QueryService
 
@@ -10,7 +10,7 @@ def test_pipeline_artifacts_and_query_answer(tmp_path):
     sample_dir = Path(__file__).resolve().parents[2] / "samples"
     output_dir = tmp_path / "artifact-run"
 
-    result = Phase1Pipeline(input_dir=sample_dir, output_dir=output_dir).run()
+    result = DocuReasonPipeline(input_dir=sample_dir, output_dir=output_dir).run()
 
     assert result["document_count"] >= 2
     manifest_path = output_dir / "manifest.json"

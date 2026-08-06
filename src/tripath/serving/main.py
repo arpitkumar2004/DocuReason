@@ -16,7 +16,7 @@ from src.tripath.retrieval.table_sql import TableSQLRetriever
 from src.tripath.generation.generate import GenerationModule
 from src.tripath.attribution.nli_attributor import NLIFaithfulnessAttributor
 from src.tripath.ingestion.docling_wrapper import DoclingWrapper
-from docureason.pipeline import Phase1Pipeline
+from docureason.pipeline import DocuReasonPipeline
 from .async_query_service import AsyncQueryService
 from .query_service import QueryService
 from ..evaluation.benchmark_dataset import BenchmarkDataset
@@ -66,7 +66,7 @@ def status_endpoint() -> Dict[str, str]:
     return {
         "status": "ready",
         "service": "DocuReason Tri-Path Multimodal RAG",
-        "version": "Phase 1 + Phase 2",
+        "version": "1.1.0",
     }
 
 
@@ -167,7 +167,7 @@ def ingest_endpoint(payload: IngestPayload) -> Dict[str, Any]:
     input_dir = payload.input_dir or "samples"
     output_dir = payload.output_dir or "artifacts/dashboard_run"
     try:
-        pipeline = Phase1Pipeline(input_dir=input_dir, output_dir=output_dir)
+        pipeline = DocuReasonPipeline(input_dir=input_dir, output_dir=output_dir)
         report = pipeline.run()
         _CACHED_DOCUMENTS = None  # Reset document cache after new ingestion
         return {"status": "success", "report": report}
@@ -177,8 +177,8 @@ def ingest_endpoint(payload: IngestPayload) -> Dict[str, Any]:
 
 @app.post("/evaluate")
 def evaluate_endpoint(payload: EvaluatePayload) -> Dict[str, Any]:
-    query_service = QueryService(input_dir=ROOT / "samples", output_dir=ROOT / "artifacts/phase2")
-    harness = EvaluationHarness(output_dir=ROOT / "artifacts/phase2")
+    query_service = QueryService(input_dir=ROOT / "samples", output_dir=ROOT / "artifacts/serving")
+    harness = EvaluationHarness(output_dir=ROOT / "artifacts/serving")
     response = query_service.query(payload.query)
     metrics = harness.evaluate(payload.query, response["results"], relevant_ids=payload.relevant_ids or [])
     return {"query": payload.query, "metrics": metrics, "results": response["results"]}

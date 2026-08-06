@@ -25,6 +25,7 @@ Usage
 from __future__ import annotations
 
 import logging
+import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -110,6 +111,9 @@ class DoclingLayoutParser:
 
     def _run_docling(self, path: Path) -> Any:
         """Run Docling with deep layout options and return the ConversionResult."""
+        if os.getenv("DOCUREASON_DISABLE_DOCLING") == "1":
+            return None
+
         import gc
         from docling.document_converter import DocumentConverter, PdfFormatOption
         from docling.datamodel.pipeline_options import PdfPipelineOptions
@@ -117,7 +121,17 @@ class DoclingLayoutParser:
 
         pipeline_options = PdfPipelineOptions()
         pipeline_options.do_ocr = self.do_ocr
-        pipeline_options.do_table_structure = True   # Enable TableFormer
+
+        # Check CUDA availability to prevent PyTorch safetensors mmap access violations on CPU
+        has_cuda = False
+        try:
+            import torch
+            has_cuda = torch.cuda.is_available()
+        except Exception:
+            pass
+
+        enable_table_structure = (os.getenv("DOCUREASON_FAST_PARSE") != "1") and (has_cuda or os.getenv("DOCUREASON_ENABLE_CPU_TABLEFORMER") == "1")
+        pipeline_options.do_table_structure = enable_table_structure
 
         # Set single-page batching and thread limits for memory safety
         for field, value in [
@@ -133,12 +147,12 @@ class DoclingLayoutParser:
             if hasattr(pipeline_options, field):
                 setattr(pipeline_options, field, value)
 
-        converter = DocumentConverter(
-            format_options={
-                InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)
-            }
-        )
         try:
+            converter = DocumentConverter(
+                format_options={
+                    InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)
+                }
+            )
             res = converter.convert(str(path))
             gc.collect()
             return res

@@ -1,0 +1,119 @@
+# ==============================================================================
+# DocuReason v1.1.0 — Enterprise Tri-Path Multimodal RAG Configuration File
+# ==============================================================================
+# Master configuration file located in the centralized `configs/` directory.
+# Overrides can be applied via:
+# 1. Preset Profiles ('quality_max', 'balanced', 'latency_optimized', 'low_resource_cpu')
+# 2. Environment Variables ('DOCUREASON_SECTION_KEY')
+# 3. Dynamic REST API JSON payloads per query request
+
+# Selected Production Preset Profile
+preset: "balanced"
+
+# Global Output & Artifact Storage Directory
+output_dir: "artifacts"
+
+# ------------------------------------------------------------------------------
+# 1. Ingestion & Layout Parsing Layer
+# ------------------------------------------------------------------------------
+ingestion:
+  ocr_fallback_char_threshold: 50   # Trigger EasyOCR if page text count < threshold
+  page_batch_size: 1                # Page processing batch size for Docling
+  image_rendering_dpi: 150          # Image resolution for OCR and vision rendering
+  enable_ocr_fallback: true         # Automatic OCR fallback for scanned pages
+  child_chunk_size: 256             # Dense vector search chunk token target
+  parent_region_size: 1024          # Parent region expansion token target
+  chunk_overlap: 32                 # Sentence chunk token overlap
+
+# ------------------------------------------------------------------------------
+# 2. Multi-Modal Indexing & FAISS HNSW Layer
+# ------------------------------------------------------------------------------
+indexing:
+  domain: "general"                 # Presets: 'general', 'biomedical', 'legal', 'financial', 'code', 'multilingual'
+  model_name: null                  # HuggingFace model override (if null, uses domain preset)
+  index_type: "hnsw"                # FAISS index type: 'flat' (exact inner-product) or 'hnsw' (approximate graph)
+  hnsw_m: 32                        # HNSW bidirectional links per node (16-64)
+  hnsw_ef_construction: 200         # HNSW search depth during graph construction (100-400)
+  hnsw_ef_search: 64                # HNSW search depth during online query execution (32-128)
+  bm25_k1: 1.5                      # BM25 term frequency saturation parameter
+  bm25_b: 0.75                      # BM25 document length normalization parameter
+
+# ------------------------------------------------------------------------------
+# 3. Intent-Based Query Router Layer
+# ------------------------------------------------------------------------------
+router:
+  threshold: 0.35                   # Modality activation sigmoid threshold (0.0 - 1.0)
+  sigmoid_lambda: 1.2               # Keyword density sigmoid scaling multiplier
+  modality_keywords:
+    text:
+      - "revenue"
+      - "growth"
+      - "report"
+      - "overview"
+      - "company"
+      - "margin"
+      - "statement"
+      - "financial"
+      - "narrative"
+    table:
+      - "table"
+      - "region"
+      - "quarter"
+      - "by"
+      - "revenue"
+      - "sum"
+      - "average"
+      - "total"
+      - "rate"
+      - "percent"
+    vision:
+      - "chart"
+      - "figure"
+      - "image"
+      - "graph"
+      - "adoption"
+      - "bar"
+      - "pie"
+      - "diagram"
+      - "plot"
+      - "trend"
+
+# ------------------------------------------------------------------------------
+# 4. Hybrid Tri-Path Retrieval & Late Fusion Layer
+# ------------------------------------------------------------------------------
+retrieval:
+  top_k_text: 20                    # Initial candidate pool retrieved from Text path
+  top_k_table: 20                   # Initial candidate pool retrieved from Table path
+  top_k_vision: 20                  # Initial candidate pool retrieved from Vision path
+  rrf_k: 60                         # Reciprocal Rank Fusion smoothing constant (k=60)
+  enable_dynamic_router_weights: true # Dynamic weight allocation via router probabilities
+
+# ------------------------------------------------------------------------------
+# 5. Cross-Encoder Reranking & Context Layer
+# ------------------------------------------------------------------------------
+reranker:
+  model_name: "cross-encoder/ms-marco-MiniLM-L-6-v2" # Cross-Encoder model path
+  short_heading_char_threshold: 45   # Character threshold for standalone heading penalty
+  heading_penalty_multiplier: 0.5   # Penalty factor applied to TOC/heading-only chunks
+  final_top_k: 5                    # Final reranked candidates sent to LLM prompt
+  enable_parent_expansion: true     # Expand child chunks to 1024-token parent regions
+
+# ------------------------------------------------------------------------------
+# 6. Multimodal Generation & Context Budget Layer
+# ------------------------------------------------------------------------------
+generation:
+  backend: "auto"                   # Options: 'auto', 'slm', 'cloud', 'template'
+  model_name_or_path: "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"
+  max_context_tokens: 4096          # Context window token budget limit
+  truncation_strategy: "smart_relevance" # Truncation mode for multi-document evidence
+  temperature: 0.1                  # Generation sampling temperature
+  max_new_tokens: 512               # Max tokens generated in response
+
+# ------------------------------------------------------------------------------
+# 7. Sentence-Level NLI Faithfulness Attribution Layer
+# ------------------------------------------------------------------------------
+attribution:
+  nli_model_name: "cross-encoder/nli-deberta-v3-small" # NLI DeBERTa entailment model
+  entailment_threshold: 0.5         # Minimum probability to classify claim as entailed
+  flag_threshold_precision: 0.5     # Response precision threshold to flag 'needs_review'
+  enable_nli: true                  # Enable automated hallucination verification pass

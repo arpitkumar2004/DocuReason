@@ -1,5 +1,7 @@
-strategy: "weighted"
-weights:
-  text: 0.5
-  table: 0.3
-  vision: 0.2
+# Hybrid Retrieval & Reciprocal Rank Fusion (RRF) Layer Configuration Profile
+retrieval:
+  top_k_text: 20
+  top_k_table: 20
+  top_k_vision: 20
+  rrf_k: 60
+  enable_dynamic_router_weights: true

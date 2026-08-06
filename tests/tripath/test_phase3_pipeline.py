@@ -3,8 +3,8 @@ from pathlib import Path
 from src.tripath.serving.async_query_service import AsyncQueryService
 
 
-def test_phase3_pipeline_components(tmp_path):
-    service = AsyncQueryService(input_dir=Path("samples"), output_dir=tmp_path / "phase3-output")
+def test_async_query_service_components(tmp_path):
+    service = AsyncQueryService(input_dir=Path("samples"), output_dir=tmp_path / "serving-output")
     response = service.run("revenue by region")
 
     assert response["answer"]

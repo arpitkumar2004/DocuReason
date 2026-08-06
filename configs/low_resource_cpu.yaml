@@ -1,0 +1,22 @@
+# Preset Profile: Low Resource CPU / Embedded Deployment
+preset: "low_resource_cpu"
+output_dir: "artifacts"
+
+indexing:
+  domain: "general"
+  index_type: "flat"
+
+retrieval:
+  top_k_text: 10
+  top_k_table: 10
+  top_k_vision: 10
+
+reranker:
+  final_top_k: 3
+
+generation:
+  backend: "template"
+  max_context_tokens: 1500
+
+attribution:
+  enable_nli: false

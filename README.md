@@ -1,71 +1,74 @@
-# DocuReason v1.0.0 — Enterprise-Grade Tri-Path Multimodal RAG Framework
+# DocuReason v1.1.0 — Enterprise-Grade Tri-Path Multimodal RAG Framework
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/arpitkumar2004/DocuReason)
+[![PyPI](https://img.shields.io/pypi/v/docureason-framework.svg)](https://pypi.org/project/docureason-framework/)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)]()
+[![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-**DocuReason** is an enterprise-grade, multimodal Retrieval-Augmented Generation (RAG) framework for Python. Built for complex multi-format enterprise document processing, DocuReason ingests, parses, segments, indexes, routes, retrieves, synthesizes grounded answers, and evaluates document corpora across text, tabular, and visual modalities.
+**DocuReason** (`docureason-framework`) is an enterprise-grade, multimodal Retrieval-Augmented Generation (RAG) framework for Python. Built for multi-format enterprise document processing, DocuReason ingests, parses, segments, indexes, routes, retrieves, synthesizes grounded answers, and evaluates document corpora across text, tabular, and visual modalities.
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
-1. [Overview](#-overview)
-2. [Key Features](#-key-features)
-3. [Architecture](#-architecture)
-4. [Installation](#-installation)
-5. [Quick Start](#-quick-start)
+1. [Overview](#overview)
+2. [Key Features](#key-features)
+3. [Architecture](#architecture)
+4. [Installation](#installation)
+   - [PyPI Installation](#pypi-installation)
+   - [Install from Source](#install-from-source)
+   - [Kaggle & Offline Notebook Installation](#kaggle--offline-notebook-installation)
+5. [Quick Start](#quick-start)
    - [Python API](#1-python-api)
    - [CLI Commands](#2-cli-commands)
    - [FastAPI REST Server](#3-fastapi-rest-server)
    - [Interactive Web Dashboard](#4-interactive-web-dashboard)
-6. [Standard Library API Reference](#-standard-library-api-reference)
+6. [Underlying Open-Source Libraries & Documentation Links](#underlying-open-source-libraries--documentation-links)
+7. [Standard Library API Reference](#standard-library-api-reference)
    - [`docureason.pipeline`](#docureasonpipeline)
-   - [`tripath.ingestion`](#tripathingestion)
-   - [`tripath.indexing`](#tripathindexing)
-   - [`tripath.router`](#tripathrouter)
-   - [`tripath.retrieval`](#tripathretrieval)
-   - [`tripath.fusion`](#tripathfusion)
-   - [`tripath.generation`](#tripathgeneration)
-   - [`tripath.attribution`](#tripathattribution)
-   - [`tripath.evaluation`](#tripathevaluation)
-   - [`tripath.serving`](#tripathserving)
-7. [REST API Endpoint Reference](#-rest-api-endpoint-reference)
-8. [Configuration Guide](#-configuration-guide)
-9. [Running Tests & Validation](#-running-tests--validation)
-10. [License](#-license)
+   - [`docureason.ingestion`](#docureasoningestion)
+   - [`docureason.serving`](#docureasonserving)
+   - [`src.tripath.retrieval`](#srctripathretrieval)
+   - [`src.tripath.attribution`](#srctripathattribution)
+   - [`src.tripath.evaluation`](#srctripathevaluation)
+8. [Fine-Tuning Dataset Exporter](#fine-tuning-dataset-exporter)
+9. [REST API Endpoint Reference](#rest-api-endpoint-reference)
+10. [Configuration Guide](#configuration-guide)
+11. [Running Tests & Validation](#running-tests--validation)
+12. [License](#license)
 
 ---
 
-## 🌐 Overview
+## Overview
 
 Enterprise document collections contain a mix of prose, multi-row financial tables, and embedded diagrams or charts. Standard RAG systems treat all content as plain text, leading to severe accuracy degradation on tabular data and visual figures.
 
-**DocuReason 1.0.0** addresses this via a **Tri-Path Multimodal RAG Architecture**:
-1. **Text Path**: Combines dense vector embeddings (SentenceTransformers / Qdrant) with sparse keyword retrieval (BM25S).
-2. **Table / Text-to-SQL Path**: Extracts tabular regions, serializes to Markdown/HTML/JSON schemas, and executes SQL aggregations using DuckDB.
-3. **Vision / Chart Path**: Uses visual feature extractors (ColPali / CLIP) and BLIP-2 figure captioning for visual chart understanding.
+**DocuReason 1.1.0** addresses this via a **Tri-Path Multimodal RAG Architecture**:
+1. **Text Path**: Combines dense vector embeddings ([SentenceTransformers](https://www.sbert.net/) / [Qdrant](https://qdrant.tech/)) with sparse keyword retrieval ([BM25S](https://github.com/xhluca/bm25s)).
+2. **Table / Text-to-SQL Path**: Extracts tabular regions, serializes to Markdown/HTML/JSON schemas, and executes SQL aggregations using [DuckDB](https://duckdb.org/).
+3. **Vision / Chart Path**: Uses visual feature extractors ([ColPali](https://github.com/illuin-tech/colpali) / [CLIP](https://huggingface.co/docs/transformers/model_doc/clip)) and [BLIP-2](https://huggingface.co/docs/transformers/model_doc/blip-2) figure captioning for visual chart understanding.
 
 Incoming queries are dynamically routed using soft probability scoring, retrieved hits are merged via Reciprocal Rank Fusion (RRF) and Cross-Encoder reranking, and outputs undergo NLI-based attribution to guarantee zero hallucinations.
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 * **Multi-Format Document Parsing**: Native support for `.pdf`, `.docx`, `.pptx`, `.xlsx`, `.html`, `.csv`, `.md`, and `.txt`.
-* **Deep Layout Segmentation**: Uses TableFormer + DocLayNet (via Docling) to separate text blocks, data tables, and figures.
-* **EasyOCR Fallback**: Automatic scan detection and optical character recognition for scanned PDFs or image-only document pages.
-* **Figure Captioning & Embeddings**: Visual caption generation using BLIP-2 and feature encoding via CLIP / ColPali engines.
+* **Deep Layout Segmentation**: Uses TableFormer + DocLayNet via [Docling](https://ds4sd.github.io/docling/) to separate text blocks, data tables, and figures.
+* **EasyOCR Fallback**: Automatic scan detection and optical character recognition for scanned PDFs or image-only document pages using [EasyOCR](https://github.com/JaidedAI/EasyOCR).
+* **Figure Captioning & Embeddings**: Visual caption generation using [BLIP-2](https://huggingface.co/docs/transformers/model_doc/blip-2) and feature encoding via CLIP / [ColPali](https://github.com/illuin-tech/colpali) engines.
 * **Intent-Based Query Routing**: Keyword match density scaling with sigmoid normalization for text, table, and vision paths.
 * **Reciprocal Rank Fusion & Reranking**: Late score fusion combining multi-path rankings with parent-child chunk expansion.
-* **Attribution & Claim Verification**: Sentence-level NLI entailment checking to verify citations and ground LLM answers.
-* **Production Evaluation Harness**: Built-in benchmark runners measuring Recall@K, nDCG@K, table accuracy, and ablation metrics.
+* **Attribution & Claim Verification**: Sentence-level NLI entailment checking via [DeBERTa-v3](https://huggingface.co/cross-encoder/nli-deberta-v3-small) to verify citations and ground LLM answers.
+* **Production Evaluation Harness**: Built-in benchmark runners measuring Recall@K, nDCG@K, table TEDS accuracy, and ablation metrics.
+* **Fine-Tuning Exporter**: Export processed interaction traces directly into HuggingFace dataset formats for training custom RAG models.
 * **FastAPI Serving & Visualization Dashboard**: Production REST API endpoints and an interactive local HTML pipeline dashboard.
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```mermaid
 flowchart TD
@@ -92,12 +95,15 @@ flowchart TD
 
 ---
 
-## 📦 Installation
+## Installation
 
-### Prerequisites
-* Python >= 3.10
-* PyTorch >= 2.0.0
-* Recommended: CUDA-capable GPU (for accelerated vision/SLM inference)
+### PyPI Installation
+
+Install the official published package from PyPI:
+
+```bash
+pip install docureason-framework
+```
 
 ### Install from Source
 
@@ -109,39 +115,53 @@ cd DocuReason
 pip install -e .
 ```
 
-Verify the installation:
+Verify installation:
 
 ```python
 import docureason
-print(docureason.__version__)  # Output: 1.0.0
+print(docureason.__version__)  # Output: 1.0.1
+```
+
+### Kaggle & Offline Notebook Installation
+
+To install in Kaggle or offline environments without internet access, upload the `.whl` package file as a Kaggle Dataset and install:
+
+```python
+!pip install /kaggle/input/your-dataset-name/docureason_framework-1.0.1-py3-none-any.whl
+```
+
+Or install directly from GitHub:
+
+```python
+!pip install git+https://github.com/arpitkumar2004/DocuReason.git
 ```
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Python API
 
-#### Ingestion and Indexing Pipeline
+#### High-Level Ingestion and Indexing Pipeline
 ```python
-from docureason import Phase1Pipeline
+from docureason import DocuReasonPipeline
 
-# Initialize the pipeline
-pipeline = Phase1Pipeline(
+# Initialize the offline ingestion pipeline
+pipeline = DocuReasonPipeline(
     input_dir="samples",
     output_dir="artifacts/my_index"
 )
 
-# Run document parsing, segmentation, and index generation
+# Run document parsing, layout segmentation, table serialization, and index generation
 report = pipeline.run()
 print(f"Processed {report['document_count']} documents and {report['chunk_count']} chunks.")
 ```
 
-#### Query Execution & Answer Generation
+#### Online Query Execution & Answer Serving
 ```python
-from src.tripath.serving.query_service import QueryService
+from docureason.serving import QueryService
 
-# Initialize the end-to-end query service
+# Initialize the end-to-end serving query engine
 service = QueryService(
     input_dir="samples",
     output_dir="artifacts/my_index"
@@ -164,7 +184,7 @@ DocuReason provides built-in command-line interfaces:
 python -m docureason --input-dir samples --output-dir artifacts/test_run
 
 # Or run via script
-python scripts/run_phase_pipeline.py
+python scripts/run_pipeline.py
 ```
 
 ### 3. FastAPI REST Server
@@ -186,190 +206,91 @@ Open browser at: `http://127.0.0.1:8001`
 
 ---
 
-## 📚 Standard Library API Reference
+## Underlying Open-Source Libraries & Documentation Links
 
-Below is the complete API reference for all core modules in the `docureason` and `tripath` packages.
+DocuReason builds upon industry-standard machine learning and data processing libraries. Below is the mapping of components to their official documentation:
+
+| Component / Engine | Purpose in DocuReason | Official Library Documentation | Primary Function / Class Used |
+| :--- | :--- | :--- | :--- |
+| **Docling** | Deep document layout parsing & TableFormer | [Docling Documentation](https://ds4sd.github.io/docling/) | [`DocumentConverter`](https://ds4sd.github.io/docling/concepts/architecture/) |
+| **DuckDB** | In-memory Text-to-SQL tabular execution | [DuckDB Python API](https://duckdb.org/docs/api/python/overview.html) | [`duckdb.connect()`](https://duckdb.org/docs/api/python/overview.html#querying) |
+| **Qdrant** | High-performance vector index storage | [Qdrant Documentation](https://qdrant.tech/documentation/) | [`QdrantClient`](https://qdrant.tech/documentation/concepts/collections/) |
+| **BM25S** | Fast sparse lexical search engine | [BM25S GitHub](https://github.com/xhluca/bm25s) | [`bm25s.BM25`](https://github.com/xhluca/bm25s#quick-start) |
+| **SentenceTransformers** | Dense vector text embeddings | [SentenceTransformers Docs](https://www.sbert.net/) | [`SentenceTransformer.encode()`](https://www.sbert.net/docs/package_reference/SentenceTransformer.html) |
+| **Hugging Face Transformers** | Cross-Encoder reranking & NLI entailment | [Transformers Documentation](https://huggingface.co/docs/transformers/) | [`AutoModelForSequenceClassification`](https://huggingface.co/docs/transformers/main_classes/model) |
+| **BLIP-2** | Image & chart visual captioning | [BLIP-2 Model Docs](https://huggingface.co/docs/transformers/model_doc/blip-2) | [`Blip2ForConditionalGeneration`](https://huggingface.co/docs/transformers/model_doc/blip-2) |
+| **ColPali & CLIP** | Multi-modal visual feature extraction | [ColPali Repository](https://github.com/illuin-tech/colpali) | [`ColPaliForRetrieval`](https://github.com/illuin-tech/colpali) |
+| **EasyOCR** | Scanned document OCR fallback engine | [EasyOCR Documentation](https://github.com/JaidedAI/EasyOCR) | [`easyocr.Reader`](https://github.com/JaidedAI/EasyOCR#usage) |
+| **FastAPI** | Asynchronous HTTP REST microservice | [FastAPI Documentation](https://fastapi.tiangolo.com/) | [`FastAPI()`](https://fastapi.tiangolo.com/tutorial/first-steps/) |
+| **MLflow** | Metrics logging & experiment tracking | [MLflow Documentation](https://mlflow.org/docs/latest/index.html) | [`mlflow.log_metrics()`](https://mlflow.org/docs/latest/python_api/mlflow.html#mlflow.log_metrics) |
 
 ---
+
+## Standard Library API Reference
 
 ### `docureason.pipeline`
 
-#### `class docureason.pipeline.Phase1Pipeline(input_dir: str | Path, output_dir: str | Path)`
-The primary high-level ingestion pipeline orchestrator. Standardizes document loading, layout parsing, table serialization, OCR fallback, figure captioning, and vector index construction.
+#### `class docureason.pipeline.DocuReasonPipeline(input_dir: str | Path, output_dir: str | Path)`
+High-level offline ingestion pipeline orchestrator. Manages layout parsing, table serialization, OCR fallback, figure captioning, and vector index construction.
 
 * **Parameters:**
-  * `input_dir` (*str | Path*): Path to input document directory containing files to ingest.
-  * `output_dir` (*str | Path*): Path to output directory where index artifacts and reports will be saved.
+  * `input_dir` (*str | Path*): Directory path containing raw enterprise documents.
+  * `output_dir` (*str | Path*): Directory path where index artifacts are stored.
 
-##### `run() -> Dict[str, object]`
-Executes the full document processing pipeline over `input_dir`.
-
-* **Returns:** *Dict[str, object]* — Summary metadata dictionary containing:
-  * `"status"` (*str*): Execution status (`"completed"`).
-  * `"document_count"` (*int*): Total number of ingested documents.
-  * `"chunk_count"` (*int*): Total number of generated chunks across all modalities.
-  * `"dense_vectors"` (*int*): Number of dense vector embeddings indexed.
-  * `"sparse_terms"` (*int*): Number of unique BM25 terms indexed.
+##### `run() -> Dict[str, Any]`
+Executes end-to-end layout segmentation, table processing, vector indexing, and artifact generation.
 
 ---
 
-### `tripath.ingestion`
+### `docureason.ingestion`
 
-Document ingestion, multi-format loading, region layout parsing, OCR fallback, table serialization, and figure captioning.
+Multi-format document loaders, vision layout parsers, OCR fallback engines, and table serializers.
 
-#### `class src.tripath.ingestion.format_loader.FormatAwareLoader()`
-Extracts raw text and deep layout structures from multi-format files (`.pdf`, `.docx`, `.pptx`, `.xlsx`, `.html`, `.csv`, `.md`, `.txt`).
+#### `class docureason.ingestion.DoclingLayoutParser(page_batch_size: int = 1, do_ocr: bool = False)`
+Deep layout parsing wrapper utilizing Docling (TableFormer + DocLayNet) to segment text, tables, and figures.
 
-##### `load(path: str | Path) -> Dict[str, object]`
-Fast-path text extraction for a file. Returns file metadata and raw text.
+##### `parse(document_path: str | Path) -> List[Region]`
+Parses `document_path` and returns typed region bounding boxes and layouts.
 
-##### `load_deep(path: str | Path) -> Optional[Any]`
-Deep-path conversion using Docling. Returns a raw layout `ConversionResult` object for PDFs/DOCX/PPTX/XLSX.
+#### `class docureason.ingestion.TableSerializer()`
+Serializes tabular document regions into GFM Markdown tables, HTML representations, and DuckDB JSON schemas.
 
-##### `iter_supported_files(dir_path: str | Path) -> Iterator[Path]`
-Yields supported file paths within `dir_path`.
-
-#### `class src.tripath.ingestion.docling_layout_parser.DoclingLayoutParser(page_batch_size: int = 1, do_ocr: bool = False)`
-Extracts structured `Region` objects (text, tables, figures, code blocks) from Docling layout parse trees.
-
-##### `parse(docling_result: Any) -> List[Region]`
-Converts raw layout parse output into a sequence of typed document `Region` objects.
-
-#### `class src.tripath.ingestion.table_serializer.TableSerializer()`
-Serializes structured document tables into multiple formats optimized for downstream LLM generation and SQL execution.
-
-##### `serialize(table_item: Any) -> Dict[str, Any]`
-Converts a table region into a dictionary containing:
-* `"markdown"` (*str*): GFM Markdown representation of the table.
-* `"html"` (*str*): Clean HTML `<table>` representation.
-* `"json"` (*dict*): Structured `{"columns": [...], "rows": [[...]]}` format for DuckDB.
-
-#### `class src.tripath.ingestion.figure_captioner.FigureCaptioner(use_blip2: bool = True, use_clip: bool = True)`
-Generates textual captions for document figures/charts using BLIP-2 and extracts visual feature vectors using CLIP.
-
-##### `caption(image: Any) -> str`
-Generates a descriptive natural language caption for an image or chart.
-
-##### `embed(image: Any) -> List[float]`
-Extracts normalized CLIP visual feature embedding vector.
-
-#### `class src.tripath.ingestion.ocr_fallback.OCRFallback(languages: List[str] = ["en"])`
-Applies EasyOCR to scanned image-only document pages when character count checks fall below density threshold.
-
-##### `process_page(image_input: Any) -> str`
-Performs OCR text extraction on the provided image input.
-
-#### `class src.tripath.ingestion.identity.IdentityManager()`
-Generates deterministic, unique hashes for document IDs and region IDs.
-
-##### `build_document_id(path: Path) -> str`
-Creates a SHA-256 derived identifier based on file contents and path.
-
-##### `build_region_id(doc_id: str, index: int) -> str`
-Creates a deterministic region identifier string.
+##### `serialize(table_region: Region) -> Dict[str, Any]`
+Converts `table_region` into linearized Markdown, HTML, and structured schema dictionary `{"columns": [...], "rows": [[...]]}`.
 
 ---
 
-### `tripath.indexing`
+### `docureason.serving`
 
-Dense vector, sparse BM25S, and artifact storage writers.
+Synchronous and asynchronous query services for production serving.
 
-#### `class src.tripath.indexing.dense_index.DenseIndexBuilder(output_dir: str | Path)`
-Builds dense vector index artifacts using SentenceTransformers embeddings.
+#### `class docureason.serving.QueryService(input_dir: str | Path, output_dir: str | Path)`
+Production query service providing dynamic query routing, multi-path retrieval, RRF fusion, reranking, and generation.
 
-##### `build_index(chunks: List[Dict[str, Any]]) -> Dict[str, Any]`
-Generates embeddings for all chunks and persists vector arrays to `output_dir`.
-
-##### `query(vector: List[float], k: int = 5) -> List[Dict[str, Any]]`
-Performs cosine similarity search over indexed dense vectors.
-
-#### `class src.tripath.indexing.sparse_index.BM25SIndexBuilder(output_dir: str | Path)`
-Builds lightweight sparse keyword indices using BM25S token scoring.
-
-##### `build_index(chunks: List[Dict[str, Any]]) -> Dict[str, Any]`
-Tokenizes chunks and constructs inverted BM25 index persisted to disk.
-
-##### `query(text: str, k: int = 5) -> List[Dict[str, Any]]`
-Performs BM25 keyword matching and score computation.
-
-#### `class src.tripath.indexing.artifact_writer.ArtifactWriter(output_dir: str | Path)`
-Serializes document corpus definitions, chunk manifests, and pipeline reports to JSON files.
+##### `query(text: str) -> Dict[str, Any]`
+Executes search, fusion, reranking, and generation for input query `text`.
 
 ---
 
-### `tripath.router`
+### `src.tripath.retrieval`
 
-Query intent classification, soft probability scoring, and route decision engines.
-
-#### `class src.tripath.router.configurable_router.ConfigurableRouter(config: Optional[Dict[str, List[str]]] = None, threshold: float = 0.35)`
-Intent router evaluating query keyword density against configured modality topic dictionaries (`text`, `table`, `vision`).
-
-##### `route(query: str) -> Dict[str, bool]`
-Returns boolean activation flags for each modality based on `threshold`.
-
-##### `route_probabilities(query: str) -> Dict[str, float]`
-Computes soft probability scores (0.0 to 1.0) using sigmoid scaling over keyword matches.
-
-##### `get_route_weights(query: str) -> Dict[str, float]`
-Returns normalized fusion weights across modalities summing to 1.0 for Reciprocal Rank Fusion.
-
----
-
-### `tripath.retrieval`
-
-Tri-path retrieval implementations (Text, Table/SQL, Vision), chart understanding, and rankers.
+Tri-path retrieval engines (Text, Table/SQL, Vision), chart understanding, and cross-encoder rankers.
 
 #### `class src.tripath.retrieval.hybrid_retriever.HybridRetriever()`
 Full multi-path retriever integrating routing, sub-path retrieval, Reciprocal Rank Fusion (RRF), parent-child chunk expansion, and cross-encoder reranking.
 
-##### `retrieve(query: str, documents: List[Document]) -> List[Dict[str, Any]]`
-Executes multi-path search over `documents` and returns reranked relevance candidates.
-
 #### `class src.tripath.retrieval.table_sql.TableSQLRetriever()`
-Converts table JSON schemas into temporary DuckDB tables and executes text-to-SQL queries to retrieve structured answer sets.
-
-##### `retrieve(query: str, documents: List[Document]) -> List[Dict[str, Any]]`
-Translates query into SQL statement, executes against in-memory DuckDB, and formats tabular results.
+Text-to-SQL retriever executing dynamic queries over DuckDB in-memory database tables.
 
 #### `class src.tripath.retrieval.ranker.Ranker()`
-Cross-encoder relevance scoring and reranking module.
+Cross-encoder relevance scoring module.
 
 ##### `rank(query: str, candidates: List[Dict[str, Any]]) -> List[Dict[str, Any]]`
 Re-scores candidate chunks against `query` using cross-encoder attention and returns sorted top hits.
 
 ---
 
-### `tripath.fusion`
-
-Late score fusion and normalization algorithms.
-
-#### `class src.tripath.fusion.fuse.Fuser(rrf_k: int = 60)`
-Combines multi-list candidate rankings into a unified score distribution.
-
-##### `fuse(batches: List[List[Dict[str, Any]]], router_weights: Optional[Dict[str, float]] = None) -> List[Dict[str, Any]]`
-Applies weighted Reciprocal Rank Fusion (RRF) across `batches` of retrieved candidates:
-
-$$\text{RRF\_Score}(d) = \sum_{m \in \text{Paths}} w_m \cdot \frac{1}{k + \text{rank}_m(d)}$$
-
----
-
-### `tripath.generation`
-
-Grounded response generation module supporting local SLMs, Cloud LLMs, and fallback synthesizers.
-
-#### `class src.tripath.generation.generate.GenerationModule(backend: str = "auto", model_name_or_path: str = "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B")`
-
-##### `generate(query: str, evidence: List[Dict[str, Any]], sql_results: Optional[Dict[str, Any]] = None) -> Dict[str, Any]`
-Generates a grounded natural language response backed by retrieved evidence chunks and tabular SQL outputs.
-
-* **Returns:** *Dict[str, Any]* containing:
-  * `"answer"` (*str*): Synthesized response string.
-  * `"citations"` (*List[str]*): List of document chunk IDs cited in answer.
-  * `"reasoning"` (*Optional[str]*): DeepSeek reasoning chain if available.
-
----
-
-### `tripath.attribution`
+### `src.tripath.attribution`
 
 Claim attribution and NLI faithfulness engine.
 
@@ -378,39 +299,39 @@ Claim attribution and NLI faithfulness engine.
 ##### `attribute(answer: str, evidence: List[Dict[str, Any]]) -> Dict[str, Any]`
 Deconstructs `answer` into discrete sentence claims and computes entailment precision against `evidence`.
 
-* **Returns:** *Dict[str, Any]* containing:
-  * `"claims"` (*List[dict]*): Sentence-level support breakdown.
-  * `"attribution_precision"` (*float*): Fraction of claims supported by evidence (0.0 to 1.0).
-  * `"status"` (*str*): `"verified"` if precision >= 0.5, else `"needs_review"`.
-
 ---
 
-### `tripath.evaluation`
+### `src.tripath.evaluation`
 
-Metrics collection, benchmark dataset runners, and ablation studies.
+Evaluation harness, benchmark runners, and ablation studies.
 
 #### `class src.tripath.evaluation.eval_harness.EvaluationHarness(output_dir: str | Path)`
 
-##### `evaluate(query: str, results: List[dict], relevant_ids: Optional[List[str]] = None) -> Dict[str, float]`
-Computes retrieval performance metrics including Recall@5 and nDCG@5.
-
-##### `save(metrics: Dict[str, float], run_name: str = "run") -> Path`
-Writes metric evaluation report to JSON file in `output_dir`.
+##### `evaluate_single(query: str, results: List[dict], relevant_ids: Optional[List[str]] = None) -> Dict[str, float]`
+Computes retrieval performance metrics including Recall@K, nDCG@K, MRR, TEDS, NLI Faithfulness, and SLA target verification.
 
 ---
 
-### `tripath.serving`
+## Fine-Tuning Dataset Exporter
 
-Synchronous and asynchronous query services for API integration.
+DocuReason provides a built-in `DatasetExporter` module to export processed multi-modal corpora and query logs into SFT (Supervised Fine-Tuning) and DPO (Direct Preference Optimization) dataset formats compatible with HuggingFace `datasets`:
 
-#### `class src.tripath.serving.query_service.QueryService(input_dir: str | Path, output_dir: str | Path)`
+```python
+from src.tripath.evaluation.dataset_exporter import DatasetExporter
 
-##### `query(text: str) -> Dict[str, object]`
-Runs end-to-end pipeline search, fusion, reranking, vector embedding, and generation for `text`.
+exporter = DatasetExporter(output_dir="artifacts/my_index")
+
+# Export fine-tuning dataset for SLM training
+dataset_path = exporter.export_fine_tuning_dataset(
+    output_format="jsonl",
+    split="train"
+)
+print("Exported dataset to:", dataset_path)
+```
 
 ---
 
-## 🔌 REST API Endpoint Reference
+## REST API Endpoint Reference
 
 When running `uvicorn src.tripath.serving.main:app --port 8000`, the server exposes the following OpenAPI endpoints:
 
@@ -425,12 +346,12 @@ When running `uvicorn src.tripath.serving.main:app --port 8000`, the server expo
 
 ---
 
-## ⚙️ Configuration Guide
+## Configuration Guide
 
 Pipeline parameters can be customized via `configs/pipeline_config.yaml`:
 
 ```yaml
-version: "1.0.0"
+version: "1.0.1"
 
 ingestion:
   page_batch_size: 1
@@ -455,7 +376,7 @@ retrieval:
 
 ---
 
-## 🧪 Running Tests & Validation
+## Running Tests & Validation
 
 DocuReason maintains a comprehensive test suite covering all modules:
 
@@ -464,14 +385,8 @@ DocuReason maintains a comprehensive test suite covering all modules:
 python -m pytest -q
 ```
 
-Expected Output:
-```text
-............... [100%]
-15 passed in 7.42s
-```
-
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

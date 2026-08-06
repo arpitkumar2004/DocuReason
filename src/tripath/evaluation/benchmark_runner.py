@@ -36,7 +36,7 @@ class BenchmarkRunner:
             })
 
         payload = {
-            "suite_name": "phase4-smoke",
+            "suite_name": "benchmark-smoke",
             "query_count": len(results),
             "results": results,
             "summary": self._summarize(results),

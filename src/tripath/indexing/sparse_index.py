@@ -1,4 +1,4 @@
-"""sparse_index.py — BM25S sparse retrieval index for Phase 1.
+"""sparse_index.py — BM25S sparse retrieval index for document search.
 
 Uses the ``bm25s`` library (pure Python, pip-installable, no Java/Lucene)
 to build a BM25 index over text chunks for the text and table retrieval

@@ -6,9 +6,9 @@ from src.tripath.router.train_router import RouterTrainer
 from src.tripath.ingestion.docling_wrapper import DoclingWrapper
 
 
-def test_phase2_research_stack_components(tmp_path):
+def test_retrieval_research_stack_components(tmp_path):
     sample_dir = Path(__file__).resolve().parents[2] / "samples"
-    output_dir = tmp_path / "phase2-output"
+    output_dir = tmp_path / "research-output"
 
     documents = DoclingWrapper(input_dir=sample_dir, output_dir=output_dir).ingest()
     results = HybridRetriever().retrieve("revenue by region", documents)

@@ -1,86 +1,82 @@
-"""dense_index.py — FAISS-based dense vector index for Phase 1 retrieval.
+"""dense_index.py — FAISS-based dense vector index for document retrieval.
 
-Builds one ``faiss.IndexFlatIP`` index per modality (text, table, vision)
-from ``sentence-transformers/all-MiniLM-L6-v2`` embeddings (dim=384).
-
-Files produced per modality
-----------------------------
-* ``faiss_{modality}.index`` — FAISS index binary
-* ``faiss_{modality}_meta.json`` — id→metadata mapping for result hydration
-
-Fallback behaviour
-------------------
-If ``faiss`` or ``sentence_transformers`` are not installed the builder
-writes a lightweight JSON stub so callers always get a consistent
-``search()`` interface (returns empty results instead of raising).
-
-Usage
------
-::
-
-    from src.tripath.indexing.dense_index import DenseIndexBuilder
-
-    builder = DenseIndexBuilder(output_dir=Path("artifacts/output"))
-    builder.build(records, modality="text")
-    results = builder.search("quarterly revenue", modality="text", k=5)
+Builds one FAISS index per modality (text, table, vision) with support for
+domain-specific embedding presets and HNSW graph parameter tuning.
 """
 from __future__ import annotations
 
 import json
-import logging
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from src.tripath.utils import get_logger, log_pipeline_flag, trace_execution
+from src.tripath.config import IndexingConfig, DocuReasonConfig
 
 logger = get_logger(__name__)
 
+_DOMAIN_PRESETS: Dict[str, str] = {
+    "general": "sentence-transformers/all-MiniLM-L6-v2",
+    "biomedical": "pritamdeka/S-PubMedBert-MS-MARCO",
+    "medical": "pritamdeka/S-PubMedBert-MS-MARCO",
+    "legal": "law-ai/InLegalBERT",
+    "financial": "ProsusAI/finbert",
+    "finance": "ProsusAI/finbert",
+    "code": "flax-sentence-embeddings/st-codesearch-distilroberta-base",
+    "technical": "flax-sentence-embeddings/st-codesearch-distilroberta-base",
+    "multilingual": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+}
 _MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 _DIM = 384
 
 
 class DenseIndexBuilder:
-    """Build and query per-modality FAISS dense indices.
-
-    Parameters
-    ----------
-    output_dir:
-        Directory where ``faiss_*.index`` and ``faiss_*_meta.json`` are saved.
-    model_name:
-        Sentence-transformers model name / HF path.
-    """
+    """Build and query per-modality FAISS dense indices with domain presets and HNSW parameters."""
 
     def __init__(
         self,
-        output_dir: str | Path = "artifacts",
-        model_name: str = _MODEL_NAME,
+        output_dir: Union[str, Path] = "artifacts",
+        model_name: Optional[str] = None,
+        domain: str = "general",
+        index_type: str = "hnsw",
+        hnsw_m: int = 32,
+        hnsw_ef_construction: int = 200,
+        hnsw_ef_search: int = 64,
+        config: Optional[Union[IndexingConfig, DocuReasonConfig]] = None,
     ) -> None:
-        self.output_dir = Path(output_dir)
-        self.output_dir.mkdir(parents=True, exist_ok=True)
-        self.model_name = model_name
-        self._model: Any = None  # lazy-loaded SentenceTransformer
-        log_pipeline_flag("dense_index_model", model_name, "FAISS embedding model name", logger)
+        if isinstance(config, DocuReasonConfig):
+            idx_cfg = config.indexing
+            self.output_dir = Path(config.output_dir)
+        elif isinstance(config, IndexingConfig):
+            idx_cfg = config
+            self.output_dir = Path(output_dir)
+        else:
+            idx_cfg = None
+            self.output_dir = Path(output_dir)
 
-    # ------------------------------------------------------------------
-    # Build
-    # ------------------------------------------------------------------
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+
+        if idx_cfg:
+            self.domain = idx_cfg.domain.lower()
+            self.model_name = idx_cfg.model_name or _DOMAIN_PRESETS.get(self.domain, _DOMAIN_PRESETS["general"])
+            self.index_type = idx_cfg.index_type.lower()
+            self.hnsw_m = idx_cfg.hnsw_m
+            self.hnsw_ef_construction = idx_cfg.hnsw_ef_construction
+            self.hnsw_ef_search = idx_cfg.hnsw_ef_search
+        else:
+            self.domain = domain.lower()
+            self.model_name = model_name or _DOMAIN_PRESETS.get(self.domain, _DOMAIN_PRESETS["general"])
+            self.index_type = index_type.lower()
+            self.hnsw_m = hnsw_m
+            self.hnsw_ef_construction = hnsw_ef_construction
+            self.hnsw_ef_search = hnsw_ef_search
+
+        self._model: Any = None  # lazy-loaded SentenceTransformer
+        log_pipeline_flag("dense_index_model", self.model_name, f"FAISS model (domain={self.domain})", logger)
+        log_pipeline_flag("dense_index_type", self.index_type, f"FAISS index type (hnsw_m={self.hnsw_m})", logger)
 
     @trace_execution(logger=logger)
     def build(self, records: List[Dict[str, Any]], modality: str) -> Path:
-        """Encode *records* and write a FAISS index to disk.
-
-        Parameters
-        ----------
-        records:
-            List of dicts with at minimum ``{"id": str, "text": str}``.
-        modality:
-            One of ``"text"``, ``"table"``, ``"vision"``.  Used as the
-            filename stem.
-
-        Returns
-        -------
-        Path to the written ``.index`` file.
-        """
+        """Encode *records* and write a FAISS index to disk."""
         index_path = self.output_dir / f"faiss_{modality}.index"
         meta_path = self.output_dir / f"faiss_{modality}_meta.json"
 
@@ -96,7 +92,7 @@ class DenseIndexBuilder:
                 "document_id": r.get("document_id", ""),
                 "modality": r.get("modality", modality),
                 "metadata": r.get("metadata", {}),
-                "text": texts[i][:500],  # keep a snippet for hydration
+                "text": texts[i][:500],
             }
             for i, r in enumerate(records)
         ]
@@ -109,10 +105,7 @@ class DenseIndexBuilder:
             if model is None:
                 raise ImportError("sentence_transformers unavailable")
 
-            logger.info(
-                "DenseIndexBuilder: encoding %d records (modality=%s)",
-                len(texts), modality,
-            )
+            logger.info("DenseIndexBuilder: encoding %d records (modality=%s)", len(texts), modality)
             vectors = model.encode(
                 texts,
                 batch_size=32,
@@ -120,43 +113,32 @@ class DenseIndexBuilder:
                 normalize_embeddings=True,  # cosine via inner product
             ).astype("float32")
 
-            index = faiss.IndexFlatIP(_DIM)
-            index.add(vectors)  # type: ignore[arg-type]
+            dim = vectors.shape[1] if hasattr(vectors, "shape") and len(vectors.shape) > 1 else _DIM
+
+            if self.index_type == "hnsw" and hasattr(faiss, "IndexHNSWFlat"):
+                logger.info(
+                    "DenseIndexBuilder: building IndexHNSWFlat (dim=%d, M=%d, efConstruction=%d)",
+                    dim, self.hnsw_m, self.hnsw_ef_construction,
+                )
+                index = faiss.IndexHNSWFlat(dim, self.hnsw_m, faiss.METRIC_INNER_PRODUCT)
+                index.hnsw.efConstruction = self.hnsw_ef_construction
+            else:
+                index = faiss.IndexFlatIP(dim)
+
+            index.add(vectors)
             faiss.write_index(index, str(index_path))
-            meta_path.write_text(
-                json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8"
-            )
-            logger.info(
-                "DenseIndexBuilder: wrote %s (%d vectors)", index_path.name, len(vectors)
-            )
+            meta_path.write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
+            logger.info("DenseIndexBuilder: wrote %s (%d vectors, type=%s)", index_path.name, len(vectors), self.index_type)
 
         except Exception as exc:
-            logger.warning(
-                "DenseIndexBuilder: FAISS build failed (%s) — writing stub", exc
-            )
-            meta_path.write_text(
-                json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8"
-            )
-            # Write a stub so the path always exists.
+            logger.warning("DenseIndexBuilder: FAISS build failed (%s) — writing stub", exc)
+            meta_path.write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
             index_path.write_bytes(b"")
 
         return index_path
 
-    # ------------------------------------------------------------------
-    # Search
-    # ------------------------------------------------------------------
-
-    def search(
-        self,
-        query: str,
-        modality: str,
-        k: int = 5,
-    ) -> List[Dict[str, Any]]:
-        """Query the FAISS index for *modality* and return top-*k* results.
-
-        Returns an empty list if the index doesn't exist or FAISS is not
-        installed.
-        """
+    def search(self, query: str, modality: str, k: int = 5) -> List[Dict[str, Any]]:
+        """Query the FAISS index for *modality* and return top-*k* results."""
         index_path = self.output_dir / f"faiss_{modality}.index"
         meta_path = self.output_dir / f"faiss_{modality}_meta.json"
 
@@ -166,7 +148,6 @@ class DenseIndexBuilder:
 
         try:
             import faiss
-            import numpy as np
 
             model = self._get_model()
             if model is None:
@@ -175,13 +156,16 @@ class DenseIndexBuilder:
             meta = json.loads(meta_path.read_text(encoding="utf-8"))
             index = faiss.read_index(str(index_path))
 
+            if hasattr(index, "hnsw"):
+                index.hnsw.efSearch = self.hnsw_ef_search
+
             q_vec = model.encode(
                 [query],
                 normalize_embeddings=True,
                 show_progress_bar=False,
             ).astype("float32")
 
-            distances, indices = index.search(q_vec, min(k, index.ntotal))  # type: ignore
+            distances, indices = index.search(q_vec, min(k, index.ntotal))
             results = []
             for score, idx in zip(distances[0], indices[0]):
                 if idx < 0 or idx >= len(meta):
@@ -195,26 +179,15 @@ class DenseIndexBuilder:
             logger.warning("DenseIndexBuilder.search failed: %s", exc)
             return []
 
-    # ------------------------------------------------------------------
-    # Model loader
-    # ------------------------------------------------------------------
-
     def _get_model(self) -> Optional[Any]:
         """Lazy-load and cache the SentenceTransformer model."""
         if self._model is not None:
             return self._model
         try:
             from sentence_transformers import SentenceTransformer
-
             self._model = SentenceTransformer(self.model_name)
             logger.info("SentenceTransformer loaded: %s", self.model_name)
-        except ImportError:
-            logger.warning(
-                "sentence_transformers not installed. "
-                "Install with: pip install sentence-transformers"
-            )
-            self._model = None
         except Exception as exc:
-            logger.warning("Failed to load SentenceTransformer: %s", exc)
+            logger.warning("Failed to load SentenceTransformer (%s) — using fallback", exc)
             self._model = None
         return self._model

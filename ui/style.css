@@ -154,20 +154,89 @@ body {
   color: #fff;
 }
 
-/* Markdown Text Formatting */
-.markdown-body { font-size: 14px; line-height: 1.6; color: #e2e8f0; }
-.markdown-body p { margin-bottom: 10px; }
+/* Markdown Text Formatting & Headers */
+.markdown-body { font-size: 14px; line-height: 1.65; color: #f1f5f9; }
+.md-p { margin-bottom: 8px; line-height: 1.65; }
+.md-h1, .md-h2, .md-h3 { font-family: 'Outfit', sans-serif; font-weight: 700; color: #fff; margin-top: 14px; margin-bottom: 8px; }
+.md-h1 { font-size: 18px; }
+.md-h2 { font-size: 16px; }
+.md-h3 { font-size: 14px; color: var(--accent-cyan); }
+.md-ul { margin: 8px 0; padding-left: 6px; }
+.md-li { margin-left: 18px; margin-bottom: 6px; list-style-type: disc; line-height: 1.6; }
+.md-p-gap { height: 10px; }
+.md-blockquote {
+  border-left: 3px solid var(--accent-cyan);
+  background: rgba(6, 182, 212, 0.08);
+  padding: 10px 14px;
+  margin: 10px 0;
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
+  color: #e2e8f0;
+}
+.inline-code { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.12); padding: 2px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #38bdf8; }
 
-/* Inline Action Buttons ([Copy], [Regenerate], [Edit]) */
+/* Inline Citation Badges */
+.citation-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(6, 182, 212, 0.12); border: 1px solid rgba(6, 182, 212, 0.3);
+  color: #38bdf8; font-size: 11px; font-weight: 600;
+  padding: 2px 8px; border-radius: 12px;
+  margin: 0 3px; cursor: help; vertical-align: middle;
+  transition: all 0.2s;
+}
+.citation-badge:hover { background: rgba(6, 182, 212, 0.25); border-color: var(--accent-cyan); }
+.citation-badge.badge-amber { background: rgba(245, 158, 11, 0.12); border-color: rgba(245, 158, 11, 0.3); color: #fbbf24; }
+.citation-badge.badge-indigo { background: rgba(99, 102, 241, 0.12); border-color: rgba(99, 102, 241, 0.3); color: #818cf8; }
+
+/* Dedicated Citations & Sources Section */
+.citations-section {
+  margin-top: 16px; padding-top: 14px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.12);
+}
+.citations-section-title {
+  font-size: 12px; font-weight: 700; color: var(--text-muted);
+  display: flex; align-items: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+.citations-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px;
+}
+.citation-card {
+  background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px;
+  transition: border-color 0.2s;
+}
+.citation-card:hover { border-color: var(--border-accent); }
+.citation-card-header { display: flex; align-items: center; gap: 8px; }
+.modality-pill {
+  font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; letter-spacing: 0.5px;
+}
+.modality-pill.badge-cyan { background: rgba(6, 182, 212, 0.2); color: #38bdf8; }
+.modality-pill.badge-amber { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+.modality-pill.badge-indigo { background: rgba(99, 102, 241, 0.2); color: #818cf8; }
+.citation-source-name { font-size: 12px; font-weight: 600; color: #f1f5f9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.citation-card-sub { font-size: 11px; color: var(--text-muted); }
+
+/* Evidence Item Cards */
+.evidence-item {
+  padding: 10px 12px; background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 8px; margin-bottom: 8px;
+}
+.evidence-item-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.evidence-source-id { font-weight: 600; font-size: 12px; color: #f1f5f9; }
+.evidence-score { font-size: 11px; color: var(--text-muted); margin-left: auto; }
+.evidence-snippet { font-size: 12px; color: #cbd5e1; line-height: 1.5; }
+
+/* Inline Action Buttons ([Copy], [Regenerate], Engine & NLI Pills) */
 .action-bar {
-  display: flex; gap: 8px; margin-top: 14px; padding-top: 12px;
-  border-top: 1px solid var(--border-color);
+  display: flex; align-items: center; gap: 8px; margin-top: 16px; padding-top: 12px;
+  border-top: 1px solid var(--border-color); flex-wrap: wrap;
 }
 .action-btn {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--border-color);
   color: var(--text-muted);
-  padding: 4px 10px;
+  padding: 5px 12px;
   border-radius: 6px;
   font-size: 12px;
   font-weight: 500;
@@ -175,6 +244,15 @@ body {
   cursor: pointer; transition: all 0.2s;
 }
 .action-btn:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
+.meta-pills-group { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.engine-pill {
+  font-size: 11px; font-weight: 600; background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.3); color: #a5b4fc; padding: 4px 10px; border-radius: 12px;
+}
+.nli-pill {
+  font-size: 11px; font-weight: 600; background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3); color: #34d399; padding: 4px 10px; border-radius: 12px;
+}
 
 /* Collapsible Card Elements */
 .collapsible-card {

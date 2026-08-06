@@ -1,2 +1,8 @@
-host: "0.0.0.0"
-port: 8000
+# REST API FastAPI Serving Configuration Profile
+serving:
+  host: "0.0.0.0"
+  port: 8000
+  workers: 4
+  reload: false
+  cors_origins:
+    - "*"

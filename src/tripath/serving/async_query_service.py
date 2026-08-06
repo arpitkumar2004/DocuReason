@@ -11,7 +11,7 @@ from .query_service import QueryService
 
 
 class AsyncQueryService:
-    """A production-oriented wrapper around the local Phase 2/3 pipeline."""
+    """A production-oriented asynchronous query service wrapper."""
 
     def __init__(self, input_dir: str | Path, output_dir: str | Path) -> None:
         self.query_service = QueryService(input_dir=input_dir, output_dir=output_dir)

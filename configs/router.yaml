@@ -1,2 +1,37 @@
-model_name: "tiny-router"
-threshold: 0.5
+# Intent-Based Query Router Layer Configuration Profile
+router:
+  threshold: 0.35
+  sigmoid_lambda: 1.2
+  modality_keywords:
+    text:
+      - "revenue"
+      - "growth"
+      - "report"
+      - "overview"
+      - "company"
+      - "margin"
+      - "statement"
+      - "financial"
+      - "narrative"
+    table:
+      - "table"
+      - "region"
+      - "quarter"
+      - "by"
+      - "revenue"
+      - "sum"
+      - "average"
+      - "total"
+      - "rate"
+      - "percent"
+    vision:
+      - "chart"
+      - "figure"
+      - "image"
+      - "graph"
+      - "adoption"
+      - "bar"
+      - "pie"
+      - "diagram"
+      - "plot"
+      - "trend"

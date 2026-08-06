@@ -1,0 +1,28 @@
+# Preset Profile: High Accuracy / Max Quality (For heavy GPU server deployments)
+preset: "quality_max"
+output_dir: "artifacts"
+
+ingestion:
+  ocr_fallback_char_threshold: 50
+  enable_ocr_fallback: true
+
+indexing:
+  domain: "general"
+  index_type: "hnsw"
+  hnsw_m: 64
+  hnsw_ef_construction: 400
+  hnsw_ef_search: 128
+
+retrieval:
+  top_k_text: 40
+  top_k_table: 40
+  top_k_vision: 40
+
+reranker:
+  final_top_k: 10
+
+generation:
+  max_context_tokens: 8192
+
+attribution:
+  enable_nli: true

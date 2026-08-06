@@ -69,3 +69,26 @@ def test_generation_module_offline_template():
     assert "description: Total Assets" in result["answer"]
     assert "| description | 2019 | 2018 |" in result["answer"]
     assert len(result["citations"]) >= 1
+
+
+def test_generation_gpu_unavailable_fallback(monkeypatch):
+    # Simulate GPU being unavailable
+    monkeypatch.setattr(GenerationModule, "_is_gpu_available", staticmethod(lambda: False))
+    gen = GenerationModule(backend="auto")
+
+    evidence = [
+        {
+            "document_id": "doc_cpu_fallback",
+            "modality": "text",
+            "text": "Q3 net profit margin increased to 24.5% year-over-year.",
+        }
+    ]
+
+    result = gen.generate(query="What was the Q3 profit margin?", evidence=evidence)
+
+    assert "answer" in result
+    assert result["fallback_used"] is True
+    assert result["device"] in {"cpu", "cloud"}
+    assert "24.5%" in result["answer"]
+    assert len(result["citations"]) == 1
+

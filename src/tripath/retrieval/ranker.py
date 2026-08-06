@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
-
+from typing import Any, Dict, List, Optional, Union
 from src.tripath.utils import get_logger, trace_execution
+from src.tripath.config import RerankerConfig, DocuReasonConfig
 
 logger = get_logger(__name__)
 
@@ -13,8 +13,26 @@ _GLOBAL_CROSS_ENCODER_CACHE: Dict[str, Any] = {}
 class Ranker:
     """Cross-Encoder reranker with breadcrumb evaluation and short-heading penalty."""
 
-    def __init__(self, model_name: str = _CROSS_ENCODER_MODEL) -> None:
-        self.model_name = model_name
+    def __init__(
+        self,
+        model_name: Optional[str] = None,
+        config: Optional[Union[RerankerConfig, DocuReasonConfig]] = None,
+    ) -> None:
+        if isinstance(config, DocuReasonConfig):
+            r_cfg = config.reranker
+        elif isinstance(config, RerankerConfig):
+            r_cfg = config
+        else:
+            r_cfg = None
+
+        if r_cfg:
+            self.model_name = model_name or r_cfg.model_name
+            self.short_heading_threshold = r_cfg.short_heading_char_threshold
+            self.heading_penalty_multiplier = r_cfg.heading_penalty_multiplier
+        else:
+            self.model_name = model_name or _CROSS_ENCODER_MODEL
+            self.short_heading_threshold = 45
+            self.heading_penalty_multiplier = 0.5
 
     def _get_cross_encoder(self) -> Optional[Any]:
         if self.model_name in _GLOBAL_CROSS_ENCODER_CACHE:
@@ -64,8 +82,8 @@ class Ranker:
                     if "[Context:" in body_text:
                         body_text = body_text.split("]", 1)[-1].strip()
                     
-                    if len(body_text) < 45 and item.get("modality") == "text":
-                        cross_score *= 0.5  # Penalize short standalone headings
+                    if len(body_text) < self.short_heading_threshold and item.get("modality") == "text":
+                        cross_score *= self.heading_penalty_multiplier  # Penalize short standalone headings
 
                     ranked_item = dict(item)
                     ranked_item["cross_encoder_score"] = round(cross_score, 4)
@@ -94,7 +112,7 @@ class Ranker:
             body_text = item.get("text", "")
             if "[Context:" in body_text:
                 body_text = body_text.split("]", 1)[-1].strip()
-            heading_penalty = 0.5 if (len(body_text) < 45 and item.get("modality") == "text") else 1.0
+            heading_penalty = self.heading_penalty_multiplier if (len(body_text) < self.short_heading_threshold and item.get("modality") == "text") else 1.0
 
             fused_rank_score = ((base_score * 0.7) + (jaccard * 100.0 * 0.3 * modality_weight)) * heading_penalty
 

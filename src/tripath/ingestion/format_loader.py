@@ -66,7 +66,7 @@ class FormatAwareLoader:
         """Run Docling in deep layout mode and return the raw ``ConversionResult``.
 
         Returns ``None`` if Docling is unavailable or the conversion fails.
-        The caller (``Phase1Pipeline``) passes this result to
+        The caller (``DocuReasonPipeline``) passes this result to
         ``DoclingLayoutParser`` which iterates the typed document items.
 
         Parameters

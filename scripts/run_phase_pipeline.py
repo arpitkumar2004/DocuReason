@@ -25,7 +25,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", type=str, default=str(ROOT / "artifacts" / "test_run"), help="Output directory for pipeline artifacts.")
     parser.add_argument("--log-level", type=str, default="INFO", choices=["DEBUG", "INFO", "WARNING", "ERROR"], help="Console log verbosity level.")
     parser.add_argument("--log-file", type=str, default=None, help="File path to write detailed execution logs.")
-    parser.add_argument("--force-reingest", action="store_true", help="Force re-running Phase 1 document parsing and index building.")
+    parser.add_argument("--force-reingest", action="store_true", help="Force re-running document parsing and index building.")
     return parser.parse_args()
 
 

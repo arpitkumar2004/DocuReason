@@ -5,6 +5,8 @@ from typing import Dict, List, Optional
 
 from src.tripath.utils import get_logger, trace_execution
 
+from src.tripath.config import RouterConfig, DocuReasonConfig
+
 logger = get_logger(__name__)
 
 
@@ -13,15 +15,32 @@ class ConfigurableRouter:
 
     def __init__(
         self,
-        config: Optional[Dict[str, List[str]]] = None,
+        config: Optional[Union[Dict[str, List[str]], RouterConfig, DocuReasonConfig]] = None,
         threshold: float = 0.35,
     ) -> None:
-        self.config = config or {
-            "text": ["revenue", "growth", "report", "overview", "company", "margin", "statement", "financial", "narrative"],
-            "table": ["table", "region", "quarter", "by", "revenue", "sum", "average", "total", "rate", "percent"],
-            "vision": ["chart", "figure", "image", "graph", "adoption", "bar", "pie", "diagram", "plot", "trend"],
-        }
-        self.threshold = threshold
+        if isinstance(config, DocuReasonConfig):
+            r_cfg = config.router
+        elif isinstance(config, RouterConfig):
+            r_cfg = config
+        else:
+            r_cfg = None
+
+        if r_cfg is not None:
+            self.config = r_cfg.modality_keywords
+            self.threshold = r_cfg.threshold
+            self.sigmoid_lambda = r_cfg.sigmoid_lambda
+        elif isinstance(config, dict):
+            self.config = config
+            self.threshold = threshold
+            self.sigmoid_lambda = 1.2
+        else:
+            self.config = {
+                "text": ["revenue", "growth", "report", "overview", "company", "margin", "statement", "financial", "narrative"],
+                "table": ["table", "region", "quarter", "by", "revenue", "sum", "average", "total", "rate", "percent"],
+                "vision": ["chart", "figure", "image", "graph", "adoption", "bar", "pie", "diagram", "plot", "trend"],
+            }
+            self.threshold = threshold
+            self.sigmoid_lambda = 1.2
 
     @trace_execution(logger=logger)
     def route(self, query: str) -> Dict[str, bool]:
@@ -43,7 +62,7 @@ class ConfigurableRouter:
                 score = 0.5 if modality == "text" else 0.1
             else:
                 # Sigmoid scaling based on keyword match density
-                score = 1.0 / (1.0 + math.exp(-1.2 * matches))
+                score = 1.0 / (1.0 + math.exp(-self.sigmoid_lambda * matches))
             probs[modality] = round(score, 3)
 
         return probs

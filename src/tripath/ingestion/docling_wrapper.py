@@ -4,11 +4,10 @@ from pathlib import Path
 from typing import List
 
 from .schema import Chunk, Document, Region
-from docureason.pipeline import Phase1Pipeline
 
 
 class DoclingWrapper:
-    """A thin adapter over the sample Phase 1 pipeline for the planned ingestion stack."""
+    """A thin adapter over the document ingestion pipeline."""
 
     def __init__(self, input_dir: str | Path, output_dir: str | Path) -> None:
         self.input_dir = Path(input_dir)
@@ -59,6 +58,7 @@ class DoclingWrapper:
         if not force_reingest and corpus_path.exists():
             return self.load_corpus()
 
-        pipeline = Phase1Pipeline(input_dir=self.input_dir, output_dir=self.output_dir)
+        from docureason.pipeline import DocuReasonPipeline
+        pipeline = DocuReasonPipeline(input_dir=self.input_dir, output_dir=self.output_dir)
         pipeline.run()
         return self.load_corpus()

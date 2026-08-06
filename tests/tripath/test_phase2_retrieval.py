@@ -7,7 +7,7 @@ from src.tripath.retrieval.vision_retrieval import VisionRetrieval
 from src.tripath.router.infer_router import Router
 
 
-def test_phase2_retrieval_and_routing(tmp_path):
+def test_multimodal_retrieval_and_routing(tmp_path):
     sample_dir = Path(__file__).resolve().parents[2] / "samples"
     output_dir = tmp_path / "tripath-output"
 

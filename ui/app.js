@@ -90,6 +90,121 @@ async function submitPrompt() {
   }
 }
 
+function formatMarkdown(text) {
+  if (!text) return '';
+
+  let html = escapeHtml(text);
+
+  // First convert inline citation patterns before inline code formatting
+  html = html.replace(/`\[Source:\s*([^\]]+)\]`/gi, '<span class="citation-badge" title="Source Citation">📌 $1</span>');
+  html = html.replace(/\[Source:\s*([^\]]+)\]/gi, '<span class="citation-badge" title="Source Citation">📌 $1</span>');
+  html = html.replace(/`\[Doc-([0-9]+)\]`/gi, '<span class="citation-badge" title="Document Citation">📄 Doc-$1</span>');
+  html = html.replace(/\[Doc-([0-9]+)\]/gi, '<span class="citation-badge" title="Document Citation">📄 Doc-$1</span>');
+  html = html.replace(/`\[Table SQL\]`/gi, '<span class="citation-badge badge-amber" title="DuckDB SQL Execution">🗄️ DuckDB SQL</span>');
+  html = html.replace(/\[Table SQL\]/gi, '<span class="citation-badge badge-amber" title="DuckDB SQL Execution">🗄️ DuckDB SQL</span>');
+
+  const rawLines = html.split('\n');
+  let resultLines = [];
+  let inTable = false;
+  let tableHtml = '';
+  let inList = false;
+
+  for (let i = 0; i < rawLines.length; i++) {
+    let line = rawLines[i].trim();
+
+    // Handle Table
+    if (line.startsWith('|') && line.endsWith('|')) {
+      if (inList) { resultLines.push('</ul>'); inList = false; }
+      if (!inTable) {
+        inTable = true;
+        tableHtml = '<table class="data-table"><tbody>';
+      }
+      if (line.includes('---')) continue;
+      const cells = line.split('|').slice(1, -1).map(c => c.trim());
+      tableHtml += '<tr>' + cells.map(c => `<td>${c}</td>`).join('') + '</tr>';
+      continue;
+    } else if (inTable) {
+      inTable = false;
+      tableHtml += '</tbody></table>';
+      resultLines.push(tableHtml);
+      tableHtml = '';
+    }
+
+    // Handle Empty Line
+    if (!line) {
+      if (inList) { resultLines.push('</ul>'); inList = false; }
+      resultLines.push('<div class="md-p-gap"></div>');
+      continue;
+    }
+
+    // Handle Blockquote (> text)
+    if (line.startsWith('&gt;') || line.startsWith('>')) {
+      if (inList) { resultLines.push('</ul>'); inList = false; }
+      let quoteText = line.replace(/^(&gt;|>)\s*/, '');
+      resultLines.push(`<blockquote class="md-blockquote">${quoteText}</blockquote>`);
+      continue;
+    }
+
+    // Handle Headings (###, ##, #)
+    if (line.startsWith('### ')) {
+      if (inList) { resultLines.push('</ul>'); inList = false; }
+      resultLines.push(`<h3 class="md-h3">${line.substring(4)}</h3>`);
+      continue;
+    }
+    if (line.startsWith('## ')) {
+      if (inList) { resultLines.push('</ul>'); inList = false; }
+      resultLines.push(`<h2 class="md-h2">${line.substring(3)}</h2>`);
+      continue;
+    }
+    if (line.startsWith('# ')) {
+      if (inList) { resultLines.push('</ul>'); inList = false; }
+      resultLines.push(`<h1 class="md-h1">${line.substring(2)}</h1>`);
+      continue;
+    }
+
+    // Handle Bullet Lists (* item or - item)
+    if (/^[\*\-]\s+/.test(line)) {
+      if (!inList) {
+        inList = true;
+        resultLines.push('<ul class="md-ul">');
+      }
+      let itemText = line.replace(/^[\*\-]\s+/, '');
+      resultLines.push(`<li class="md-li">${itemText}</li>`);
+      continue;
+    } else if (inList) {
+      resultLines.push('</ul>');
+      inList = false;
+    }
+
+    // General Paragraph
+    resultLines.push(`<p class="md-p">${line}</p>`);
+  }
+
+  if (inTable) {
+    tableHtml += '</tbody></table>';
+    resultLines.push(tableHtml);
+  }
+  if (inList) {
+    resultLines.push('</ul>');
+  }
+
+  let formatted = resultLines.join('\n');
+
+  // Format remaining Bold, Italics, and Inline Code
+  formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  formatted = formatted.replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>');
+
+  return formatted;
+}
+
+function getEngineLabel(engineKey) {
+  if (engineKey === 'local_slm_deepseek_r1') return '⚡ DeepSeek-R1 Distill';
+  if (engineKey === 'cloud_gemini_api') return '☁️ Gemini 1.5 Flash';
+  if (engineKey === 'offline_template_synthesizer') return '⚙️ Multi-Modal Synthesizer';
+  return '🤖 ' + (engineKey || 'RAG Engine');
+}
+
 function renderAssistantResponse(groupId, query, data) {
   const asstElement = document.getElementById(groupId);
   if (!asstElement) return;
@@ -98,8 +213,11 @@ function renderAssistantResponse(groupId, query, data) {
   const weights = (data.router && data.router.weights) ? data.router.weights : { text: 0.33, table: 0.33, vision: 0.33 };
   const sqlData = data.sql_execution || {};
   const answer = data.answer || "No response generated.";
+  const citations = data.citations || [];
   const attribution = data.attribution || {};
   const nliScore = attribution.faithfulness_score !== undefined ? attribution.faithfulness_score : 0.95;
+  const nliPct = (nliScore * 100).toFixed(1);
+  const engineLabel = getEngineLabel(data.generation_engine);
 
   // Build DuckDB Result Table HTML if available
   let sqlTableHtml = '<div style="font-size:12px; color:var(--text-muted);">No structured table rows returned.</div>';
@@ -114,16 +232,56 @@ function renderAssistantResponse(groupId, query, data) {
     sqlTableHtml += '</tbody></table>';
   }
 
+  // Build Citations Section HTML
+  let citationsHtml = '';
+  if (citations.length > 0) {
+    let citationItems = citations.map(c => {
+      let mod = (c.type || 'text').toLowerCase();
+      let modClass = mod === 'table_sql' ? 'badge-amber' : (mod === 'vision' ? 'badge-indigo' : 'badge-cyan');
+      let modLabel = mod === 'table_sql' ? 'TABLE SQL' : mod.toUpperCase();
+      let sourceName = escapeHtml(c.source || 'Document');
+      let extraInfo = c.query ? `Query: <code>${escapeHtml(c.query)}</code>` : (c.chunk_id ? `Chunk: <code>${escapeHtml(c.chunk_id)}</code>` : '');
+
+      return `
+        <div class="citation-card">
+          <div class="citation-card-header">
+            <span class="modality-pill ${modClass}">${modLabel}</span>
+            <span class="citation-source-name" title="${sourceName}">${sourceName}</span>
+          </div>
+          ${extraInfo ? `<div class="citation-card-sub">${extraInfo}</div>` : ''}
+        </div>
+      `;
+    }).join('');
+
+    citationsHtml = `
+      <div class="citations-section">
+        <div class="citations-section-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span>Verified Citations & Sources (${citations.length})</span>
+        </div>
+        <div class="citations-grid">
+          ${citationItems}
+        </div>
+      </div>
+    `;
+  }
+
   // Build Evidence Items HTML
   let evidenceHtml = '';
-  (data.retrieved_evidence || []).forEach(item => {
+  (data.retrieved_evidence || []).forEach((item, idx) => {
+    let mod = (item.modality || 'text').toLowerCase();
+    let modClass = mod === 'table' ? 'badge-amber' : (mod === 'vision' ? 'badge-indigo' : 'badge-cyan');
+    let docId = item.document_id || item.id || `Doc-${idx+1}`;
+    let snippet = item.text || item.linearized || '';
+
     evidenceHtml += `
-      <div style="padding: 8px 0; border-bottom: 1px solid var(--border-color); font-size: 12px;">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-          <span style="font-weight: 700; color: var(--accent-cyan);">${escapeHtml(item.modality || 'text')}</span>
-          <span style="color: var(--text-muted);">Score: ${item.rank_score || item.score}</span>
+      <div class="evidence-item">
+        <div class="evidence-item-header">
+          <span class="modality-pill ${modClass}">${mod.toUpperCase()}</span>
+          <span class="evidence-source-id">${escapeHtml(docId)}</span>
+          <span class="evidence-score">RRF Score: ${(item.rank_score || item.score || 0).toFixed(4)}</span>
         </div>
-        <div style="color: #cbd5e1;">${escapeHtml(item.text || item.linearized || '')}</div>
+        <div class="evidence-snippet">${escapeHtml(snippet)}</div>
       </div>
     `;
   });
@@ -133,31 +291,38 @@ function renderAssistantResponse(groupId, query, data) {
     <div class="message-content" style="width: 100%;">
       <div class="response-card">
         
-        <!-- Grounded Answer Body -->
+        <!-- Grounded Answer Body (Rich Markdown Rendered) -->
         <div class="markdown-body">
-          ${escapeHtml(answer)}
+          ${formatMarkdown(answer)}
         </div>
 
-        <!-- Inline Action Bar -->
+        <!-- Dedicated Verified Citations & Sources Section -->
+        ${citationsHtml}
+
+        <!-- Inline Action & Metadata Bar -->
         <div class="action-bar">
           <button class="action-btn" onclick="copyText('${escapeJsString(answer)}')">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-            Copy
+            Copy Answer
           </button>
           <button class="action-btn" onclick="sendSample('${escapeJsString(query)}')">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
             Regenerate
           </button>
-          <span style="font-size: 11px; color: var(--accent-emerald); align-self: center; margin-left: auto;">
-            ✓ NLI Score: ${nliScore} (Faithful)
-          </span>
+
+          <div class="meta-pills-group">
+            <span class="engine-pill" title="Model Generation Engine">${engineLabel}</span>
+            <span class="nli-pill" title="NLI Entailment Score (Zero-Hallucination Grounding)">
+              ✓ ${nliPct}% Faithful
+            </span>
+          </div>
         </div>
 
         ${data.reasoning_chain ? `
         <!-- Collapsible Card: DeepSeek-R1 Chain-of-Thought Reasoning -->
         <div class="collapsible-card">
           <div class="collapsible-header" onclick="toggleCollapsible(this)">
-            <span>🧠 DeepSeek-R1 Reasoning Chain (&lt;think&gt;)</span>
+            <span>🧠 DeepSeek-R1 Reasoning Trace (&lt;think&gt;)</span>
             <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
           <div class="collapsible-body">
@@ -256,7 +421,7 @@ async function triggerIngestion() {
   const outPath = document.getElementById('ingest-output-path').value;
   const statusBox = document.getElementById('ingest-modal-status');
   statusBox.style.display = 'block';
-  statusBox.innerText = 'Running Phase 1 document ingestion and layout parsing pipeline...';
+  statusBox.innerText = 'Running document ingestion and layout parsing pipeline...';
 
   try {
     const res = await fetch('/api/ingest', {

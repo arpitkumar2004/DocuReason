@@ -16,7 +16,7 @@ class VisionEncoder:
     Caption text is produced by ``FigureCaptioner`` (stored in
     ``region.metadata["caption"]`` and ``region.text``).  If CLIP is
     available the raw image embedding is also stored in the payload as
-    ``clip_vector`` for MaxSim-style retrieval in Phase 2.
+    ``clip_vector`` for MaxSim-style visual retrieval.
 
     Falls back to hash-vectors when sentence_transformers is absent.
     """

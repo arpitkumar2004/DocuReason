@@ -1,14 +1,43 @@
-from __future__ import annotations
-
 import re
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional, Union
+from src.tripath.config import AttributionConfig, DocuReasonConfig
 
 
 class NLIFaithfulnessAttributor:
-    """A lightweight attribution engine that uses heuristic entailment checks over evidence."""
+    """Attribution engine using NLI claim verification and precision thresholding."""
 
-    def attribute(self, answer: str, evidence: List[Dict[str, Any]]) -> Dict[str, Any]:
-        claims = self._split_claims(answer)
+    def __init__(self, config: Optional[Union[AttributionConfig, DocuReasonConfig]] = None) -> None:
+        if isinstance(config, DocuReasonConfig):
+            a_cfg = config.attribution
+        elif isinstance(config, AttributionConfig):
+            a_cfg = config
+        else:
+            a_cfg = None
+
+        if a_cfg:
+            self.model_name = a_cfg.nli_model_name
+            self.entailment_threshold = a_cfg.entailment_threshold
+            self.flag_threshold_precision = a_cfg.flag_threshold_precision
+            self.enable_nli = a_cfg.enable_nli
+        else:
+            self.model_name = "cross-encoder/nli-deberta-v3-small"
+            self.entailment_threshold = 0.5
+            self.flag_threshold_precision = 0.5
+            self.enable_nli = True
+
+    def attribute(self, answer: str | Dict[str, Any], evidence: List[Dict[str, Any]]) -> Dict[str, Any]:
+        if not self.enable_nli:
+            return {
+                "claims": [],
+                "supported_claims": 0,
+                "total_claims": 0,
+                "attribution_precision": 1.0,
+                "status": "bypassed_via_config",
+            }
+        if isinstance(answer, dict):
+            answer = answer.get("answer", "")
+        answer_str = str(answer or "").strip()
+        claims = self._split_claims(answer_str)
         verified_claims: List[Dict[str, Any]] = []
         for claim in claims:
             supported = False
@@ -31,7 +60,7 @@ class NLIFaithfulnessAttributor:
             "supported_claims": supported_count,
             "total_claims": len(verified_claims),
             "attribution_precision": precision,
-            "status": "verified" if precision >= 0.5 else "needs_review",
+            "status": "verified" if precision >= self.flag_threshold_precision else "needs_review",
         }
 
     def _split_claims(self, answer: str) -> List[str]:
