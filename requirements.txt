@@ -5,7 +5,7 @@
 pypdf>=5.0.0
 docling>=2.117.0
 easyocr>=1.7.1
-pillow>=10.0.0
+pillow>=12.3.0
 
 # Embeddings & Dense Indexing
 sentence-transformers>=3.0.0
