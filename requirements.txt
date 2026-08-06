@@ -9,7 +9,7 @@ pillow>=10.0.0
 
 # Embeddings & Dense Indexing
 sentence-transformers>=3.0.0
-faiss-cpu>=1.8.0
+faiss-cpu>=1.15.0
 bm25s>=0.2.0
 
 # API Serving & Backend
