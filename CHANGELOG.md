@@ -4,6 +4,16 @@ All notable changes to the **DocuReason** framework (`docureason-framework`) wil
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.2] - 2026-08-07
+
+### Maintenance Release — Packaging & Wheel Validation Fixes
+
+#### Fixed
+- **Wheel Content Structure Validation (`check-wheel-contents.cfg`)**: Added repository root configuration for `check-wheel-contents` (`ignore = W005, W009`) to resolve multi-toplevel packaging warnings (`src/` and `docureason/`) during PyPI wheel distribution audits.
+- **PyPI Release Update**: Bumped version to `1.1.2` across framework packages, configuration files, and documentation.
+
+---
+
 ## [1.1.1] - 2026-08-07
 
 ### Production Release — Enterprise CI/CD Pipeline & PyPI Release Engineering

@@ -8,7 +8,7 @@ from src.tripath.evaluation.dataset_exporter import DatasetExporter
 from src.tripath.evaluation.eval_harness import EvaluationHarness
 from src.tripath.evaluation.table_eval import TableEvaluator
 
-__version__ = "1.1.1"
+__version__ = "1.1.2"
 
 __all__ = [
     "DocuReasonPipeline",

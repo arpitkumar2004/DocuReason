@@ -66,7 +66,7 @@ def status_endpoint() -> Dict[str, str]:
     return {
         "status": "ready",
         "service": "DocuReason Tri-Path Multimodal RAG",
-        "version": "1.1.1",
+        "version": "1.1.2",
     }
 
 
