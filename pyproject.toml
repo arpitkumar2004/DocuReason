@@ -7,7 +7,7 @@ name = "docureason-framework"
 version = "1.1.1"
 description = "DocuReason RAG: A Grounded Framework for Multimodal Document Retrieval and Reasoning. An Enterprise-Grade Tri-Path Multimodal RAG Framework for Text, Tables, and Visual Documents"
 readme = "README.md"
-authors = [{name = "Arpit Kumar", email = "arpitkumar2004@gmail.com"}]
+authors = [{name = "Arpit Kumar", email = "[EMAIL_ADDRESS]"}]
 license = {text = "MIT"}
 requires-python = ">=3.10"
 keywords = ["docureason", "rag", "multimodal", "retrieval", "duckdb", "eval", "nlp", "llm", "colpali", "vector-search"]
