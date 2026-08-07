@@ -126,8 +126,17 @@ class DoclingLayoutParser:
         # Check CUDA availability to prevent PyTorch safetensors mmap access violations on CPU
         has_cuda = False
         try:
+            import sys
             import torch
             has_cuda = torch.cuda.is_available()
+            if not has_cuda:
+                # Prevent Windows CPU PyTorch OpenMP/MKL multi-threading access violations in Conv2D
+                torch.set_num_threads(1)
+                if hasattr(torch, "set_num_interop_threads"):
+                    try:
+                        torch.set_num_interop_threads(1)
+                    except RuntimeError:
+                        pass
         except Exception:
             pass
 

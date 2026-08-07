@@ -29,6 +29,7 @@ var/
 wheels/
 share/python-wheels/
 *.egg-info/
+docureason_framework-*/
 .installed.cfg
 *.egg
 MANIFEST
