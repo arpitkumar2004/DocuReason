@@ -2,17 +2,18 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
-from src.tripath.utils import get_logger, trace_execution
 from src.tripath.config import DocuReasonConfig
+from src.tripath.utils import get_logger, trace_execution
+
+from ..fusion.fuse import Fuser
 from ..ingestion.schema import Document
 from ..router.configurable_router import ConfigurableRouter
-from .text_retrieval import TextRetrieval
-from .table_retrieval import TableRetrieval
-from .vision_retrieval import VisionRetrieval
-from .table_sql import TableSQLRetriever
 from .chart_understanding import ChartUnderstandingModule
 from .ranker import Ranker
-from ..fusion.fuse import Fuser
+from .table_retrieval import TableRetrieval
+from .table_sql import TableSQLRetriever
+from .text_retrieval import TextRetrieval
+from .vision_retrieval import VisionRetrieval
 
 logger = get_logger(__name__)
 

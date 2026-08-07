@@ -11,9 +11,10 @@ from __future__ import annotations
 
 import json
 import re
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Tuple
 
 from src.tripath.utils import get_logger, trace_execution
+
 from .schema import Region
 
 logger = get_logger(__name__)
@@ -101,7 +102,7 @@ class TableSerializer:
     @trace_execution(logger=logger)
     def enrich(self, region: Region, table_item: Any) -> Region:
         raw_cells, raw_grid = self._extract_table_cells_and_grid(table_item)
-        
+
         if not raw_grid:
             logger.debug("TableSerializer: empty grid for region — skipping enrichment")
             return region
@@ -111,7 +112,7 @@ class TableSerializer:
 
         header_rows, data_rows, n_cols = self._parse_spans_and_headers(spatially_sorted_cells, raw_grid)
         header_paths = build_header_hierarchy(header_rows, n_cols)
-        
+
         # Deduplicate flattened column names
         flat_columns: List[str] = []
         seen: Dict[str, int] = {}

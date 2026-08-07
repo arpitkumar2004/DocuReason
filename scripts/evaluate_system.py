@@ -6,7 +6,6 @@ Usage:
 
 from __future__ import annotations
 
-import os
 import sys
 from pathlib import Path
 
@@ -67,7 +66,7 @@ def main():
         # Run query pipeline
         response = service.query(query)
         sql_res = response.get("sql_results", {})
-        
+
         # Only evaluate sql_executed for tabular queries
         sql_executed = None
         if case.get("is_tabular"):
@@ -92,8 +91,7 @@ def main():
     print("\n" + "=" * 70)
     print("EVALUATION RESULTS & TARGET METRICS VERIFICATION SUMMARY")
     print("=" * 70)
-    
-    summary = report["summary_metrics"]
+
     verification = report["target_verification"]
 
     print(f"{'Metric Name':<30} | {'Achieved':<10} | {'Target':<10} | {'Status':<8}")
@@ -102,7 +100,7 @@ def main():
         achieved = f"{target_info['achieved']:.3f}" if isinstance(target_info['achieved'], float) else str(target_info['achieved'])
         target = f"{target_info['target']:.3f}" if isinstance(target_info['target'], float) else str(target_info['target'])
         status = target_info["status"]
-        status_str = f"[PASS]" if status == "PASS" else (f"[FAIL]" if status == "FAIL" else "[N/A]")
+        status_str = "[PASS]" if status == "PASS" else ("[FAIL]" if status == "FAIL" else "[N/A]")
         print(f"{metric_name:<30} | {achieved:<10} | {target:<10} | {status_str}")
 
     print("-" * 68)

@@ -9,18 +9,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from src.tripath.utils import get_logger, trace_execution
-from src.tripath.router.configurable_router import ConfigurableRouter
+from docureason.pipeline import DocuReasonPipeline
+from src.tripath.attribution.nli_attributor import NLIFaithfulnessAttributor
+from src.tripath.generation.generate import GenerationModule
+from src.tripath.ingestion.docling_wrapper import DoclingWrapper
 from src.tripath.retrieval.hybrid_retriever import HybridRetriever
 from src.tripath.retrieval.table_sql import TableSQLRetriever
-from src.tripath.generation.generate import GenerationModule
-from src.tripath.attribution.nli_attributor import NLIFaithfulnessAttributor
-from src.tripath.ingestion.docling_wrapper import DoclingWrapper
-from docureason.pipeline import DocuReasonPipeline
-from .async_query_service import AsyncQueryService
-from .query_service import QueryService
+from src.tripath.router.configurable_router import ConfigurableRouter
+from src.tripath.utils import get_logger, trace_execution
+
 from ..evaluation.benchmark_dataset import BenchmarkDataset
 from ..evaluation.eval_harness import EvaluationHarness
+from .query_service import QueryService
 
 logger = get_logger(__name__)
 ROOT = Path(__file__).resolve().parents[3]
@@ -76,7 +76,7 @@ def report_endpoint() -> Dict[str, Any]:
         try:
             return json.loads(REPORT_PATH.read_text(encoding="utf-8"))
         except Exception as exc:
-            raise HTTPException(status_code=500, detail=str(exc))
+            raise HTTPException(status_code=500, detail=str(exc)) from exc
     return {"status": "No pipeline report generated yet. Run ingestion first."}
 
 
@@ -172,7 +172,7 @@ def ingest_endpoint(payload: IngestPayload) -> Dict[str, Any]:
         _CACHED_DOCUMENTS = None  # Reset document cache after new ingestion
         return {"status": "success", "report": report}
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=str(exc))
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
 
 
 @app.post("/evaluate")

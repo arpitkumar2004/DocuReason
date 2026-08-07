@@ -32,11 +32,11 @@ Usage
 from __future__ import annotations
 
 import io
-import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from src.tripath.utils import get_logger, log_pipeline_flag, trace_execution
+
 from .schema import Region
 
 logger = get_logger(__name__)

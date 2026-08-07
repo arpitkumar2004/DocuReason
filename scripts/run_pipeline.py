@@ -2,21 +2,21 @@ from __future__ import annotations
 
 import argparse
 import json
-from pathlib import Path
 import sys
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 for path in [ROOT, ROOT / "src"]:
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-from tripath.utils import setup_logger, trace_execution, trace_pipeline_stage
-from tripath.ingestion.docling_wrapper import DoclingWrapper
-from tripath.ingestion.chunker import SectionAwareChunker
-from tripath.retrieval.hybrid_retriever import HybridRetriever
-from tripath.evaluation.eval_harness import EvaluationHarness
 from tripath.evaluation.benchmark_dataset import BenchmarkDataset
+from tripath.evaluation.eval_harness import EvaluationHarness
+from tripath.ingestion.chunker import SectionAwareChunker
+from tripath.ingestion.docling_wrapper import DoclingWrapper
+from tripath.retrieval.hybrid_retriever import HybridRetriever
 from tripath.router.configurable_router import ConfigurableRouter
+from tripath.utils import setup_logger, trace_pipeline_stage
 
 
 def parse_args() -> argparse.Namespace:
@@ -33,7 +33,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     logger = setup_logger("scripts.run_pipeline", log_level=args.log_level, log_file=args.log_file)
-    
+
     sample_dir = Path(args.input_dir)
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)

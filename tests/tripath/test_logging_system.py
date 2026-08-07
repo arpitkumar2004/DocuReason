@@ -2,7 +2,8 @@ import logging
 from pathlib import Path
 
 import pytest
-from src.tripath.utils.logger import get_logger, log_pipeline_flag, setup_logger
+
+from src.tripath.utils.logger import log_pipeline_flag, setup_logger
 from src.tripath.utils.tracing import trace_execution, trace_pipeline_stage
 
 

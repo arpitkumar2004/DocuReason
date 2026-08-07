@@ -140,9 +140,9 @@ class FormatAwareLoader:
     def _load_docling_fast(self, path: Path) -> str | None:
         """Fast text-only Docling pass (no table structure, minimal RAM)."""
         try:
-            from docling.document_converter import DocumentConverter, PdfFormatOption
-            from docling.datamodel.pipeline_options import PdfPipelineOptions
             from docling.datamodel.base_models import InputFormat
+            from docling.datamodel.pipeline_options import PdfPipelineOptions
+            from docling.document_converter import DocumentConverter, PdfFormatOption
 
             pipeline_options = PdfPipelineOptions()
             pipeline_options.do_ocr = False
@@ -165,9 +165,9 @@ class FormatAwareLoader:
     def _load_docling_deep(self, path: Path) -> Optional[Any]:
         """Deep layout Docling pass — TableFormer enabled, returns ConversionResult."""
         try:
-            from docling.document_converter import DocumentConverter, PdfFormatOption
-            from docling.datamodel.pipeline_options import PdfPipelineOptions
             from docling.datamodel.base_models import InputFormat
+            from docling.datamodel.pipeline_options import PdfPipelineOptions
+            from docling.document_converter import DocumentConverter, PdfFormatOption
 
             pipeline_options = PdfPipelineOptions()
             pipeline_options.do_ocr = False          # OCR handled by OCRFallback

@@ -9,8 +9,8 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
+from src.tripath.config import DocuReasonConfig, IndexingConfig
 from src.tripath.utils import get_logger, log_pipeline_flag, trace_execution
-from src.tripath.config import IndexingConfig, DocuReasonConfig
 
 logger = get_logger(__name__)
 
@@ -99,7 +99,6 @@ class DenseIndexBuilder:
 
         try:
             import faiss
-            import numpy as np
 
             model = self._get_model()
             if model is None:

@@ -20,7 +20,7 @@ def test_heading_body_binding_and_breadcrumbs():
     )
     chunker = SectionAwareChunker(chunk_size=128)
     chunks = chunker.chunk_document(doc)
-    
+
     assert len(chunks) >= 1
     # Check that ancestry metadata header is injected
     assert "Metadata Header: Financial Statement > Executive Summary" in chunks[0].text

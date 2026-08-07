@@ -8,15 +8,14 @@ from typing import Any, Dict, List, Optional
 from src.tripath.indexing.artifact_writer import ArtifactWriter
 from src.tripath.indexing.dense_index import DenseIndexBuilder
 from src.tripath.indexing.sparse_index import BM25SIndexBuilder
+from src.tripath.ingestion.docling_layout_parser import DoclingLayoutParser
 from src.tripath.ingestion.figure_captioner import FigureCaptioner
 from src.tripath.ingestion.format_loader import FormatAwareLoader
 from src.tripath.ingestion.identity import IdentityManager
-from src.tripath.ingestion.docling_layout_parser import DoclingLayoutParser
 from src.tripath.ingestion.ocr_fallback import OCRFallback
-from src.tripath.ingestion.table_serializer import TableSerializer
 from src.tripath.ingestion.schema import Region
+from src.tripath.ingestion.table_serializer import TableSerializer
 from src.tripath.utils import (
-    get_logger,
     log_pipeline_flag,
     setup_logger,
     trace_execution,

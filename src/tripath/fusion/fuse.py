@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from typing import Dict, List, Any
+from typing import Any, Dict, List
 
 from src.tripath.utils import get_logger, trace_execution
+
 from .late_fusion import ReciprocalRankFuser
 from .normalize import Normalizer
 

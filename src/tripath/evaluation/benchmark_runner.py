@@ -4,10 +4,9 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List
 
-from .eval_harness import EvaluationHarness
-from ..retrieval.hybrid_retriever import HybridRetriever
 from ..router.configurable_router import ConfigurableRouter
 from ..serving.query_service import QueryService
+from .eval_harness import EvaluationHarness
 
 
 class BenchmarkRunner:

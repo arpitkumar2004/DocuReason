@@ -1,6 +1,5 @@
-import pytest
-from src.tripath.retrieval.chart_understanding import ChartUnderstandingModule
 from src.tripath.generation.generate import GenerationModule
+from src.tripath.retrieval.chart_understanding import ChartUnderstandingModule
 
 
 def test_dynamic_chart_linearization():

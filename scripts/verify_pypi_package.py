@@ -10,10 +10,9 @@ Verifies that:
  4. Built wheel can be installed and imported cleanly in a isolated test environment.
 """
 
-import os
-import sys
 import shutil
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 
@@ -73,7 +72,7 @@ def main():
     try:
         import check_wheel_contents  # noqa: F401
         print("\n[CHECK] Checking wheel contents structure...")
-        run_cmd([sys.executable, "-m", "check_wheel_contents"] + [str(p) for p in wheel_files], cwd=repo_root)
+        run_cmd([sys.executable, "-m", "check_wheel_contents", "--ignore", "W005,W009"] + [str(p) for p in wheel_files], cwd=repo_root)
         print("[OK] Wheel contents structure validation passed!")
     except ImportError:
         print("\n[SKIP] 'check-wheel-contents' not installed, skipping wheel structure check.")

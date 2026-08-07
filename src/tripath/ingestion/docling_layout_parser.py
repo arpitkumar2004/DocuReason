@@ -24,12 +24,12 @@ Usage
 """
 from __future__ import annotations
 
-import logging
 import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from src.tripath.utils import get_logger, log_pipeline_flag, trace_execution
+
 from .schema import Region
 
 logger = get_logger(__name__)
@@ -115,9 +115,10 @@ class DoclingLayoutParser:
             return None
 
         import gc
-        from docling.document_converter import DocumentConverter, PdfFormatOption
-        from docling.datamodel.pipeline_options import PdfPipelineOptions
+
         from docling.datamodel.base_models import InputFormat
+        from docling.datamodel.pipeline_options import PdfPipelineOptions
+        from docling.document_converter import DocumentConverter, PdfFormatOption
 
         pipeline_options = PdfPipelineOptions()
         pipeline_options.do_ocr = self.do_ocr
@@ -162,22 +163,17 @@ class DoclingLayoutParser:
 
     def _item_to_region(self, item: Any, seen_title: bool) -> Optional[Region]:
         """Map a single Docling DocItem to a ``Region``, or ``None`` to skip."""
-        # Lazy imports — docling types are only resolved when the parser runs.
         try:
-            from docling.datamodel.document import (
-                SectionHeaderItem,
-                TextItem,
-                TableItem,
-                PictureItem,
+            from docling.datamodel.document import (  # noqa: F401
                 ListItem,
+                PictureItem,
+                SectionHeaderItem,
+                TableItem,
+                TextItem,
             )
         except ImportError:
             # Older docling builds use different class paths — fall back gracefully.
-            SectionHeaderItem = None
-            TextItem = None
-            TableItem = None
-            PictureItem = None
-            ListItem = None
+            pass
 
         item_type = type(item)
         item_type_name = item_type.__name__

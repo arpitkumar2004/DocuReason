@@ -28,11 +28,11 @@ Usage
 from __future__ import annotations
 
 import io
-import logging
 from pathlib import Path
 from typing import Any, List, Optional
 
 from src.tripath.utils import get_logger, log_pipeline_flag, trace_execution
+
 from .schema import Region
 
 logger = get_logger(__name__)
@@ -114,7 +114,7 @@ class FigureCaptioner:
             if existing_text and len(existing_text) > 8 and existing_text.lower() not in ("figure", "image", "picture"):
                 caption = existing_text
             else:
-                generated = self._caption_region(region, source_path, doc_title)
+                generated = self._caption_region(region, path, doc_title)
                 caption = f"{existing_text} - {generated}".strip(" -") if existing_text else generated
 
             region.text = caption
@@ -246,7 +246,7 @@ class FigureCaptioner:
             return self._torch, self._blip2_processor, self._blip2_model
         try:
             import torch
-            from transformers import Blip2Processor, Blip2ForConditionalGeneration
+            from transformers import Blip2ForConditionalGeneration, Blip2Processor
 
             self._torch = torch
             device = self._resolve_device()
@@ -300,7 +300,7 @@ class FigureCaptioner:
             return self._torch, self._clip_processor, self._clip_model
         try:
             import torch
-            from transformers import CLIPProcessor, CLIPModel
+            from transformers import CLIPModel, CLIPProcessor
 
             self._torch = torch
             device = self._resolve_device()

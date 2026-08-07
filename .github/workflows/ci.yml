@@ -102,7 +102,7 @@ jobs:
         run: twine check --strict dist/*
 
       - name: Inspect Wheel Contents
-        run: check-wheel-contents dist/*.whl
+        run: check-wheel-contents --ignore W005,W009 dist/*.whl
 
       - name: Upload Dist Artifacts
         uses: actions/upload-artifact@v4

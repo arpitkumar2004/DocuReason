@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 from typing import Any, Dict, List, Optional, Union
+
+from src.tripath.config import DocuReasonConfig, RerankerConfig
 from src.tripath.utils import get_logger, trace_execution
-from src.tripath.config import RerankerConfig, DocuReasonConfig
 
 logger = get_logger(__name__)
 
@@ -76,12 +77,12 @@ class Ranker:
 
                 for idx, item in enumerate(target_results):
                     cross_score = float(scores[idx])
-                    
+
                     # Apply penalty to standalone short heading chunks (< 45 body chars)
                     body_text = item.get("text", "")
                     if "[Context:" in body_text:
                         body_text = body_text.split("]", 1)[-1].strip()
-                    
+
                     if len(body_text) < self.short_heading_threshold and item.get("modality") == "text":
                         cross_score *= self.heading_penalty_multiplier  # Penalize short standalone headings
 

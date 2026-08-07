@@ -11,7 +11,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from typing import Any, Dict, List, Union
-from src.tripath.ingestion.schema import Document
 
 
 class DatasetExporter:

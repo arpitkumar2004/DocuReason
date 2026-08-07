@@ -89,7 +89,7 @@ def main():
     for metric_name, target_info in verification.get("metric_breakdown", {}).items():
         achieved = f"{target_info['achieved']:.3f}" if isinstance(target_info['achieved'], float) else str(target_info['achieved'])
         target = f"{target_info['target']:.3f}" if isinstance(target_info['target'], float) else str(target_info['target'])
-        status_str = f"[PASS]" if target_info["status"] == "PASS" else f"[FAIL]"
+        status_str = "[PASS]" if target_info["status"] == "PASS" else "[FAIL]"
         print(f"{metric_name:<30} | {achieved:<10} | {target:<10} | {status_str}")
 
     print("-" * 72)

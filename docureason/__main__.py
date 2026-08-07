@@ -4,6 +4,7 @@ import argparse
 from pathlib import Path
 
 from src.tripath.utils import get_logger, setup_logger
+
 from .pipeline import DocuReasonPipeline
 
 

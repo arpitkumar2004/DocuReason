@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from collections import Counter
 import json
-from pathlib import Path
 import re
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 from src.tripath.utils import get_logger, trace_execution
+
 from ..ingestion.schema import Document
 
 logger = get_logger(__name__)
@@ -195,7 +195,7 @@ class TableSQLRetriever:
 
         table_name = "doc_table"
         is_agg = any(agg in query for agg in ["sum", "average", "avg", "max", "min", "total sum"])
-        
+
         # Check for year match in columns
         year_match = next((c for c in columns if any(y in c for y in ["2019", "2018", "2020", "2021", "2022", "2023", "2024", "2025"])), None)
         col_0 = columns[0] if columns else "col_1"

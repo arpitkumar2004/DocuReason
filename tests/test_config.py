@@ -3,15 +3,13 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
-import pytest
 
-from src.tripath.config import DocuReasonConfig
-from src.tripath.indexing.dense_index import DenseIndexBuilder
-from src.tripath.router.configurable_router import ConfigurableRouter
-from src.tripath.retrieval.ranker import Ranker
-from src.tripath.retrieval.hybrid_retriever import HybridRetriever
-from src.tripath.generation.generate import GenerationModule
 from src.tripath.attribution.nli_attributor import NLIFaithfulnessAttributor
+from src.tripath.config import DocuReasonConfig
+from src.tripath.generation.generate import GenerationModule
+from src.tripath.indexing.dense_index import DenseIndexBuilder
+from src.tripath.retrieval.ranker import Ranker
+from src.tripath.router.configurable_router import ConfigurableRouter
 
 
 def test_preset_profiles_loading():

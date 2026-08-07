@@ -3,10 +3,10 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Dict, List
 
+from ..attribution.nli_attributor import NLIFaithfulnessAttributor
 from ..evaluation.eval_harness import EvaluationHarness
 from ..fusion.late_fusion import LateFusionLayer
 from ..generation.prompt_builder import PromptBuilder
-from ..attribution.nli_attributor import NLIFaithfulnessAttributor
 from .query_service import QueryService
 
 

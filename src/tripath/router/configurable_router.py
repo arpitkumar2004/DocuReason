@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 import math
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 
+from src.tripath.config import DocuReasonConfig, RouterConfig
 from src.tripath.utils import get_logger, trace_execution
-
-from src.tripath.config import RouterConfig, DocuReasonConfig
 
 logger = get_logger(__name__)
 

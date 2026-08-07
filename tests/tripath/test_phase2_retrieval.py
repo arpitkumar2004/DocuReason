@@ -1,8 +1,8 @@
 from pathlib import Path
 
 from src.tripath.ingestion.docling_wrapper import DoclingWrapper
-from src.tripath.retrieval.text_retrieval import TextRetrieval
 from src.tripath.retrieval.table_retrieval import TableRetrieval
+from src.tripath.retrieval.text_retrieval import TextRetrieval
 from src.tripath.retrieval.vision_retrieval import VisionRetrieval
 from src.tripath.router.infer_router import Router
 

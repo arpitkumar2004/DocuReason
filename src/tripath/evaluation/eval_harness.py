@@ -2,9 +2,7 @@ from __future__ import annotations
 
 import json
 import math
-import os
 import time
-import tracemalloc
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
@@ -53,9 +51,10 @@ class EvaluationHarness:
         ground_truth_table: Optional[Dict[str, Any]] = None,
         sql_executed: Optional[bool] = None,
         latency_ms: Optional[float] = None,
-        k_values: List[int] = [5, 10, 20],
+        k_values: Optional[List[int]] = None,
     ) -> Dict[str, Any]:
         """Evaluates a single query run across 22 multi-dimensional evaluation metrics."""
+        k_values = k_values or [5, 10, 20]
         relevant_ids = relevant_ids or []
         evidence = evidence or results
 

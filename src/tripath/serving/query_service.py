@@ -1,15 +1,17 @@
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
+
 from src.tripath.config import DocuReasonConfig
+
+from ..fusion.fuse import Fuser
+from ..generation.generate import GenerationModule
 from ..ingestion.docling_wrapper import DoclingWrapper
 from ..retrieval.embedder import ChunkEmbedder
 from ..retrieval.ranker import Ranker
-from ..retrieval.text_retrieval import TextRetrieval
 from ..retrieval.table_retrieval import TableRetrieval
+from ..retrieval.text_retrieval import TextRetrieval
 from ..retrieval.vision_retrieval import VisionRetrieval
 from ..router.configurable_router import ConfigurableRouter
-from ..fusion.fuse import Fuser
-from ..generation.generate import GenerationModule
 
 
 class QueryService:

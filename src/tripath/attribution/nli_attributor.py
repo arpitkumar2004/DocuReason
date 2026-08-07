@@ -1,5 +1,6 @@
 import re
-from typing import List, Dict, Any, Optional, Union
+from typing import Any, Dict, List, Optional, Union
+
 from src.tripath.config import AttributionConfig, DocuReasonConfig
 
 

@@ -1,6 +1,6 @@
 """DocuReason Quickstart: Evaluation & NLI Attribution Precision."""
 
-from src.tripath.evaluation import EvaluationHarness, DatasetExporter
+from src.tripath.evaluation import DatasetExporter, EvaluationHarness
 
 
 def main() -> None:

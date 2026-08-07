@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from src.tripath.utils import get_logger, trace_execution
+
 from .schema import Chunk, Document, Region
 
 logger = get_logger(__name__)

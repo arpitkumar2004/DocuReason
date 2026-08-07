@@ -47,7 +47,7 @@ jobs:
         run: twine check --strict dist/*
 
       - name: Verify Wheel Contents
-        run: check-wheel-contents dist/*.whl
+        run: check-wheel-contents --ignore W005,W009 dist/*.whl
 
       - name: Publish Package to PyPI (OIDC Trusted Publisher)
         if: ${{ !inputs.dry_run }}

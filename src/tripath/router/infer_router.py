@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Dict, Optional
 
 from src.tripath.utils import get_logger, trace_execution
+
 from .configurable_router import ConfigurableRouter
 
 logger = get_logger(__name__)

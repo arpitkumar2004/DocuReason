@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any, Dict, List, Optional
 
 from src.tripath.utils import get_logger, trace_execution
+
 from ..ingestion.schema import Document
 
 logger = get_logger(__name__)

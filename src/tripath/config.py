@@ -13,7 +13,7 @@ Supports:
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
@@ -233,7 +233,7 @@ class DocuReasonConfig:
                         if hasattr(sec_obj, field_name):
                             field_type = type(getattr(sec_obj, field_name))
                             try:
-                                if field_type == bool:
+                                if field_type is bool:
                                     cast_val = env_val.lower() in ("1", "true", "yes")
                                 else:
                                     cast_val = field_type(env_val)
@@ -250,7 +250,7 @@ class DocuReasonConfig:
                         if hasattr(sec_obj, raw):
                             field_type = type(getattr(sec_obj, raw))
                             try:
-                                cast_val = env_val.lower() in ("1", "true", "yes") if field_type == bool else field_type(env_val)
+                                cast_val = env_val.lower() in ("1", "true", "yes") if field_type is bool else field_type(env_val)
                                 setattr(sec_obj, raw, cast_val)
                                 logger.info("Env override applied: %s -> %s", env_key, cast_val)
                                 break

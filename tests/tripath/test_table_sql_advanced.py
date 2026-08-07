@@ -1,14 +1,12 @@
-import json
-from pathlib import Path
+from src.tripath.evaluation.table_eval import TableEvaluator
 from src.tripath.ingestion.table_serializer import (
     TableSerializer,
     build_header_hierarchy,
+    extract_unit_multiplier,
     flatten_column_name,
     normalize_numeric_cell,
-    extract_unit_multiplier,
 )
-from src.tripath.retrieval.table_sql import TableSQLRetriever, infer_sql_type, FAILURE_LOG_PATH
-from src.tripath.evaluation.table_eval import TableEvaluator
+from src.tripath.retrieval.table_sql import TableSQLRetriever, infer_sql_type
 
 
 def test_build_header_hierarchy_and_flattening():

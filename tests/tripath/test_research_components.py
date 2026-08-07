@@ -3,7 +3,6 @@ from pathlib import Path
 from src.tripath.evaluation.benchmark_dataset import BenchmarkDataset
 from src.tripath.ingestion.chunker import SectionAwareChunker
 from src.tripath.ingestion.docling_wrapper import DoclingWrapper
-from src.tripath.ingestion.schema import Document
 
 
 def test_chunking_and_benchmark_dataset(tmp_path):

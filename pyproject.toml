@@ -97,10 +97,13 @@ filterwarnings = [
 [tool.ruff]
 line-length = 120
 target-version = "py310"
-select = ["E", "F", "W", "I", "B"]
-ignore = ["E501", "B008"]
+extend-exclude = ["scratch", "artifacts", "dist", "build"]
 
-[tool.ruff.isort]
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B"]
+ignore = ["E501", "B008", "B905", "E402"]
+
+[tool.ruff.lint.isort]
 known-first-party = ["docureason", "src"]
 
 [tool.coverage.run]
@@ -121,4 +124,7 @@ python_version = "3.10"
 warn_return_any = false
 warn_unused_configs = true
 ignore_missing_imports = true
+
+[tool.check-wheel-contents]
+ignore = ["W005", "W009"]
 

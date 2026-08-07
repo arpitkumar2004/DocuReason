@@ -1,4 +1,5 @@
 from fastapi.testclient import TestClient
+
 import src.tripath.serving.main as main_module
 from src.tripath.ingestion.schema import Document, Region
 

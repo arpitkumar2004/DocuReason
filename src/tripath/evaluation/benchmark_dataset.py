@@ -7,7 +7,7 @@ from typing import Dict, List, Optional, Union
 
 class BenchmarkDataset:
     """Enterprise Multimodal Benchmark Dataset Builder.
-    
+
     Provides ready-to-use evaluation samples inspired by FinQA, TAT-QA, DocVQA, and ChartQA,
     as well as hooks to download external public evaluation datasets.
     """
@@ -51,7 +51,6 @@ class BenchmarkDataset:
 
     def build_extended_suite(self, total_items: int = 60) -> List[Dict[str, object]]:
         """Generates a structured multi-modal benchmark set of `total_items` across text, table, and vision."""
-        base_samples = self.build_smoke_suite()
         extended = []
 
         topics = [
@@ -103,7 +102,17 @@ class BenchmarkDataset:
             print(f"HuggingFace dataset loading notice ({exc}). Returning extended built-in suite.")
             return self.build_extended_suite(limit)
 
-    def save(self, benchmark_items: List[Dict[str, object]], output_path: Union[str, Path]) -> Path:
+    def save(self, benchmark_items: Optional[Union[List[Dict[str, object]], str, Path]] = None, output_path: Optional[Union[str, Path]] = None) -> Path:
+        if isinstance(benchmark_items, (str, Path)) and output_path is None:
+            output_path = benchmark_items
+            benchmark_items = None
+
+        if benchmark_items is None:
+            benchmark_items = self.build()
+
+        if output_path is None:
+            raise ValueError("output_path must be specified when saving BenchmarkDataset.")
+
         output = Path(output_path)
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(json.dumps(benchmark_items, indent=2), encoding="utf-8")
