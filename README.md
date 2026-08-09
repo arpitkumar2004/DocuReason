@@ -1,4 +1,4 @@
-# DocuReason v1.1.1 — Enterprise-Grade Tri-Path Multimodal RAG Framework
+# DocuReason v1.1.2 — Enterprise-Grade Tri-Path Multimodal RAG Framework
 
 [![CI Pipeline](https://github.com/arpitkumar2004/DocuReason/actions/workflows/ci.yml/badge.svg)](https://github.com/arpitkumar2004/DocuReason/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/docureason-framework.svg)](https://pypi.org/project/docureason-framework/)
