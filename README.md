@@ -8,8 +8,6 @@
 
 **DocuReason** (`docureason-framework`) is an enterprise-grade, multimodal Retrieval-Augmented Generation (RAG) framework for Python. Built for multi-format enterprise document processing, DocuReason ingests, parses, segments, indexes, routes, retrieves, synthesizes grounded answers, and evaluates document corpora across text, tabular, and visual modalities.
 
-![DocuReason Tri-Path Multimodal RAG Pipeline Demo](assets/docureason_demo.jpg)
-
 ---
 
 ## Table of Contents
@@ -17,30 +15,35 @@
 1. [Overview](#overview)
 2. [Key Features](#key-features)
 3. [Architecture](#architecture)
-4. [Benchmark Results & Performance](#benchmark-results--performance)
-5. [Installation](#installation)
+4. [Pipeline Walkthrough & Segment Breakdown](#pipeline-walkthrough--segment-breakdown)
+   - [Step 1: Ingestion & Layout Parsing](#step-1-multi-format-document-ingestion--layout-parsing)
+   - [Step 2: Tri-Path Routing & Indexing](#step-2-tri-path-dynamic-query-routing--multimodal-indexing)
+   - [Step 3: RRF Fusion & Reranking](#step-3-reciprocal-rank-fusion-rrf--cross-encoder-reranking)
+   - [Step 4: Generation & NLI Attribution](#step-4-multimodal-generation--nli-faithfulness-attribution)
+5. [Benchmark Results & Performance](#benchmark-results--performance)
+6. [Installation](#installation)
    - [PyPI Installation](#pypi-installation)
    - [Install from Source](#install-from-source)
    - [Kaggle & Offline Notebook Installation](#kaggle--offline-notebook-installation)
-6. [Quick Start](#quick-start)
+7. [Quick Start](#quick-start)
    - [Python API](#1-python-api)
    - [CLI Commands](#2-cli-commands)
    - [FastAPI REST Server](#3-fastapi-rest-server)
    - [Interactive Web Dashboard](#4-interactive-web-dashboard)
-7. [Underlying Open-Source Libraries & Documentation Links](#underlying-open-source-libraries--documentation-links)
-8. [Standard Library API Reference](#standard-library-api-reference)
+8. [Underlying Open-Source Libraries & Documentation Links](#underlying-open-source-libraries--documentation-links)
+9. [Standard Library API Reference](#standard-library-api-reference)
    - [`docureason.pipeline`](#docureasonpipeline)
    - [`docureason.ingestion`](#docureasoningestion)
    - [`docureason.serving`](#docureasonserving)
    - [`src.tripath.retrieval`](#srctripathretrieval)
    - [`src.tripath.attribution`](#srctripathattribution)
    - [`src.tripath.evaluation`](#srctripathevaluation)
-9. [Fine-Tuning Dataset Exporter](#fine-tuning-dataset-exporter)
-10. [REST API Endpoint Reference](#rest-api-endpoint-reference)
-11. [Configuration Guide](#configuration-guide)
-12. [Running Tests & Validation](#running-tests--validation)
-13. [CI/CD & PyPI Release Engineering](#cicd--pypi-release-engineering)
-14. [License](#license)
+10. [Fine-Tuning Dataset Exporter](#fine-tuning-dataset-exporter)
+11. [REST API Endpoint Reference](#rest-api-endpoint-reference)
+12. [Configuration Guide](#configuration-guide)
+13. [Running Tests & Validation](#running-tests--validation)
+14. [CI/CD & PyPI Release Engineering](#cicd--pypi-release-engineering)
+15. [License](#license)
 
 ---
 
@@ -90,6 +93,55 @@ flowchart TD
     J --> K[NLI Faithfulness Attributor]
     K --> L[Grounded Response + Citations]
 ```
+
+---
+
+## Pipeline Walkthrough & Segment Breakdown
+
+DocuReason breaks complex multimodal document reasoning into **4 clear, modular pipeline segments**:
+
+### Step 1: Multi-Format Document Ingestion & Layout Parsing
+
+![Step 1: Multi-Format Document Ingestion and Layout Parsing](assets/step1_ingestion.jpg)
+
+* **Document Loading**: Ingests unstructured enterprise files (`.pdf`, `.docx`, `.xlsx`, `.pptx`, `.html`, scanned images).
+* **Layout Parsing**: Uses **Docling** (TableFormer + DocLayNet) to segment documents into distinct structural regions:
+  1. **Text Blocks**: Formatted text passages annotated with section hierarchy and breadcrumbs.
+  2. **Data Tables**: Extracted grids serialized into GitHub Flavored Markdown and JSON schemas.
+  3. **Figure Images**: Embedded visual charts, graphs, and diagrams paired with captions.
+* **OCR Fallback**: Automatically triggers **EasyOCR** when scanned or non-searchable document pages are detected.
+
+---
+
+### Step 2: Tri-Path Dynamic Query Routing & Multimodal Indexing
+
+![Step 2: Tri-Path Dynamic Query Routing and Multimodal Indexing](assets/step2_routing.jpg)
+
+* **Modality Router**: A soft-probability classifier analyzes incoming user queries to determine the search intent (Text, Table/SQL, or Vision/Chart).
+* **Specialized Tri-Path Processing**:
+  - **Text Path**: Combines dense vector search via **Qdrant** / SentenceTransformers with sparse BM25 keyword search via **BM25S**.
+  - **Table Path**: Translates natural language table queries into SQL aggregations (`SUM`, `AVG`, `GROUP BY`) executed in-memory with **DuckDB**.
+  - **Vision Path**: Embeds graphic charts and figures using **ColPali** visual representations and **BLIP-2** image captioning.
+
+---
+
+### Step 3: Reciprocal Rank Fusion (RRF) & Cross-Encoder Reranking
+
+![Step 3: Reciprocal Rank Fusion (RRF) & Cross-Encoder Reranking](assets/step3_fusion_reranking.jpg)
+
+* **Rank Fusion**: Combines candidate hits retrieved across Text, Table, and Vision paths using **Reciprocal Rank Fusion (RRF)**:
+  $$RRF_{score}(d) = \sum_{k} \frac{1}{60 + rank_k(d)}$$
+* **Cross-Encoder Reranking**: Passes fused candidates through a Cross-Encoder Transformer to score query-context pairs and extract the top-$K$ most relevant context chunks.
+
+---
+
+### Step 4: Multimodal Generation & NLI Faithfulness Attribution
+
+![Step 4: Multimodal Generation Engine and NLI Faithfulness Attribution](assets/step4_attribution.jpg)
+
+* **Multimodal Answer Synthesis**: Feeds top-$K$ grounded context passages to the LLM generation engine.
+* **NLI Entailment Guardrails**: The `NLIFaithfulnessAttributor` decomposes generated responses into individual claims and checks NLI premise-hypothesis entailment against retrieved document sources.
+* **Grounded Output**: Returns zero-hallucination answers accompanied by page-level document citations.
 
 ---
 
