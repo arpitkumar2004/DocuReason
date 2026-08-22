@@ -96,6 +96,7 @@ class TableSQLRetriever:
         if self._duckdb_available is None:
             try:
                 import duckdb  # noqa: F401
+
                 self._duckdb_available = True
             except ImportError:
                 self._duckdb_available = False
@@ -119,20 +120,22 @@ class TableSQLRetriever:
                 sql_query, sql_result, score = self._execute_sql_query(lowered_query, table_data)
 
                 if score > 0.0:
-                    results.append({
-                        "document_id": document.id,
-                        "region_id": f"{document.id}-table-{idx}",
-                        "score": round(score, 3),
-                        "text": region.table_markdown or region.text,
-                        "modality": "table",
-                        "mode": "typed_duckdb_sql" if self._has_duckdb() else "sql_simulation",
-                        "sql_query": sql_query,
-                        "sql_result": sql_result,
-                        "table_schema": table_data.get("columns", []),
-                        "inferred_types": table_data.get("inferred_types", {}),
-                        "unit_multiplier": table_data.get("unit_multiplier", 1),
-                        "query": query,
-                    })
+                    results.append(
+                        {
+                            "document_id": document.id,
+                            "region_id": f"{document.id}-table-{idx}",
+                            "score": round(score, 3),
+                            "text": region.table_markdown or region.text,
+                            "modality": "table",
+                            "mode": "typed_duckdb_sql" if self._has_duckdb() else "sql_simulation",
+                            "sql_query": sql_query,
+                            "sql_result": sql_result,
+                            "table_schema": table_data.get("columns", []),
+                            "inferred_types": table_data.get("inferred_types", {}),
+                            "unit_multiplier": table_data.get("unit_multiplier", 1),
+                            "query": query,
+                        }
+                    )
 
         return sorted(results, key=lambda item: item["score"], reverse=True)
 
@@ -178,9 +181,7 @@ class TableSQLRetriever:
             return {"columns": headers, "rows": data_rows}
         return None
 
-    def _execute_sql_query(
-        self, query: str, table_data: Dict[str, Any]
-    ) -> Tuple[str, List[Dict[str, Any]], float]:
+    def _execute_sql_query(self, query: str, table_data: Dict[str, Any]) -> Tuple[str, List[Dict[str, Any]], float]:
         columns = table_data.get("columns", [])
         rows = table_data.get("rows", [])
         if not columns or not rows:
@@ -197,12 +198,26 @@ class TableSQLRetriever:
         is_agg = any(agg in query for agg in ["sum", "average", "avg", "max", "min", "total sum"])
 
         # Check for year match in columns
-        year_match = next((c for c in columns if any(y in c for y in ["2019", "2018", "2020", "2021", "2022", "2023", "2024", "2025"])), None)
+        year_match = next(
+            (
+                c
+                for c in columns
+                if any(y in c for y in ["2019", "2018", "2020", "2021", "2022", "2023", "2024", "2025"])
+            ),
+            None,
+        )
         col_0 = columns[0] if columns else "col_1"
 
         # Check for target concept terms in query
         target_concept = None
-        for concept in ["total assets", "total equity", "total liabilities", "cash and cash equivalents", "net income", "operating expenses"]:
+        for concept in [
+            "total assets",
+            "total equity",
+            "total liabilities",
+            "cash and cash equivalents",
+            "net income",
+            "operating expenses",
+        ]:
             if concept in query:
                 target_concept = concept
                 break
@@ -214,7 +229,7 @@ class TableSQLRetriever:
             if year_match:
                 generated_sql = f'SELECT "{col_0}", "{year_match}" FROM {table_name} WHERE LOWER("{col_0}") LIKE \'%{concept_keyword}%\''
             else:
-                generated_sql = f'SELECT * FROM {table_name} WHERE LOWER("{col_0}") LIKE \'%{concept_keyword}%\''
+                generated_sql = f"SELECT * FROM {table_name} WHERE LOWER(\"{col_0}\") LIKE '%{concept_keyword}%'"
         elif is_agg and numeric_cols:
             generated_sql = f'SELECT SUM("{numeric_cols[0]}") AS total_sum FROM {table_name}'
         elif year_match:
@@ -226,6 +241,7 @@ class TableSQLRetriever:
         if self._has_duckdb():
             try:
                 import duckdb
+
                 con = duckdb.connect(database=":memory:")
                 col_defs = ", ".join([f'"{col}" {column_types.get(col, "VARCHAR")}' for col in columns])
                 con.execute(f"CREATE TABLE {table_name} ({col_defs})")
@@ -236,7 +252,7 @@ class TableSQLRetriever:
                     row_padded = row + [None] * (len(columns) - len(row))
                     sanitized_row = [
                         sanitize_cell_for_sql(val, column_types.get(col, "VARCHAR"))
-                        for col, val in zip(columns, row_padded[:len(columns)])
+                        for col, val in zip(columns, row_padded[: len(columns)])
                     ]
                     con.execute(f"INSERT INTO {table_name} VALUES ({placeholders})", sanitized_row)
 

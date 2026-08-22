@@ -7,6 +7,7 @@ Enhancements for Problem 1:
 - Layer 4: Numeric normalization ((1,234) -> -1234.0) & unit multiplier extraction.
 - Validation: Structure validation for confidence-gated fallback.
 """
+
 from __future__ import annotations
 
 import json
@@ -127,10 +128,7 @@ class TableSerializer:
             flat_columns.append(unique_col)
 
         # Layer 4: Normalize numeric cells in data rows
-        normalized_rows = [
-            [normalize_numeric_cell(cell) for cell in row]
-            for row in data_rows
-        ]
+        normalized_rows = [[normalize_numeric_cell(cell) for cell in row] for row in data_rows]
 
         # Layer 2: Sanitize stub columns & realign shifted fallback headers
         flat_columns, normalized_rows = self._sanitize_stub_columns_and_headers(flat_columns, normalized_rows)
@@ -282,8 +280,7 @@ class TableSerializer:
 
         # Check if column 0 data cells contain string labels (e.g. "ASSETS", "Cash and cash equivalents")
         first_col_text_count = sum(
-            1 for row in rows
-            if row and isinstance(row[0], str) and re.search(r"[a-zA-Z]{2,}", row[0])
+            1 for row in rows if row and isinstance(row[0], str) and re.search(r"[a-zA-Z]{2,}", row[0])
         )
         is_stub_col_text = (first_col_text_count / max(1, len(rows))) >= 0.25
 
@@ -291,11 +288,15 @@ class TableSerializer:
         # Realignment Case 1: Shift fallback header from end to index 0 if Column 0 contains row labels
         if last_is_fallback and first_is_explicit and is_stub_col_text and n_cols > 1:
             realigned_cols = [columns[-1]] + columns[:-1]
-            logger.info("Layer 2 Sanitizer: Realigned shifted stub header '%s' from col %d to col 0", columns[-1], n_cols - 1)
+            logger.info(
+                "Layer 2 Sanitizer: Realigned shifted stub header '%s' from col %d to col 0", columns[-1], n_cols - 1
+            )
 
         # Realignment Case 2: Rename generic stub column header at index 0 (e.g. "col_4" or "col_1") to "description"
         if is_stub_col_text and any(realigned_cols[0].startswith(p) for p in ("col_", "col")):
-            logger.info("Layer 2 Sanitizer: Renamed generic stub header '%s' at col 0 to 'description'", realigned_cols[0])
+            logger.info(
+                "Layer 2 Sanitizer: Renamed generic stub header '%s' at col 0 to 'description'", realigned_cols[0]
+            )
             realigned_cols[0] = "description"
 
         return realigned_cols, rows
@@ -311,9 +312,7 @@ class TableSerializer:
 
         header_line = "| " + " | ".join(pad(headers, col_count)) + " |"
         separator = "| " + " | ".join(["---"] * col_count) + " |"
-        data_lines = [
-            "| " + " | ".join(pad(row, col_count)) + " |" for row in rows
-        ]
+        data_lines = ["| " + " | ".join(pad(row, col_count)) + " |" for row in rows]
         return "\n".join([header_line, separator] + data_lines)
 
     @staticmethod
@@ -342,12 +341,7 @@ def _cell_text(cell: Any) -> str:
 
 
 def _escape_html(text: str) -> str:
-    return (
-        text.replace("&", "&amp;")
-            .replace("<", "&lt;")
-            .replace(">", "&gt;")
-            .replace('"', "&quot;")
-    )
+    return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
 
 
 def _markdown_to_grid(md: str) -> List[List[str]]:

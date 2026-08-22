@@ -11,8 +11,12 @@ from .pipeline import DocuReasonPipeline
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run the document ingestion and indexing pipeline")
     parser.add_argument("--input-dir", default="samples", help="Input directory containing documents")
-    parser.add_argument("--output-dir", default="artifacts/index", help="Output directory for generated corpus and index")
-    parser.add_argument("--log-level", default="INFO", choices=["DEBUG", "INFO", "WARNING", "ERROR"], help="Console log verbosity level")
+    parser.add_argument(
+        "--output-dir", default="artifacts/index", help="Output directory for generated corpus and index"
+    )
+    parser.add_argument(
+        "--log-level", default="INFO", choices=["DEBUG", "INFO", "WARNING", "ERROR"], help="Console log verbosity level"
+    )
     parser.add_argument("--log-file", default=None, help="File path to write detailed execution logs")
     args = parser.parse_args()
 
@@ -22,7 +26,7 @@ def main() -> None:
 
     pipeline = DocuReasonPipeline(input_dir=Path(args.input_dir), output_dir=Path(args.output_dir))
     result = pipeline.run()
-    logger.info("Pipeline run complete: %s documents, %s chunks", result['document_count'], result['chunk_count'])
+    logger.info("Pipeline run complete: %s documents, %s chunks", result["document_count"], result["chunk_count"])
     print(f"Processed {result['document_count']} documents into {result['chunk_count']} chunks")
 
 

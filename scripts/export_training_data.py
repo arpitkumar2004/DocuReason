@@ -37,13 +37,15 @@ def main():
         query = case["question"]
         print(f"  [{idx}/{len(test_cases)}] Query: '{query}'")
         response = service.query(query)
-        eval_cases.append({
-            "query": query,
-            "results": response.get("results", []),
-            "relevant_ids": case.get("relevant_ids", []),
-            "answer": response.get("answer", ""),
-            "evidence": response.get("results", []),
-        })
+        eval_cases.append(
+            {
+                "query": query,
+                "results": response.get("results", []),
+                "relevant_ids": case.get("relevant_ids", []),
+                "answer": response.get("answer", ""),
+                "evidence": response.get("results", []),
+            }
+        )
 
     # 3. Export datasets
     exporter = DatasetExporter(output_dir="artifacts/training_data")

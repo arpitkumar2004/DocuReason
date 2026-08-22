@@ -36,16 +36,18 @@ class TextEncoder:
         for document in documents:
             for region in document.regions:
                 if region.type in ("body", "title"):
-                    records.append({
-                        "id": f"{document.id}-{region.type}-{len(records)}",
-                        "document_id": document.id,
-                        "region_type": region.type,
-                        "modality": "text",
-                        "text": region.text,
-                        "page_no": region.page_no,
-                        "layout_source": region.layout_source,
-                        "vector": [],  # filled below
-                    })
+                    records.append(
+                        {
+                            "id": f"{document.id}-{region.type}-{len(records)}",
+                            "document_id": document.id,
+                            "region_type": region.type,
+                            "modality": "text",
+                            "text": region.text,
+                            "page_no": region.page_no,
+                            "layout_source": region.layout_source,
+                            "vector": [],  # filled below
+                        }
+                    )
                     texts_pending.append(region.text)
                     indices_pending.append(len(records) - 1)
 
@@ -79,6 +81,7 @@ class TextEncoder:
             return self._model
         try:
             from sentence_transformers import SentenceTransformer
+
             self._model = SentenceTransformer(self.model_name)
         except Exception:
             self._model = None
@@ -87,8 +90,6 @@ class TextEncoder:
     @staticmethod
     def _hash_vector(text: str) -> List[float]:
         import hashlib
+
         tokens = sorted(set(text.lower().split()))
-        return [
-            round(int(hashlib.sha256(t.encode()).hexdigest()[:8], 16) / 0xFFFFFF, 4)
-            for t in tokens
-        ]
+        return [round(int(hashlib.sha256(t.encode()).hexdigest()[:8], 16) / 0xFFFFFF, 4) for t in tokens]

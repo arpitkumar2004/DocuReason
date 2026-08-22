@@ -1,6 +1,6 @@
 """DocuReason Quickstart: Online Query Serving & Multimodal Retrieval with Configuration Transparency."""
 
-from docureason import DocuReasonConfig, QueryService
+from docureason import QueryService
 
 
 def main() -> None:
@@ -26,4 +26,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

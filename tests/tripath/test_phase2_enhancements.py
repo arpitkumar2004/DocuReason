@@ -48,7 +48,10 @@ def test_table_sql_duckdb_and_fallback():
                 start=0,
                 end=100,
                 table_markdown="Quarter | Region | Revenue\nQ1 | North America | 10000\nQ2 | Europe | 8000",
-                table_json={"columns": ["Quarter", "Region", "Revenue"], "rows": [["Q1", "North America", "10000"], ["Q2", "Europe", "8000"]]},
+                table_json={
+                    "columns": ["Quarter", "Region", "Revenue"],
+                    "rows": [["Q1", "North America", "10000"], ["Q2", "Europe", "8000"]],
+                },
             )
         ],
     )

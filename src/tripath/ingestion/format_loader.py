@@ -101,7 +101,8 @@ class FormatAwareLoader:
 
         for path in input_dir.iterdir():
             if path.is_file() and (
-                self._mime_type(path) in self.SUPPORTED_EXTENSIONS.values() or path.suffix.lower() in self.SUPPORTED_EXTENSIONS
+                self._mime_type(path) in self.SUPPORTED_EXTENSIONS.values()
+                or path.suffix.lower() in self.SUPPORTED_EXTENSIONS
             ):
                 supported.append(path)
 
@@ -127,6 +128,7 @@ class FormatAwareLoader:
     def _load_pdf(self, path: Path) -> str:
         try:
             import pypdf
+
             reader = pypdf.PdfReader(str(path))
             pages_text = []
             for page in reader.pages:
@@ -152,9 +154,7 @@ class FormatAwareLoader:
             pipeline_options.page_batch_size = 1
 
             converter = DocumentConverter(
-                format_options={
-                    InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)
-                }
+                format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)}
             )
             result = converter.convert(str(path))
             text = result.document.export_to_markdown()
@@ -170,16 +170,14 @@ class FormatAwareLoader:
             from docling.document_converter import DocumentConverter, PdfFormatOption
 
             pipeline_options = PdfPipelineOptions()
-            pipeline_options.do_ocr = False          # OCR handled by OCRFallback
+            pipeline_options.do_ocr = False  # OCR handled by OCRFallback
             pipeline_options.do_table_structure = True  # Enable TableFormer
             pipeline_options.images_scale = 1.0
             pipeline_options.generate_page_images = False
-            pipeline_options.page_batch_size = 2     # Memory-safe batch size
+            pipeline_options.page_batch_size = 2  # Memory-safe batch size
 
             converter = DocumentConverter(
-                format_options={
-                    InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)
-                }
+                format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)}
             )
             return converter.convert(str(path))
         except Exception:

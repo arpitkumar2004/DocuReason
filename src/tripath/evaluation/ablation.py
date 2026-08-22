@@ -14,9 +14,11 @@ class AblationStudy:
                 - baseline.get("summary", {}).get("average_recall_at_5", 0.0),
                 3,
             )
-            rows.append({
-                "name": ablation.get("name", "unnamed"),
-                "average_recall_at_5": ablation.get("summary", {}).get("average_recall_at_5", 0.0),
-                "delta_vs_full": delta,
-            })
+            rows.append(
+                {
+                    "name": ablation.get("name", "unnamed"),
+                    "average_recall_at_5": ablation.get("summary", {}).get("average_recall_at_5", 0.0),
+                    "delta_vs_full": delta,
+                }
+            )
         return {"baseline": baseline, "ablations": rows}

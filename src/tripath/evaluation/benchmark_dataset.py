@@ -57,15 +57,78 @@ class BenchmarkDataset:
 
         topics = [
             ("FinQA", "table", "What is the net profit margin for fiscal quarter {}?", ["finqa_doc_01"], "24%", True),
-            ("TAT-QA", "text", "What risk factors affect revenue stream {} in paragraph report?", ["tatqa_doc_01"], "inflation", False),
-            ("DocVQA", "vision", "What is the peak bar value shown in infographic figure {}?", ["docvqa_doc_01"], "85%", False),
-            ("ChartQA", "vision", "Compare line chart trajectory between product {} and market baseline", ["chartqa_doc_01"], "15 points", False),
-            ("WikiTable", "table", "Calculate average EBITDA growth rate across region {}", ["wikitable_doc_01"], "12%", True),
-            ("DocLayNet", "layout", "What is the layout boundary score for document section {}?", ["doclaynet_doc_01"], "0.94", False),
-            ("FinTabNet", "table", "What are the row cell alignments in financial table {}?", ["fintabnet_doc_01"], "100%", True),
-            ("PubLayNet", "layout", "Identify multi-column bounding box for article {}?", ["publaynet_doc_01"], "bounding_box_v1", False),
-            ("AI2D", "vision", "What is the label of the primary diagram component {}?", ["ai2d_doc_01"], "component_alpha", False),
-            ("InfographicVQA", "vision", "What statistic is highlighted in infographic section {}?", ["infographicvqa_doc_01"], "78 percent", False),
+            (
+                "TAT-QA",
+                "text",
+                "What risk factors affect revenue stream {} in paragraph report?",
+                ["tatqa_doc_01"],
+                "inflation",
+                False,
+            ),
+            (
+                "DocVQA",
+                "vision",
+                "What is the peak bar value shown in infographic figure {}?",
+                ["docvqa_doc_01"],
+                "85%",
+                False,
+            ),
+            (
+                "ChartQA",
+                "vision",
+                "Compare line chart trajectory between product {} and market baseline",
+                ["chartqa_doc_01"],
+                "15 points",
+                False,
+            ),
+            (
+                "WikiTable",
+                "table",
+                "Calculate average EBITDA growth rate across region {}",
+                ["wikitable_doc_01"],
+                "12%",
+                True,
+            ),
+            (
+                "DocLayNet",
+                "layout",
+                "What is the layout boundary score for document section {}?",
+                ["doclaynet_doc_01"],
+                "0.94",
+                False,
+            ),
+            (
+                "FinTabNet",
+                "table",
+                "What are the row cell alignments in financial table {}?",
+                ["fintabnet_doc_01"],
+                "100%",
+                True,
+            ),
+            (
+                "PubLayNet",
+                "layout",
+                "Identify multi-column bounding box for article {}?",
+                ["publaynet_doc_01"],
+                "bounding_box_v1",
+                False,
+            ),
+            (
+                "AI2D",
+                "vision",
+                "What is the label of the primary diagram component {}?",
+                ["ai2d_doc_01"],
+                "component_alpha",
+                False,
+            ),
+            (
+                "InfographicVQA",
+                "vision",
+                "What statistic is highlighted in infographic section {}?",
+                ["infographicvqa_doc_01"],
+                "78 percent",
+                False,
+            ),
         ]
 
         item_id = 1
@@ -73,43 +136,54 @@ class BenchmarkDataset:
             for source, modality, q_template, rel_ids, ans, is_tab in topics:
                 if len(extended) >= total_items:
                     break
-                extended.append({
-                    "id": f"{source.lower()}-{item_id:03d}",
-                    "source": source,
-                    "question": q_template.format(item_id),
-                    "answer": f"{ans} (Item {item_id})",
-                    "modality": modality,
-                    "relevant_ids": rel_ids,
-                    "is_tabular": is_tab,
-                })
+                extended.append(
+                    {
+                        "id": f"{source.lower()}-{item_id:03d}",
+                        "source": source,
+                        "question": q_template.format(item_id),
+                        "answer": f"{ans} (Item {item_id})",
+                        "modality": modality,
+                        "relevant_ids": rel_ids,
+                        "is_tabular": is_tab,
+                    }
+                )
                 item_id += 1
 
         return extended
 
-    def load_from_huggingface(self, dataset_name: str, split: str = "test", limit: int = 100) -> List[Dict[str, object]]:
+    def load_from_huggingface(
+        self, dataset_name: str, split: str = "test", limit: int = 100
+    ) -> List[Dict[str, object]]:
         """Loads public datasets (e.g. 'financial_phrasebank', 'docvqa', 'chartqa') via HuggingFace datasets library if available."""
         try:
             from datasets import load_dataset
+
             ds = load_dataset(dataset_name, split=split)
             items = []
             for idx, record in enumerate(ds):
                 if idx >= limit:
                     break
-                items.append({
-                    "id": f"{dataset_name.replace('/', '_')}-{idx:04d}",
-                    "source": dataset_name,
-                    "question": record.get("question") or record.get("text") or record.get("query", ""),
-                    "answer": str(record.get("answer") or record.get("label", "")),
-                    "modality": "text",
-                    "relevant_ids": ["sample_doc_1"],
-                    "is_tabular": False,
-                })
+                items.append(
+                    {
+                        "id": f"{dataset_name.replace('/', '_')}-{idx:04d}",
+                        "source": dataset_name,
+                        "question": record.get("question") or record.get("text") or record.get("query", ""),
+                        "answer": str(record.get("answer") or record.get("label", "")),
+                        "modality": "text",
+                        "relevant_ids": ["sample_doc_1"],
+                        "is_tabular": False,
+                    }
+                )
             return items
         except Exception as exc:
             print(f"HuggingFace dataset loading notice ({exc}). Returning extended built-in suite.")
             return self.build_extended_suite(limit)
 
-    def save(self, benchmark_items: Optional[Union[List[Dict[str, object]], str, Path]] = None, output_path: Optional[Union[str, Path]] = None) -> Path:
+    def save(
+        self,
+        benchmark_items: Optional[Union[List[Dict[str, object]], str, Path]] = None,
+        output_path: Optional[Union[str, Path]] = None,
+    ) -> Path:
         if isinstance(benchmark_items, (str, Path)) and output_path is None:
             output_path = benchmark_items
             benchmark_items = None
@@ -124,4 +198,3 @@ class BenchmarkDataset:
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(json.dumps(benchmark_items, indent=2), encoding="utf-8")
         return output
-

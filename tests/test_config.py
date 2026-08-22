@@ -1,4 +1,5 @@
 """test_config.py — Unit & Integration Tests for DocuReason v1.1.0 Configuration Engine."""
+
 from __future__ import annotations
 
 import os
@@ -120,6 +121,7 @@ def test_component_injection_with_config():
 def test_check_system_diagnostics():
     """Verify system readiness diagnostic check returns expected status dictionary."""
     from docureason import check_system
+
     report = check_system(verbose=True)
     assert "python_version" in report
     assert "device" in report

@@ -71,8 +71,12 @@ def main():
     # 4. Check wheel contents with check-wheel-contents if installed
     try:
         import check_wheel_contents  # noqa: F401
+
         print("\n[CHECK] Checking wheel contents structure...")
-        run_cmd([sys.executable, "-m", "check_wheel_contents", "--ignore", "W005,W009"] + [str(p) for p in wheel_files], cwd=repo_root)
+        run_cmd(
+            [sys.executable, "-m", "check_wheel_contents", "--ignore", "W005,W009"] + [str(p) for p in wheel_files],
+            cwd=repo_root,
+        )
         print("[OK] Wheel contents structure validation passed!")
     except ImportError:
         print("\n[SKIP] 'check-wheel-contents' not installed, skipping wheel structure check.")
@@ -93,7 +97,9 @@ def main():
         run_cmd([str(venv_python), "-m", "pip", "install", str(target_wheel)])
 
         # Test importing docureason and checking version
-        test_import_script = "import docureason; print('Installed docureason version:', getattr(docureason, '__version__', 'OK'))"
+        test_import_script = (
+            "import docureason; print('Installed docureason version:', getattr(docureason, '__version__', 'OK'))"
+        )
         res = run_cmd([str(venv_python), "-c", test_import_script])
         print(f"[OK] Import test output: {res.stdout.strip()}")
 

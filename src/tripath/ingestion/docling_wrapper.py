@@ -18,6 +18,7 @@ class DoclingWrapper:
         corpus_path = self.output_dir / "corpus.json"
         if corpus_path.exists():
             import json
+
             payload = json.loads(corpus_path.read_text(encoding="utf-8"))
             for item in payload.get("documents", []):
                 regions = [
@@ -59,6 +60,7 @@ class DoclingWrapper:
             return self.load_corpus()
 
         from docureason.pipeline import DocuReasonPipeline
+
         pipeline = DocuReasonPipeline(input_dir=self.input_dir, output_dir=self.output_dir, verbose=False)
         pipeline.run()
         return self.load_corpus()

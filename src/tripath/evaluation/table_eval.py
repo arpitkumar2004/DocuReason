@@ -4,6 +4,7 @@ Measures:
 1. TEDS (Tree-Edit-Distance Similarity) — structural grid & span alignment.
 2. Cell Content Accuracy — exact cell value matching given aligned structure.
 """
+
 from __future__ import annotations
 
 from typing import Any, Dict

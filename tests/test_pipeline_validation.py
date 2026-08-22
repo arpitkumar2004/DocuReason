@@ -1,12 +1,13 @@
 """test_pipeline_validation.py — Unit & Integration Tests for Input Validation and Configuration Transparency."""
+
 from __future__ import annotations
 
 from pathlib import Path
+
 import pytest
 
 from docureason import (
     DocuReasonConfig,
-    DocuReasonConfigError,
     DocuReasonPipeline,
     InvalidCorpusError,
     MissingRequiredConfigError,

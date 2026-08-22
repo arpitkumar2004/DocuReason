@@ -36,24 +36,22 @@ class VisionEncoder:
         for document in documents:
             for region in document.regions:
                 if region.type == "figure":
-                    caption = (
-                        (region.metadata or {}).get("caption")
-                        or region.text
-                        or f"Figure from {document.title}"
+                    caption = (region.metadata or {}).get("caption") or region.text or f"Figure from {document.title}"
+                    records.append(
+                        {
+                            "id": f"{document.id}-figure-{len(records)}",
+                            "document_id": document.id,
+                            "region_type": "figure",
+                            "modality": "vision",
+                            "text": caption,
+                            "caption": caption,
+                            "page_no": region.page_no,
+                            "bbox": list(region.bbox) if region.bbox else None,
+                            "layout_source": region.layout_source,
+                            "vector": [],  # text-based embedding (always filled)
+                            "clip_vector": [],  # image-based CLIP embedding (optional)
+                        }
                     )
-                    records.append({
-                        "id": f"{document.id}-figure-{len(records)}",
-                        "document_id": document.id,
-                        "region_type": "figure",
-                        "modality": "vision",
-                        "text": caption,
-                        "caption": caption,
-                        "page_no": region.page_no,
-                        "bbox": list(region.bbox) if region.bbox else None,
-                        "layout_source": region.layout_source,
-                        "vector": [],       # text-based embedding (always filled)
-                        "clip_vector": [],  # image-based CLIP embedding (optional)
-                    })
                     texts_pending.append(caption)
                     indices_pending.append(len(records) - 1)
 
@@ -86,6 +84,7 @@ class VisionEncoder:
             return self._model
         try:
             from sentence_transformers import SentenceTransformer
+
             self._model = SentenceTransformer(self.model_name)
         except Exception:
             self._model = None
@@ -94,8 +93,6 @@ class VisionEncoder:
     @staticmethod
     def _hash_vector(text: str) -> List[float]:
         import hashlib
+
         tokens = sorted(set(text.lower().split()))
-        return [
-            round(int(hashlib.sha256(t.encode()).hexdigest()[:8], 16) / 0xFFFFFF, 4)
-            for t in tokens
-        ]
+        return [round(int(hashlib.sha256(t.encode()).hexdigest()[:8], 16) / 0xFFFFFF, 4) for t in tokens]

@@ -25,6 +25,7 @@ Usage
     # Every figure region now has non-empty region.text and
     # region.metadata["caption"] set.
 """
+
 from __future__ import annotations
 
 import io
@@ -124,7 +125,9 @@ class FigureCaptioner:
             regions[idx] = region
             logger.debug(
                 "FigureCaptioner: region %d → %r (page %d)",
-                idx, caption[:60], region.page_no,
+                idx,
+                caption[:60],
+                region.page_no,
             )
 
         return regions
@@ -133,9 +136,7 @@ class FigureCaptioner:
     # Caption generation tiers
     # ------------------------------------------------------------------
 
-    def _caption_region(
-        self, region: Region, source_path: Path, doc_title: str
-    ) -> str:
+    def _caption_region(self, region: Region, source_path: Path, doc_title: str) -> str:
         """Try each tier in order, returning the first successful caption."""
         image_bytes = self._extract_region_image(region, source_path)
 
@@ -155,9 +156,7 @@ class FigureCaptioner:
     # Image extraction
     # ------------------------------------------------------------------
 
-    def _extract_region_image(
-        self, region: Region, source_path: Path
-    ) -> Optional[bytes]:
+    def _extract_region_image(self, region: Region, source_path: Path) -> Optional[bytes]:
         """Extract image bytes for the region's page / bbox.
 
         For PDFs: tries embedded images on the page first, then renders a
@@ -251,9 +250,7 @@ class FigureCaptioner:
             self._torch = torch
             device = self._resolve_device()
             dtype = torch.float16 if device == "cuda" else torch.float32
-            self._blip2_processor = Blip2Processor.from_pretrained(
-                "Salesforce/blip2-opt-2.7b"
-            )
+            self._blip2_processor = Blip2Processor.from_pretrained("Salesforce/blip2-opt-2.7b")
             self._blip2_model = Blip2ForConditionalGeneration.from_pretrained(
                 "Salesforce/blip2-opt-2.7b", torch_dtype=dtype
             ).to(device)
@@ -304,12 +301,8 @@ class FigureCaptioner:
 
             self._torch = torch
             device = self._resolve_device()
-            self._clip_processor = CLIPProcessor.from_pretrained(
-                "openai/clip-vit-base-patch32"
-            )
-            self._clip_model = CLIPModel.from_pretrained(
-                "openai/clip-vit-base-patch32"
-            ).to(device)
+            self._clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+            self._clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32").to(device)
             self._clip_model.eval()
             logger.info("CLIP loaded on %s", device)
         except Exception as exc:
@@ -350,6 +343,7 @@ class FigureCaptioner:
             return self._device
         try:
             import torch
+
             return "cuda" if torch.cuda.is_available() else "cpu"
         except ImportError:
             return "cpu"

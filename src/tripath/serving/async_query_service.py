@@ -26,7 +26,11 @@ class AsyncQueryService:
         prompt = self.prompt_builder.build(query, fused)
         answer = self._compose_answer(query, fused)
         attribution = self.attributor.attribute(answer, fused)
-        metrics = self.evaluator.evaluate(query, raw_response.get("results", []), relevant_ids=[item.get("document_id") for item in raw_response.get("results", [])][:1])
+        metrics = self.evaluator.evaluate(
+            query,
+            raw_response.get("results", []),
+            relevant_ids=[item.get("document_id") for item in raw_response.get("results", [])][:1],
+        )
         return {
             "query": query,
             "answer": answer,

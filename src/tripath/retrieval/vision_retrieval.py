@@ -19,10 +19,12 @@ class VisionRetrieval:
                     if matches:
                         score = matches / max(1, len(query_terms))
                         score += 0.1 if any(term in text for term in query_terms) else 0.0
-                        results.append({
-                            "document_id": document.id,
-                            "score": round(score, 3),
-                            "text": region.text,
-                            "modality": "vision",
-                        })
+                        results.append(
+                            {
+                                "document_id": document.id,
+                                "score": round(score, 3),
+                                "text": region.text,
+                                "modality": "vision",
+                            }
+                        )
         return sorted(results, key=lambda item: item["score"], reverse=True)

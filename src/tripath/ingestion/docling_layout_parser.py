@@ -22,6 +22,7 @@ Usage
     regions, raw_tables = parser.parse(Path("document.pdf"))
     # ``raw_tables`` is a dict mapping region index → docling TableItem
 """
+
 from __future__ import annotations
 
 import os
@@ -60,9 +61,7 @@ class DoclingLayoutParser:
     # ------------------------------------------------------------------
 
     @trace_execution(logger=logger, log_return=True)
-    def parse(
-        self, path: Path
-    ) -> Tuple[List[Region], Dict[int, Any]]:
+    def parse(self, path: Path) -> Tuple[List[Region], Dict[int, Any]]:
         """Convert *path* with Docling and return typed regions.
 
         Returns
@@ -126,8 +125,8 @@ class DoclingLayoutParser:
         # Check CUDA availability to prevent PyTorch safetensors mmap access violations on CPU
         has_cuda = False
         try:
-            import sys
             import torch
+
             has_cuda = torch.cuda.is_available()
             if not has_cuda:
                 # Prevent Windows CPU PyTorch OpenMP/MKL multi-threading access violations in Conv2D
@@ -140,7 +139,9 @@ class DoclingLayoutParser:
         except Exception:
             pass
 
-        enable_table_structure = (os.getenv("DOCUREASON_FAST_PARSE") != "1") and (has_cuda or os.getenv("DOCUREASON_ENABLE_CPU_TABLEFORMER") == "1")
+        enable_table_structure = (os.getenv("DOCUREASON_FAST_PARSE") != "1") and (
+            has_cuda or os.getenv("DOCUREASON_ENABLE_CPU_TABLEFORMER") == "1"
+        )
         pipeline_options.do_table_structure = enable_table_structure
 
         # Set single-page batching and thread limits for memory safety
@@ -159,9 +160,7 @@ class DoclingLayoutParser:
 
         try:
             converter = DocumentConverter(
-                format_options={
-                    InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)
-                }
+                format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)}
             )
             res = converter.convert(str(path))
             gc.collect()

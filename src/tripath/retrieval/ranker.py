@@ -41,6 +41,7 @@ class Ranker:
 
         try:
             from sentence_transformers import CrossEncoder
+
             encoder = CrossEncoder(self.model_name)
             _GLOBAL_CROSS_ENCODER_CACHE[self.model_name] = encoder
             logger.info("Loaded and cached process-wide CrossEncoder model: %s", self.model_name)
@@ -113,7 +114,11 @@ class Ranker:
             body_text = item.get("text", "")
             if "[Context:" in body_text:
                 body_text = body_text.split("]", 1)[-1].strip()
-            heading_penalty = self.heading_penalty_multiplier if (len(body_text) < self.short_heading_threshold and item.get("modality") == "text") else 1.0
+            heading_penalty = (
+                self.heading_penalty_multiplier
+                if (len(body_text) < self.short_heading_threshold and item.get("modality") == "text")
+                else 1.0
+            )
 
             fused_rank_score = ((base_score * 0.7) + (jaccard * 100.0 * 0.3 * modality_weight)) * heading_penalty
 

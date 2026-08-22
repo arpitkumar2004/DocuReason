@@ -29,6 +29,7 @@ Usage
     fallback = OCRFallback(languages=["en"])
     extra_regions = fallback.run(pdf_path, regions_from_docling)
 """
+
 from __future__ import annotations
 
 import io
@@ -71,7 +72,9 @@ class OCRFallback:
         self.languages = languages or ["en"]
         self.gpu = gpu
         self.min_chars_threshold = min_chars_threshold
-        log_pipeline_flag("ocr_min_chars_threshold", min_chars_threshold, "Character threshold to detect scanned PDF pages", logger)
+        log_pipeline_flag(
+            "ocr_min_chars_threshold", min_chars_threshold, "Character threshold to detect scanned PDF pages", logger
+        )
 
     # ------------------------------------------------------------------
     # Public API
@@ -127,9 +130,7 @@ class OCRFallback:
                         layout_source="ocr",
                     )
                 )
-                logger.debug(
-                    "OCRFallback: page %d → %d chars", page_no, len(text)
-                )
+                logger.debug("OCRFallback: page %d → %d chars", page_no, len(text))
 
         return ocr_regions
 
@@ -211,9 +212,7 @@ class OCRFallback:
             OCRFallback._reader_cache = easyocr.Reader(**kwargs)
             return OCRFallback._reader_cache
         except ImportError:
-            logger.warning(
-                "easyocr is not installed.  Install it with: pip install easyocr"
-            )
+            logger.warning("easyocr is not installed.  Install it with: pip install easyocr")
             return None
         except Exception as exc:
             logger.warning("Failed to initialise EasyOCR reader: %s", exc)
@@ -225,6 +224,7 @@ class OCRFallback:
         try:
             try:
                 import torch
+
                 with torch.no_grad():
                     results = reader.readtext(image_bytes, detail=0, paragraph=True)
             except ImportError:

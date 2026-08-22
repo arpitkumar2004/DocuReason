@@ -1,6 +1,6 @@
 """DocuReason Quickstart: Ingestion and Indexing Pipeline with Configuration Transparency."""
 
-from docureason import DocuReasonConfig, DocuReasonPipeline, MissingRequiredConfigError, InvalidCorpusError
+from docureason import DocuReasonPipeline, InvalidCorpusError, MissingRequiredConfigError
 
 
 def main() -> None:
@@ -36,4 +36,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

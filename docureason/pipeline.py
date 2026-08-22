@@ -46,7 +46,7 @@ class DocuReasonPipeline:
         input_dir: str | Path,
         output_dir: str | Path,
         config: Optional[DocuReasonConfig | str] = None,
-        verbose: bool = True
+        verbose: bool = True,
     ) -> None:
         # Validate minimum required developer inputs
         validation_info = DocuReasonConfig.validate_inputs(input_dir, output_dir)
@@ -71,15 +71,12 @@ class DocuReasonPipeline:
         self.artifact_writer = ArtifactWriter(self.output_dir)
         self.loader = FormatAwareLoader()
 
-        self.layout_parser = DoclingLayoutParser(
-            page_batch_size=self.config.ingestion.page_batch_size,
-            do_ocr=False
-        )
+        self.layout_parser = DoclingLayoutParser(page_batch_size=self.config.ingestion.page_batch_size, do_ocr=False)
         log_pipeline_flag(
             "layout_parser_batch_size",
             self.config.ingestion.page_batch_size,
             "Docling single-page memory limit",
-            logger
+            logger,
         )
 
         self.ocr_fallback = OCRFallback(languages=["en"])
@@ -124,28 +121,28 @@ class DocuReasonPipeline:
                     if region.table_markdown:
                         region_meta["table_markdown"] = region.table_markdown
                     if region.table_json is not None:
-                        region_meta["table_json"] = json.dumps(
-                            region.table_json, ensure_ascii=False
-                        )
+                        region_meta["table_json"] = json.dumps(region.table_json, ensure_ascii=False)
                     # Merge any extra metadata set by TableSerializer.
                     if region.metadata:
                         for k in ("table_html", "table_markdown", "table_json"):
                             if k in region.metadata:
                                 region_meta[k] = region.metadata[k]
 
-                doc_regions.append({
-                    "id": region_id,
-                    "type": region.type,
-                    "text": region.text,
-                    "start": region.start,
-                    "end": region.end,
-                    "page_no": region.page_no,
-                    "bbox": list(region.bbox) if region.bbox else None,
-                    "layout_source": region.layout_source,
-                    "table_markdown": region.table_markdown,
-                    "table_json": region.table_json,
-                    "metadata": region_meta,
-                })
+                doc_regions.append(
+                    {
+                        "id": region_id,
+                        "type": region.type,
+                        "text": region.text,
+                        "start": region.start,
+                        "end": region.end,
+                        "page_no": region.page_no,
+                        "bbox": list(region.bbox) if region.bbox else None,
+                        "layout_source": region.layout_source,
+                        "table_markdown": region.table_markdown,
+                        "table_json": region.table_json,
+                        "metadata": region_meta,
+                    }
+                )
 
                 chunk: Dict[str, Any] = {
                     "id": self.identity.build_chunk_id(region_id, len(doc_chunks)),
@@ -159,19 +156,21 @@ class DocuReasonPipeline:
                 doc_chunks.append(chunk)
 
             title = self._title_from_regions(regions) or path.stem
-            documents.append({
-                "id": doc_id,
-                "source": path.name,
-                "title": title,
-                "regions": doc_regions,
-                "chunks": doc_chunks,
-                "metadata": {
-                    "document_id": doc_id,
-                    "source_path": path.name,
-                    "chunk_count": len(doc_chunks),
-                    "namespace": "tripath-v1",
-                },
-            })
+            documents.append(
+                {
+                    "id": doc_id,
+                    "source": path.name,
+                    "title": title,
+                    "regions": doc_regions,
+                    "chunks": doc_chunks,
+                    "metadata": {
+                        "document_id": doc_id,
+                        "source_path": path.name,
+                        "chunk_count": len(doc_chunks),
+                        "namespace": "tripath-v1",
+                    },
+                }
+            )
 
         corpus = {"documents": documents}
         index = {"chunks": chunks}
@@ -215,9 +214,7 @@ class DocuReasonPipeline:
         BM25SIndexBuilder for each group.  All failures are caught and
         logged so a missing optional dependency never crashes the pipeline.
         """
-        modality_groups: Dict[str, List[Dict[str, Any]]] = {
-            "text": [], "table": [], "vision": []
-        }
+        modality_groups: Dict[str, List[Dict[str, Any]]] = {"text": [], "table": [], "vision": []}
         for chunk in chunks:
             m = chunk.get("modality", "text")
             if m in modality_groups:
@@ -231,7 +228,8 @@ class DocuReasonPipeline:
                 self.dense_index.build(records, modality=modality)
                 logger.info(
                     "FAISS index built: modality=%s (%d records)",
-                    modality, len(records),
+                    modality,
+                    len(records),
                 )
             except Exception as exc:
                 logger.warning("FAISS build failed (%s): %s", modality, exc)
@@ -242,7 +240,8 @@ class DocuReasonPipeline:
                     self.sparse_index.build(records, modality=modality)
                     logger.info(
                         "BM25S index built: modality=%s (%d records)",
-                        modality, len(records),
+                        modality,
+                        len(records),
                     )
                 except Exception as exc:
                     logger.warning("BM25S build failed (%s): %s", modality, exc)
@@ -270,17 +269,13 @@ class DocuReasonPipeline:
         if path.suffix.lower() in {".pdf", ".docx", ".pptx", ".xlsx"}:
             try:
                 regions, raw_tables = self.layout_parser.parse(path)
-                logger.debug(
-                    "DoclingLayoutParser: %d region(s) from %s", len(regions), path.name
-                )
+                logger.debug("DoclingLayoutParser: %d region(s) from %s", len(regions), path.name)
             except Exception as exc:
                 logger.warning("Layout parser failed for %s: %s", path.name, exc)
 
         # Step 2 — rule-based fallback when Docling produced nothing.
         if not regions:
-            logger.info(
-                "Falling back to rule-based segmentation for %s", path.name
-            )
+            logger.info("Falling back to rule-based segmentation for %s", path.name)
             payload = self.loader.load(path)
             text = str(payload.get("text", ""))
             regions = self._segment_regions_rule_based(text)
@@ -310,12 +305,15 @@ class DocuReasonPipeline:
                     except Exception as exc:
                         logger.warning(
                             "TableSerializer failed for region %d in %s: %s",
-                            idx, path.name, exc,
+                            idx,
+                            path.name,
+                            exc,
                         )
                 else:
                     # No raw TableItem — try enriching from region.text (GFM fallback).
                     try:
                         from src.tripath.ingestion.table_serializer import _markdown_to_grid
+
                         grid = _markdown_to_grid(region.text)
                         if len(grid) >= 2:
                             headers = grid[0]
@@ -332,9 +330,7 @@ class DocuReasonPipeline:
                 (r.text.strip() for r in regions if r.type == "title" and r.text.strip()),
                 "",
             )
-            regions = self.figure_captioner.caption_figures(
-                path, regions, doc_title=doc_title
-            )
+            regions = self.figure_captioner.caption_figures(path, regions, doc_title=doc_title)
         except Exception as exc:
             logger.warning("FigureCaptioner error for %s: %s", path.name, exc)
 
@@ -359,10 +355,15 @@ class DocuReasonPipeline:
                 title_text = stripped
                 break
         if title_text:
-            regions.append(Region(
-                type="title", text=title_text,
-                start=0, end=len(title_text), layout_source="rule",
-            ))
+            regions.append(
+                Region(
+                    type="title",
+                    text=title_text,
+                    start=0,
+                    end=len(title_text),
+                    layout_source="rule",
+                )
+            )
 
         current_type = "body"
         current_lines: List[str] = []
@@ -373,12 +374,15 @@ class DocuReasonPipeline:
             if current_lines:
                 block = "\n".join(current_lines).strip()
                 if block:
-                    regions.append(Region(
-                        type=current_type, text=block,
-                        start=current_start,
-                        end=current_start + len(block),
-                        layout_source="rule",
-                    ))
+                    regions.append(
+                        Region(
+                            type=current_type,
+                            text=block,
+                            start=current_start,
+                            end=current_start + len(block),
+                            layout_source="rule",
+                        )
+                    )
                 current_lines = []
                 current_type = "body"
                 current_start = 0
@@ -430,4 +434,3 @@ class DocuReasonPipeline:
 
 # Backward compatibility alias
 Phase1Pipeline = DocuReasonPipeline
-

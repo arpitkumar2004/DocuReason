@@ -129,7 +129,9 @@ class EvaluationHarness:
         metrics["noise_ratio"] = round(max(0.0, noise_ratio), 4)
 
         unique_doc_sources = len({str(item.get("document_id", "")) for item in results[:5] if item.get("document_id")})
-        metrics["unique_evidence_ratio"] = round(unique_doc_sources / max(1, min(5, len(results))), 4) if results else 0.0
+        metrics["unique_evidence_ratio"] = (
+            round(unique_doc_sources / max(1, min(5, len(results))), 4) if results else 0.0
+        )
 
         # 5. Attribution & Groundedness (NLI Faithfulness & Hallucination Rate)
         answer_str = ""
@@ -217,9 +219,7 @@ class EvaluationHarness:
             "detailed_results": results,
         }
 
-    def verify_target_achievements(
-        self, summary: Dict[str, float], targets: Dict[str, float]
-    ) -> Dict[str, Any]:
+    def verify_target_achievements(self, summary: Dict[str, float], targets: Dict[str, float]) -> Dict[str, Any]:
         """Compares achieved summary metrics against planned target thresholds."""
         verification = {}
         all_passed = True

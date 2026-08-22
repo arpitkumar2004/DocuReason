@@ -31,7 +31,9 @@ async def test_query_and_evaluation_endpoints():
     transport = httpx.ASGITransport(app=main_module.app)
     async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
         query_response = await client.post("/query", json={"query": "revenue by region"})
-        assert query_response.status_code == 200, f"Expected 200, got {query_response.status_code}: {query_response.text}"
+        assert query_response.status_code == 200, (
+            f"Expected 200, got {query_response.status_code}: {query_response.text}"
+        )
         query_payload = query_response.json()
         assert query_payload["answer"]
         assert query_payload["results"]

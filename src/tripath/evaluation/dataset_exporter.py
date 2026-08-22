@@ -32,17 +32,25 @@ class DatasetExporter:
             results = case.get("results", [])
             relevant_ids = case.get("relevant_ids", [])
 
-            positives = [r for r in results if any(rel in (r.get("document_id") or r.get("id") or "") for rel in relevant_ids)]
-            negatives = [r for r in results if not any(rel in (r.get("document_id") or r.get("id") or "") for rel in relevant_ids)]
+            positives = [
+                r for r in results if any(rel in (r.get("document_id") or r.get("id") or "") for rel in relevant_ids)
+            ]
+            negatives = [
+                r
+                for r in results
+                if not any(rel in (r.get("document_id") or r.get("id") or "") for rel in relevant_ids)
+            ]
 
             if positives and negatives:
-                records.append({
-                    "query": query,
-                    "positive": positives[0].get("text", ""),
-                    "negative": negatives[0].get("text", ""),
-                    "positive_id": positives[0].get("document_id") or positives[0].get("id"),
-                    "negative_id": negatives[0].get("document_id") or negatives[0].get("id"),
-                })
+                records.append(
+                    {
+                        "query": query,
+                        "positive": positives[0].get("text", ""),
+                        "negative": negatives[0].get("text", ""),
+                        "positive_id": positives[0].get("document_id") or positives[0].get("id"),
+                        "negative_id": negatives[0].get("document_id") or negatives[0].get("id"),
+                    }
+                )
 
         with out_path.open("w", encoding="utf-8") as f:
             for rec in records:
@@ -65,12 +73,14 @@ class DatasetExporter:
             for item in results[:10]:
                 doc_id = str(item.get("document_id") or item.get("id") or "")
                 is_rel = any(rel in doc_id or doc_id in rel for rel in relevant_ids)
-                records.append({
-                    "query": query,
-                    "document": item.get("text", ""),
-                    "label": 1.0 if is_rel else 0.0,
-                    "document_id": doc_id,
-                })
+                records.append(
+                    {
+                        "query": query,
+                        "document": item.get("text", ""),
+                        "label": 1.0 if is_rel else 0.0,
+                        "document_id": doc_id,
+                    }
+                )
 
         with out_path.open("w", encoding="utf-8") as f:
             for rec in records:
@@ -78,9 +88,7 @@ class DatasetExporter:
 
         return out_path
 
-    def export_llm_sft_dataset(
-        self, eval_cases: List[Dict[str, Any]], filename: str = "train_llm_sft.jsonl"
-    ) -> Path:
+    def export_llm_sft_dataset(self, eval_cases: List[Dict[str, Any]], filename: str = "train_llm_sft.jsonl") -> Path:
         """Exports (instruction, input_context, output_answer) for Supervised Fine-Tuning (SFT) of SLMs/LLMs."""
         out_path = self.output_dir / filename
         records = []
@@ -90,12 +98,16 @@ class DatasetExporter:
             evidence = case.get("evidence", [])
             answer = case.get("answer", "")
 
-            context_str = "\n\n".join([f"[{e.get('modality', 'text').upper()}] {e.get('text', '')}" for e in evidence[:3]])
-            records.append({
-                "instruction": "Synthesize a grounded answer using the provided multi-modal evidence context.",
-                "input": f"Query: {query}\n\nEvidence Context:\n{context_str}",
-                "output": answer,
-            })
+            context_str = "\n\n".join(
+                [f"[{e.get('modality', 'text').upper()}] {e.get('text', '')}" for e in evidence[:3]]
+            )
+            records.append(
+                {
+                    "instruction": "Synthesize a grounded answer using the provided multi-modal evidence context.",
+                    "input": f"Query: {query}\n\nEvidence Context:\n{context_str}",
+                    "output": answer,
+                }
+            )
 
         with out_path.open("w", encoding="utf-8") as f:
             for rec in records:

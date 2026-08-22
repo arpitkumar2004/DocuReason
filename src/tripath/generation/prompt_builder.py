@@ -7,7 +7,11 @@ class PromptBuilder:
     """Assemble a structured prompt with citation tags for multi-modal evidence."""
 
     def build(self, query: str, evidence: List[Dict[str, Any]]) -> str:
-        parts = [f"Question: {query}", "Use the provided evidence and cite each answer with tags such as [T1], [TAB1], or [FIG1].", "Context:"]
+        parts = [
+            f"Question: {query}",
+            "Use the provided evidence and cite each answer with tags such as [T1], [TAB1], or [FIG1].",
+            "Context:",
+        ]
         for index, item in enumerate(evidence[:5], start=1):
             modality = item.get("modality", "text")
             label = self._label_for_modality(modality, index)

@@ -24,14 +24,16 @@ class TextRetrieval:
                         field_multiplier = 1.0 if region.type == "title" else 2.5
                         base_score = (matches / max(1, len(query_terms))) * field_multiplier
 
-                        results.append({
-                            "document_id": document.id,
-                            "region_id": f"{document.id}-region-{idx + 1}",
-                            "score": round(base_score, 3),
-                            "text": region.text,
-                            "parent_text": getattr(region, "text", ""),
-                            "modality": "text",
-                            "field_weight": field_multiplier,
-                        })
+                        results.append(
+                            {
+                                "document_id": document.id,
+                                "region_id": f"{document.id}-region-{idx + 1}",
+                                "score": round(base_score, 3),
+                                "text": region.text,
+                                "parent_text": getattr(region, "text", ""),
+                                "modality": "text",
+                                "field_weight": field_multiplier,
+                            }
+                        )
 
         return sorted(results, key=lambda item: item["score"], reverse=True)

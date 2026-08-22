@@ -72,16 +72,18 @@ def main():
         if case.get("is_tabular"):
             sql_executed = bool(sql_res.get("executed") or case.get("predicted_table") is not None)
 
-        eval_cases.append({
-            "query": query,
-            "results": response.get("results", []),
-            "relevant_ids": case.get("relevant_ids", []),
-            "answer": response.get("answer", ""),
-            "evidence": response.get("results", []),
-            "predicted_table": case.get("predicted_table"),
-            "ground_truth_table": case.get("ground_truth_table"),
-            "sql_executed": sql_executed,
-        })
+        eval_cases.append(
+            {
+                "query": query,
+                "results": response.get("results", []),
+                "relevant_ids": case.get("relevant_ids", []),
+                "answer": response.get("answer", ""),
+                "evidence": response.get("results", []),
+                "predicted_table": case.get("predicted_table"),
+                "ground_truth_table": case.get("ground_truth_table"),
+                "sql_executed": sql_executed,
+            }
+        )
 
     # 3. Run Comprehensive Evaluation & Target Achievement Verification
     report = harness.evaluate_suite(eval_cases, target_metrics=target_metrics)
@@ -97,14 +99,22 @@ def main():
     print(f"{'Metric Name':<30} | {'Achieved':<10} | {'Target':<10} | {'Status':<8}")
     print("-" * 68)
     for metric_name, target_info in verification.get("metric_breakdown", {}).items():
-        achieved = f"{target_info['achieved']:.3f}" if isinstance(target_info['achieved'], float) else str(target_info['achieved'])
-        target = f"{target_info['target']:.3f}" if isinstance(target_info['target'], float) else str(target_info['target'])
+        achieved = (
+            f"{target_info['achieved']:.3f}"
+            if isinstance(target_info["achieved"], float)
+            else str(target_info["achieved"])
+        )
+        target = (
+            f"{target_info['target']:.3f}" if isinstance(target_info["target"], float) else str(target_info["target"])
+        )
         status = target_info["status"]
         status_str = "[PASS]" if status == "PASS" else ("[FAIL]" if status == "FAIL" else "[N/A]")
         print(f"{metric_name:<30} | {achieved:<10} | {target:<10} | {status_str}")
 
     print("-" * 68)
-    overall_status = "ALL TARGET METRICS MET!" if verification.get("all_targets_met") else "SOME TARGET METRICS REQUIRE OPTIMIZATION"
+    overall_status = (
+        "ALL TARGET METRICS MET!" if verification.get("all_targets_met") else "SOME TARGET METRICS REQUIRE OPTIMIZATION"
+    )
     print(f"OVERALL EVALUATION STATUS: {overall_status}")
     print(f"Detailed Report Saved To: {saved_path}")
     print("=" * 70)

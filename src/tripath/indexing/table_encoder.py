@@ -36,20 +36,23 @@ class TableEncoder:
                 if region.type == "table":
                     # Prefer the clean Markdown over raw text for embedding.
                     embed_text = region.table_markdown or region.text or ""
-                    records.append({
-                        "id": f"{document.id}-table-{len(records)}",
-                        "document_id": document.id,
-                        "region_type": "table",
-                        "modality": "table",
-                        "text": embed_text,
-                        "table_markdown": region.table_markdown or "",
-                        "table_json": json.dumps(region.table_json, ensure_ascii=False)
-                            if region.table_json else "",
-                        "page_no": region.page_no,
-                        "bbox": list(region.bbox) if region.bbox else None,
-                        "layout_source": region.layout_source,
-                        "vector": [],
-                    })
+                    records.append(
+                        {
+                            "id": f"{document.id}-table-{len(records)}",
+                            "document_id": document.id,
+                            "region_type": "table",
+                            "modality": "table",
+                            "text": embed_text,
+                            "table_markdown": region.table_markdown or "",
+                            "table_json": json.dumps(region.table_json, ensure_ascii=False)
+                            if region.table_json
+                            else "",
+                            "page_no": region.page_no,
+                            "bbox": list(region.bbox) if region.bbox else None,
+                            "layout_source": region.layout_source,
+                            "vector": [],
+                        }
+                    )
                     texts_pending.append(embed_text)
                     indices_pending.append(len(records) - 1)
 
@@ -82,6 +85,7 @@ class TableEncoder:
             return self._model
         try:
             from sentence_transformers import SentenceTransformer
+
             self._model = SentenceTransformer(self.model_name)
         except Exception:
             self._model = None
@@ -90,8 +94,6 @@ class TableEncoder:
     @staticmethod
     def _hash_vector(text: str) -> List[float]:
         import hashlib
+
         tokens = sorted(set(text.lower().split()))
-        return [
-            round(int(hashlib.sha256(t.encode()).hexdigest()[:8], 16) / 0xFFFFFF, 4)
-            for t in tokens
-        ]
+        return [round(int(hashlib.sha256(t.encode()).hexdigest()[:8], 16) / 0xFFFFFF, 4) for t in tokens]

@@ -12,8 +12,10 @@ class Normalizer:
         max_score = max(item["score"] for item in results)
         normalized: List[dict] = []
         for item in results:
-            normalized.append({
-                **item,
-                "score": round(item["score"] / max_score, 2) if max_score else 0.0,
-            })
+            normalized.append(
+                {
+                    **item,
+                    "score": round(item["score"] / max_score, 2) if max_score else 0.0,
+                }
+            )
         return normalized

@@ -48,11 +48,13 @@ class NLIFaithfulnessAttributor:
                 if self._is_entailed(claim, text):
                     supported = True
                     supporting_evidence.append(item)
-            verified_claims.append({
-                "claim": claim,
-                "supported": supported,
-                "supporting_evidence": supporting_evidence[:2],
-            })
+            verified_claims.append(
+                {
+                    "claim": claim,
+                    "supported": supported,
+                    "supporting_evidence": supporting_evidence[:2],
+                }
+            )
 
         supported_count = sum(1 for item in verified_claims if item["supported"])
         precision = round(supported_count / max(1, len(verified_claims)), 3)

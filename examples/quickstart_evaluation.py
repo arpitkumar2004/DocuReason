@@ -8,9 +8,7 @@ def main() -> None:
     harness = EvaluationHarness(output_dir="artifacts/quickstart_run")
 
     sample_query = "What is the operating margin?"
-    sample_results = [
-        {"document_id": "sample_doc_1", "text": "Operating margin reached 21% in Q3."}
-    ]
+    sample_results = [{"document_id": "sample_doc_1", "text": "Operating margin reached 21% in Q3."}]
 
     # Evaluate single query
     metrics = harness.evaluate_single(
@@ -18,7 +16,7 @@ def main() -> None:
         results=sample_results,
         relevant_ids=["sample_doc_1"],
         answer="Operating margin was 21%.",
-        evidence=sample_results
+        evidence=sample_results,
     )
 
     print("Evaluation Metrics:")

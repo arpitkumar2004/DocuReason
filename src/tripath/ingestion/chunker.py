@@ -115,10 +115,12 @@ class SectionAwareChunker:
             body_text = " ".join(window_tokens)
             full_text = f"{ancestry_header}{body_text}".strip()
 
-            windows.append({
-                "text": full_text,
-                "token_count": len(window_tokens),
-            })
+            windows.append(
+                {
+                    "text": full_text,
+                    "token_count": len(window_tokens),
+                }
+            )
             if end == len(tokens):
                 break
             start += max(1, self.chunk_size - self.overlap)

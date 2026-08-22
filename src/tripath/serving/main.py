@@ -103,7 +103,9 @@ def query_endpoint(payload: QueryPayload = Body(...)) -> Dict[str, Any]:
         docs_dir = ROOT / (payload.input_dir or "samples")
         if docs_dir.exists():
             try:
-                _CACHED_DOCUMENTS = DoclingWrapper(input_dir=docs_dir, output_dir=ROOT / "artifacts" / "test_run").ingest(force_reingest=False)
+                _CACHED_DOCUMENTS = DoclingWrapper(
+                    input_dir=docs_dir, output_dir=ROOT / "artifacts" / "test_run"
+                ).ingest(force_reingest=False)
             except Exception as exc:
                 logger.warning("Document ingestion fallback: %s", exc)
                 _CACHED_DOCUMENTS = []
@@ -149,7 +151,9 @@ def query_endpoint(payload: QueryPayload = Body(...)) -> Dict[str, Any]:
         "sql_execution": {
             "executed": sql_payload["executed"],
             "route_active": is_table_active,
-            "reason": "Table route active" if is_table_active else f"Table route inactive (P(table)={probs.get('table', 0.0)} < threshold 0.35)",
+            "reason": "Table route active"
+            if is_table_active
+            else f"Table route inactive (P(table)={probs.get('table', 0.0)} < threshold 0.35)",
             "sql_query": sql_payload["sql_query"],
             "sql_results": sql_payload["sql_results"],
         },

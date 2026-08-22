@@ -90,4 +90,3 @@ def test_generation_gpu_unavailable_fallback(monkeypatch):
     assert result["device"] in {"cpu", "cloud"}
     assert "24.5%" in result["answer"]
     assert len(result["citations"]) == 1
-

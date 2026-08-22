@@ -52,6 +52,7 @@ class GenerationModule:
         """Check if PyTorch is available with an active CUDA GPU."""
         try:
             import torch
+
             return torch.cuda.is_available()
         except Exception:
             return False
@@ -68,11 +69,14 @@ class GenerationModule:
 
         # In 'auto' mode without CUDA GPU, skip loading heavy SLM models on CPU
         if self.backend == "auto" and not gpu_available:
-            logger.info("GPU unavailable (CUDA disabled/absent). Skipping local SLM loading on CPU; fallback engine will generate text.")
+            logger.info(
+                "GPU unavailable (CUDA disabled/absent). Skipping local SLM loading on CPU; fallback engine will generate text."
+            )
             return None
 
         try:
             from transformers import pipeline
+
             logger.info("Loading local SLM model for generation: %s (device_map=auto)", self.model_name_or_path)
             self._slm_pipeline = pipeline(
                 "text-generation",
@@ -135,7 +139,9 @@ class GenerationModule:
         result = self._synthesize_offline_template(query, evidence, sql_results, citations)
         result["device"] = "cpu"
         result["fallback_used"] = True
-        result["fallback_reason"] = "GPU unavailable or SLM offline; generated text using offline multi-modal synthesizer fallback."
+        result["fallback_reason"] = (
+            "GPU unavailable or SLM offline; generated text using offline multi-modal synthesizer fallback."
+        )
         return result
 
     def _estimate_tokens(self, text: str) -> int:
@@ -177,23 +183,35 @@ class GenerationModule:
             if accumulated_tokens + block_tokens <= max_budget:
                 context_blocks.append(block_text)
                 accumulated_tokens += block_tokens
-                citations.append({"type": modality, "source": str(doc_id), "chunk_id": item.get("chunk_id", f"c-{idx}")})
+                citations.append(
+                    {"type": modality, "source": str(doc_id), "chunk_id": item.get("chunk_id", f"c-{idx}")}
+                )
             else:
                 # Apply smart relevance truncation to remaining budget
                 remaining_tokens = max(0, max_budget - accumulated_tokens)
                 if remaining_tokens > 50:
                     max_chars = remaining_tokens * 4
-                    truncated_text = text_content[:max_chars].rsplit(" ", 1)[0] + f"... [truncated (max_context_tokens={self.max_context_tokens})]"
-                    trunc_block = f"--- EVIDENCE ITEM {idx} [{modality.upper()}] (Source: {doc_id}) ---\n{truncated_text}"
+                    truncated_text = (
+                        text_content[:max_chars].rsplit(" ", 1)[0]
+                        + f"... [truncated (max_context_tokens={self.max_context_tokens})]"
+                    )
+                    trunc_block = (
+                        f"--- EVIDENCE ITEM {idx} [{modality.upper()}] (Source: {doc_id}) ---\n{truncated_text}"
+                    )
                     context_blocks.append(trunc_block)
                     accumulated_tokens += self._estimate_tokens(trunc_block)
-                    citations.append({"type": modality, "source": str(doc_id), "chunk_id": item.get("chunk_id", f"c-{idx}")})
+                    citations.append(
+                        {"type": modality, "source": str(doc_id), "chunk_id": item.get("chunk_id", f"c-{idx}")}
+                    )
                     truncated_count += 1
                 break
 
         logger.info(
             "Context Budget Manager: packaged %d blocks (~%d tokens / limit %d, truncated=%d)",
-            len(context_blocks), accumulated_tokens, self.max_context_tokens, truncated_count
+            len(context_blocks),
+            accumulated_tokens,
+            self.max_context_tokens,
+            truncated_count,
         )
 
         joined_context = "\n\n".join(context_blocks)
@@ -226,11 +244,10 @@ class GenerationModule:
             logger.warning("SLM generation error: %s", exc)
             return self._synthesize_offline_template(query, [], None, citations)
 
-    def _generate_with_gemini(
-        self, query: str, prompt: str, citations: List[Dict[str, str]]
-    ) -> Dict[str, Any]:
+    def _generate_with_gemini(self, query: str, prompt: str, citations: List[Dict[str, str]]) -> Dict[str, Any]:
         """Execute Cloud Gemini LLM API."""
         import google.generativeai as genai
+
         genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
         model = genai.GenerativeModel("gemini-1.5-flash")
         response = model.generate_content(prompt)
@@ -288,7 +305,11 @@ class GenerationModule:
             rows = sql_results["sql_results"]
             if rows:
                 cols = list(rows[0].keys())
-                table_md = ["\n### Structured Table Summary\n", "| " + " | ".join(cols) + " |", "| " + " | ".join(["---"] * len(cols)) + " |"]
+                table_md = [
+                    "\n### Structured Table Summary\n",
+                    "| " + " | ".join(cols) + " |",
+                    "| " + " | ".join(["---"] * len(cols)) + " |",
+                ]
                 for r in rows[:5]:
                     table_md.append("| " + " | ".join(str(r.get(c, "")) for c in cols) + " |")
                 lines.append("\n".join(table_md))

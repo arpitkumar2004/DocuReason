@@ -34,7 +34,17 @@ class ConfigurableRouter:
             self.sigmoid_lambda = 1.2
         else:
             self.config = {
-                "text": ["revenue", "growth", "report", "overview", "company", "margin", "statement", "financial", "narrative"],
+                "text": [
+                    "revenue",
+                    "growth",
+                    "report",
+                    "overview",
+                    "company",
+                    "margin",
+                    "statement",
+                    "financial",
+                    "narrative",
+                ],
                 "table": ["table", "region", "quarter", "by", "revenue", "sum", "average", "total", "rate", "percent"],
                 "vision": ["chart", "figure", "image", "graph", "adoption", "bar", "pie", "diagram", "plot", "trend"],
             }

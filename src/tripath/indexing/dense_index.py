@@ -3,6 +3,7 @@
 Builds one FAISS index per modality (text, table, vision) with support for
 domain-specific embedding presets and HNSW graph parameter tuning.
 """
+
 from __future__ import annotations
 
 import json
@@ -117,7 +118,9 @@ class DenseIndexBuilder:
             if self.index_type == "hnsw" and hasattr(faiss, "IndexHNSWFlat"):
                 logger.info(
                     "DenseIndexBuilder: building IndexHNSWFlat (dim=%d, M=%d, efConstruction=%d)",
-                    dim, self.hnsw_m, self.hnsw_ef_construction,
+                    dim,
+                    self.hnsw_m,
+                    self.hnsw_ef_construction,
                 )
                 index = faiss.IndexHNSWFlat(dim, self.hnsw_m, faiss.METRIC_INNER_PRODUCT)
                 index.hnsw.efConstruction = self.hnsw_ef_construction
@@ -127,7 +130,9 @@ class DenseIndexBuilder:
             index.add(vectors)
             faiss.write_index(index, str(index_path))
             meta_path.write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
-            logger.info("DenseIndexBuilder: wrote %s (%d vectors, type=%s)", index_path.name, len(vectors), self.index_type)
+            logger.info(
+                "DenseIndexBuilder: wrote %s (%d vectors, type=%s)", index_path.name, len(vectors), self.index_type
+            )
 
         except Exception as exc:
             logger.warning("DenseIndexBuilder: FAISS build failed (%s) — writing stub", exc)
@@ -184,6 +189,7 @@ class DenseIndexBuilder:
             return self._model
         try:
             from sentence_transformers import SentenceTransformer
+
             self._model = SentenceTransformer(self.model_name)
             logger.info("SentenceTransformer loaded: %s", self.model_name)
         except Exception as exc:

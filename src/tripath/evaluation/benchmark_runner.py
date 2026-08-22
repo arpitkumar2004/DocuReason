@@ -27,12 +27,14 @@ class BenchmarkRunner:
             rel_ids = relevant_ids[index] if relevant_ids and index < len(relevant_ids) else []
             metrics = self.harness.evaluate(query, response.get("results", []), relevant_ids=rel_ids)
             route = self.router.route(query)
-            results.append({
-                "query": query,
-                "route": route,
-                "metrics": metrics,
-                "answer": response.get("answer", ""),
-            })
+            results.append(
+                {
+                    "query": query,
+                    "route": route,
+                    "metrics": metrics,
+                    "answer": response.get("answer", ""),
+                }
+            )
 
         payload = {
             "suite_name": "benchmark-smoke",

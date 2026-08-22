@@ -24,14 +24,16 @@ class TableRetrieval:
                         field_multiplier = 3.0
                         base_score = (matches / max(1, len(query_terms))) * field_multiplier
 
-                        results.append({
-                            "document_id": document.id,
-                            "region_id": f"{document.id}-table-{idx + 1}",
-                            "score": round(base_score, 3),
-                            "text": region.text,
-                            "parent_text": getattr(region, "table_markdown", "") or region.text,
-                            "modality": "table",
-                            "field_weight": field_multiplier,
-                        })
+                        results.append(
+                            {
+                                "document_id": document.id,
+                                "region_id": f"{document.id}-table-{idx + 1}",
+                                "score": round(base_score, 3),
+                                "text": region.text,
+                                "parent_text": getattr(region, "table_markdown", "") or region.text,
+                                "modality": "table",
+                                "field_weight": field_multiplier,
+                            }
+                        )
 
         return sorted(results, key=lambda item: item["score"], reverse=True)

@@ -73,7 +73,9 @@ def setup_logger(
         formatter = logging.Formatter(DEFAULT_LOG_FORMAT)
 
     # Check if handlers already exist to avoid duplicate logs
-    if not any(isinstance(h, logging.StreamHandler) and not isinstance(h, logging.FileHandler) for h in logger.handlers):
+    if not any(
+        isinstance(h, logging.StreamHandler) and not isinstance(h, logging.FileHandler) for h in logger.handlers
+    ):
         console_handler = logging.StreamHandler(sys.stdout)
         console_handler.setLevel(level)
         console_handler.setFormatter(formatter)

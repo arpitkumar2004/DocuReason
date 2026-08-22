@@ -10,6 +10,7 @@ Supports:
 3. Environment variable overrides ('DOCUREASON_*').
 4. Per-query runtime overrides for REST API requests.
 """
+
 from __future__ import annotations
 
 import os
@@ -43,6 +44,7 @@ def check_system(verbose: bool = True) -> Dict[str, Any]:
 
     try:
         import torch
+
         results["dependencies"]["torch"] = torch.__version__
         if torch.cuda.is_available():
             results["cuda_available"] = True
@@ -81,29 +83,34 @@ def check_system(verbose: bool = True) -> Dict[str, Any]:
 # Framework Custom Exceptions
 # ----------------------------------------------------------------------
 
+
 class DocuReasonConfigError(Exception):
     """Base exception for all configuration and validation errors in DocuReason."""
+
     pass
 
 
 class MissingRequiredConfigError(DocuReasonConfigError):
     """Raised when a minimum required developer input is missing or invalid."""
+
     pass
 
 
 class InvalidCorpusError(DocuReasonConfigError):
     """Raised when the specified input data corpus directory is invalid or contains no supported files."""
-    pass
 
+    pass
 
 
 # ----------------------------------------------------------------------
 # Layer Configurations
 # ----------------------------------------------------------------------
 
+
 @dataclass
 class IngestionConfig:
     """Ingestion & Layout Parsing Parameters."""
+
     ocr_fallback_char_threshold: int = 50
     page_batch_size: int = 1
     image_rendering_dpi: int = 150
@@ -116,6 +123,7 @@ class IngestionConfig:
 @dataclass
 class IndexingConfig:
     """Multi-Modal Indexing & FAISS HNSW Parameters."""
+
     domain: str = "general"
     model_name: Optional[str] = None
     index_type: str = "hnsw"  # "flat" or "hnsw"
@@ -129,18 +137,32 @@ class IndexingConfig:
 @dataclass
 class RouterConfig:
     """Intent Routing & Modality Keyword Parameters."""
+
     threshold: float = 0.35
     sigmoid_lambda: float = 1.2
-    modality_keywords: Dict[str, List[str]] = field(default_factory=lambda: {
-        "text": ["revenue", "growth", "report", "overview", "company", "margin", "statement", "financial", "narrative"],
-        "table": ["table", "region", "quarter", "by", "revenue", "sum", "average", "total", "rate", "percent"],
-        "vision": ["chart", "figure", "image", "graph", "adoption", "bar", "pie", "diagram", "plot", "trend"],
-    })
+    modality_keywords: Dict[str, List[str]] = field(
+        default_factory=lambda: {
+            "text": [
+                "revenue",
+                "growth",
+                "report",
+                "overview",
+                "company",
+                "margin",
+                "statement",
+                "financial",
+                "narrative",
+            ],
+            "table": ["table", "region", "quarter", "by", "revenue", "sum", "average", "total", "rate", "percent"],
+            "vision": ["chart", "figure", "image", "graph", "adoption", "bar", "pie", "diagram", "plot", "trend"],
+        }
+    )
 
 
 @dataclass
 class RetrievalConfig:
     """Hybrid Retrieval & Late Fusion Parameters."""
+
     top_k_text: int = 20
     top_k_table: int = 20
     top_k_vision: int = 20
@@ -151,6 +173,7 @@ class RetrievalConfig:
 @dataclass
 class RerankerConfig:
     """Cross-Encoder Reranking & Parent-Child Expansion Parameters."""
+
     model_name: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
     short_heading_char_threshold: int = 45
     heading_penalty_multiplier: float = 0.5
@@ -161,6 +184,7 @@ class RerankerConfig:
 @dataclass
 class GenerationConfig:
     """Multimodal Generator & Context Budget Parameters."""
+
     backend: str = "auto"
     model_name_or_path: str = "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"
     max_context_tokens: int = 4096
@@ -172,6 +196,7 @@ class GenerationConfig:
 @dataclass
 class AttributionConfig:
     """Sentence-Level NLI Faithfulness Attribution Parameters."""
+
     nli_model_name: str = "cross-encoder/nli-deberta-v3-small"
     entailment_threshold: float = 0.5
     flag_threshold_precision: float = 0.5
@@ -182,9 +207,11 @@ class AttributionConfig:
 # Root Framework Configuration
 # ----------------------------------------------------------------------
 
+
 @dataclass
 class DocuReasonConfig:
     """Central Master Configuration Object for DocuReason v1.1.0."""
+
     preset: str = "balanced"
     output_dir: str = "artifacts"
     ingestion: IngestionConfig = field(default_factory=IngestionConfig)
@@ -201,10 +228,7 @@ class DocuReasonConfig:
         return asdict(self)
 
     @staticmethod
-    def validate_inputs(
-        input_dir: Union[str, Path, None],
-        output_dir: Union[str, Path, None]
-    ) -> Dict[str, Any]:
+    def validate_inputs(input_dir: Union[str, Path, None], output_dir: Union[str, Path, None]) -> Dict[str, Any]:
         """Validate minimum required developer inputs to run the DocuReason pipeline.
 
         Returns metadata about input corpus validation.
@@ -231,8 +255,7 @@ class DocuReasonConfig:
             )
 
         supported_files = [
-            f for f in in_path.rglob("*")
-            if f.is_file() and f.suffix.lower() in SUPPORTED_CORPUS_EXTENSIONS
+            f for f in in_path.rglob("*") if f.is_file() and f.suffix.lower() in SUPPORTED_CORPUS_EXTENSIONS
         ]
         if not supported_files:
             raise InvalidCorpusError(
@@ -254,7 +277,7 @@ class DocuReasonConfig:
         except Exception as exc:
             raise MissingRequiredConfigError(
                 f"Output directory '{output_dir}' could not be created/accessed: {exc}"
-            )
+            ) from exc
 
         return {
             "input_dir": str(in_path.resolve()),
@@ -338,6 +361,7 @@ class DocuReasonConfig:
         if path.exists():
             try:
                 import yaml
+
                 data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
                 logger.info("Loaded DocuReasonConfig from YAML: %s", path)
             except Exception as exc:
@@ -364,16 +388,20 @@ class DocuReasonConfig:
         sections = ["ingestion", "indexing", "router", "retrieval", "reranker", "generation", "attribution"]
         for env_key, env_val in os.environ.items():
             if env_key.startswith("DOCUREASON_"):
-                raw = env_key[len("DOCUREASON_"):].lower()
+                raw = env_key[len("DOCUREASON_") :].lower()
                 matched = False
                 for sec_name in sections:
                     if raw.startswith(f"{sec_name}_"):
-                        field_name = raw[len(sec_name) + 1:]
+                        field_name = raw[len(sec_name) + 1 :]
                         sec_obj = getattr(config, sec_name)
                         if hasattr(sec_obj, field_name):
                             field_type = type(getattr(sec_obj, field_name))
                             try:
-                                cast_val = env_val.lower() in ("1", "true", "yes") if field_type is bool else field_type(env_val)
+                                cast_val = (
+                                    env_val.lower() in ("1", "true", "yes")
+                                    if field_type is bool
+                                    else field_type(env_val)
+                                )
                                 setattr(sec_obj, field_name, cast_val)
                                 config.source_map[f"{sec_name}.{field_name}"] = f"Environment Variable: {env_key}"
                                 logger.info("Env override applied: %s -> %s", env_key, cast_val)
@@ -387,7 +415,11 @@ class DocuReasonConfig:
                         if hasattr(sec_obj, raw):
                             field_type = type(getattr(sec_obj, raw))
                             try:
-                                cast_val = env_val.lower() in ("1", "true", "yes") if field_type is bool else field_type(env_val)
+                                cast_val = (
+                                    env_val.lower() in ("1", "true", "yes")
+                                    if field_type is bool
+                                    else field_type(env_val)
+                                )
                                 setattr(sec_obj, raw, cast_val)
                                 config.source_map[f"{sec_name}.{raw}"] = f"Environment Variable: {env_key}"
                                 logger.info("Env override applied: %s -> %s", env_key, cast_val)
@@ -436,9 +468,7 @@ class DocuReasonConfig:
         }
 
     def summary_string(
-        self,
-        input_dir: Optional[Union[str, Path]] = None,
-        output_dir: Optional[Union[str, Path]] = None
+        self, input_dir: Optional[Union[str, Path]] = None, output_dir: Optional[Union[str, Path]] = None
     ) -> str:
         """Generate a formatted PyTorch-like Configuration Transparency Summary string."""
         lines = []
@@ -452,7 +482,9 @@ class DocuReasonConfig:
         if input_dir:
             in_path = Path(input_dir)
             if in_path.exists() and in_path.is_dir():
-                count = len([f for f in in_path.rglob("*") if f.is_file() and f.suffix.lower() in SUPPORTED_CORPUS_EXTENSIONS])
+                count = len(
+                    [f for f in in_path.rglob("*") if f.is_file() and f.suffix.lower() in SUPPORTED_CORPUS_EXTENSIONS]
+                )
                 lines.append(f"  - input_dir (Data Corpus Path) : {input_dir} [VERIFIED - {count} supported file(s)]")
             else:
                 lines.append(f"  - input_dir (Data Corpus Path) : {input_dir} [INVALID / NOT FOUND]")
@@ -466,27 +498,51 @@ class DocuReasonConfig:
 
         lines.append("-" * 80)
         lines.append("[Framework Active Layer Configurations & Defaults]:")
-        lines.append(f"  - Config Preset Profile       : '{self.preset}' ({self.source_map.get('config_origin', 'Framework Default Preset')})")
+        lines.append(
+            f"  - Config Preset Profile       : '{self.preset}' ({self.source_map.get('config_origin', 'Framework Default Preset')})"
+        )
         lines.append("  [1. Ingestion Layer Defaults]:")
-        lines.append(f"      • OCR Fallback Enabled     : {self.ingestion.enable_ocr_fallback} (char_threshold={self.ingestion.ocr_fallback_char_threshold}, dpi={self.ingestion.image_rendering_dpi})")
-        lines.append(f"      • Chunking Tokens          : child_chunk={self.ingestion.child_chunk_size}, parent_region={self.ingestion.parent_region_size}, overlap={self.ingestion.chunk_overlap}")
+        lines.append(
+            f"      • OCR Fallback Enabled     : {self.ingestion.enable_ocr_fallback} (char_threshold={self.ingestion.ocr_fallback_char_threshold}, dpi={self.ingestion.image_rendering_dpi})"
+        )
+        lines.append(
+            f"      • Chunking Tokens          : child_chunk={self.ingestion.child_chunk_size}, parent_region={self.ingestion.parent_region_size}, overlap={self.ingestion.chunk_overlap}"
+        )
         lines.append("  [2. Indexing Layer Defaults]:")
-        lines.append(f"      • Domain / Vector Model    : domain='{self.indexing.domain}', model='{self.indexing.model_name or 'Default (sentence-transformers/all-MiniLM-L6-v2)'}'")
-        lines.append(f"      • FAISS Index Configuration: index_type='{self.indexing.index_type}', hnsw_m={self.indexing.hnsw_m}, ef_construction={self.indexing.hnsw_ef_construction}, ef_search={self.indexing.hnsw_ef_search}")
+        lines.append(
+            f"      • Domain / Vector Model    : domain='{self.indexing.domain}', model='{self.indexing.model_name or 'Default (sentence-transformers/all-MiniLM-L6-v2)'}'"
+        )
+        lines.append(
+            f"      • FAISS Index Configuration: index_type='{self.indexing.index_type}', hnsw_m={self.indexing.hnsw_m}, ef_construction={self.indexing.hnsw_ef_construction}, ef_search={self.indexing.hnsw_ef_search}"
+        )
         lines.append(f"      • BM25S Parameters         : k1={self.indexing.bm25_k1}, b={self.indexing.bm25_b}")
         lines.append("  [3. Intent Router Layer Defaults]:")
-        lines.append(f"      • Activation Threshold     : {self.router.threshold} (sigmoid_lambda={self.router.sigmoid_lambda})")
+        lines.append(
+            f"      • Activation Threshold     : {self.router.threshold} (sigmoid_lambda={self.router.sigmoid_lambda})"
+        )
         lines.append("  [4. Hybrid Retrieval Layer Defaults]:")
-        lines.append(f"      • Top-K Per Modality       : text={self.retrieval.top_k_text}, table={self.retrieval.top_k_table}, vision={self.retrieval.top_k_vision} (RRF k={self.retrieval.rrf_k})")
+        lines.append(
+            f"      • Top-K Per Modality       : text={self.retrieval.top_k_text}, table={self.retrieval.top_k_table}, vision={self.retrieval.top_k_vision} (RRF k={self.retrieval.rrf_k})"
+        )
         lines.append("  [5. Cross-Encoder Reranker Defaults]:")
-        lines.append(f"      • Model & Target Top-K     : model='{self.reranker.model_name}', final_top_k={self.reranker.final_top_k}, parent_expansion={self.reranker.enable_parent_expansion}")
+        lines.append(
+            f"      • Model & Target Top-K     : model='{self.reranker.model_name}', final_top_k={self.reranker.final_top_k}, parent_expansion={self.reranker.enable_parent_expansion}"
+        )
         lines.append("  [6. Multimodal Generation Defaults]:")
-        lines.append(f"      • Model Backend & Path     : backend='{self.generation.backend}', model='{self.generation.model_name_or_path}'")
-        lines.append(f"      • Context Token Budget     : max_context_tokens={self.generation.max_context_tokens}, temp={self.generation.temperature}, max_new_tokens={self.generation.max_new_tokens}")
+        lines.append(
+            f"      • Model Backend & Path     : backend='{self.generation.backend}', model='{self.generation.model_name_or_path}'"
+        )
+        lines.append(
+            f"      • Context Token Budget     : max_context_tokens={self.generation.max_context_tokens}, temp={self.generation.temperature}, max_new_tokens={self.generation.max_new_tokens}"
+        )
         lines.append("  [7. Faithfulness Attribution Defaults]:")
-        lines.append(f"      • NLI Model & Threshold    : enable_nli={self.attribution.enable_nli}, model='{self.attribution.nli_model_name}', threshold={self.attribution.entailment_threshold}")
+        lines.append(
+            f"      • NLI Model & Threshold    : enable_nli={self.attribution.enable_nli}, model='{self.attribution.nli_model_name}', threshold={self.attribution.entailment_threshold}"
+        )
         lines.append("=" * 80)
-        lines.append("Transparency Notice: Active defaults logged. To override, pass a custom DocuReasonConfig or YAML path.")
+        lines.append(
+            "Transparency Notice: Active defaults logged. To override, pass a custom DocuReasonConfig or YAML path."
+        )
         lines.append("=" * 80)
         return "\n".join(lines)
 
@@ -494,7 +550,7 @@ class DocuReasonConfig:
         self,
         input_dir: Optional[Union[str, Path]] = None,
         output_dir: Optional[Union[str, Path]] = None,
-        logger: Optional[Any] = None
+        logger: Optional[Any] = None,
     ) -> None:
         """Print or log the Configuration Transparency Summary."""
         summary_txt = self.summary_string(input_dir=input_dir, output_dir=output_dir)
@@ -503,4 +559,3 @@ class DocuReasonConfig:
                 logger.info(line)
         else:
             print(summary_txt)
-

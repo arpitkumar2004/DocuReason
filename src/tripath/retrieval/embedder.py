@@ -13,13 +13,15 @@ class ChunkEmbedder:
         embeddings: List[dict] = []
         for chunk in chunks:
             token_vector = self._token_vector(chunk.text)
-            embeddings.append({
-                "chunk_id": chunk.id,
-                "document_id": chunk.document_id,
-                "modality": chunk.modality,
-                "vector": token_vector,
-                "text": chunk.text,
-            })
+            embeddings.append(
+                {
+                    "chunk_id": chunk.id,
+                    "document_id": chunk.document_id,
+                    "modality": chunk.modality,
+                    "vector": token_vector,
+                    "text": chunk.text,
+                }
+            )
         return embeddings
 
     def embed_query(self, query: str) -> List[float]:

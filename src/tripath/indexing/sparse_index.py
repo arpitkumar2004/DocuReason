@@ -24,13 +24,14 @@ Usage
     builder.build(records, modality="text")
     results = builder.search("quarterly revenue", modality="text", k=10)
 """
+
 from __future__ import annotations
 
 import json
 import logging
 import re
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional, Union
 
 logger = logging.getLogger(__name__)
 
@@ -50,9 +51,7 @@ class BM25SIndexBuilder:
     """
 
     def __init__(
-        self,
-        output_dir: str | Path,
-        config: Optional[Union[IndexingConfig, DocuReasonConfig]] = None
+        self, output_dir: str | Path, config: Optional[Union[IndexingConfig, DocuReasonConfig]] = None
     ) -> None:
         if isinstance(config, DocuReasonConfig):
             idx_cfg = config.indexing
@@ -67,7 +66,7 @@ class BM25SIndexBuilder:
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.bm25_k1 = idx_cfg.bm25_k1 if idx_cfg else 1.5
         self.bm25_b = idx_cfg.bm25_b if idx_cfg else 0.75
-        self._indices: Dict[str, Any] = {}   # in-memory cache after build
+        self._indices: Dict[str, Any] = {}  # in-memory cache after build
         self._meta: Dict[str, List[Dict[str, Any]]] = {}
 
     # ------------------------------------------------------------------
@@ -107,9 +106,7 @@ class BM25SIndexBuilder:
 
         if not texts:
             logger.warning("BM25SIndexBuilder: no texts for modality=%s", modality)
-            (index_dir / "meta.json").write_text(
-                json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8"
-            )
+            (index_dir / "meta.json").write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
             return index_dir
 
         try:
@@ -119,31 +116,24 @@ class BM25SIndexBuilder:
             retriever = bm25s.BM25()
             retriever.index(corpus_tokens)
             retriever.save(str(index_dir))
-            (index_dir / "meta.json").write_text(
-                json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8"
-            )
+            (index_dir / "meta.json").write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
             self._indices[modality] = retriever
             logger.info(
                 "BM25SIndexBuilder: indexed %d docs (modality=%s) → %s",
-                len(texts), modality, index_dir,
+                len(texts),
+                modality,
+                index_dir,
             )
 
         except ImportError:
-            logger.warning(
-                "bm25s not installed — writing stub. "
-                "Install with: pip install bm25s"
-            )
-            (index_dir / "meta.json").write_text(
-                json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8"
-            )
+            logger.warning("bm25s not installed — writing stub. Install with: pip install bm25s")
+            (index_dir / "meta.json").write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
             # Mark as stub so search() knows not to try loading.
             (index_dir / ".stub").write_text("no-bm25s", encoding="utf-8")
 
         except Exception as exc:
             logger.warning("BM25SIndexBuilder build failed: %s", exc)
-            (index_dir / "meta.json").write_text(
-                json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8"
-            )
+            (index_dir / "meta.json").write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
 
         return index_dir
 
@@ -209,9 +199,7 @@ class BM25SIndexBuilder:
     # ------------------------------------------------------------------
 
     @staticmethod
-    def _keyword_fallback(
-        query: str, meta: List[Dict[str, Any]], k: int
-    ) -> List[Dict[str, Any]]:
+    def _keyword_fallback(query: str, meta: List[Dict[str, Any]], k: int) -> List[Dict[str, Any]]:
         """Trivial keyword overlap scorer used when bm25s is absent."""
         terms = set(re.findall(r"\w+", query.lower()))
         scored = []
