@@ -1,0 +1,12 @@
+=== FINQA BENCHMARK FINANCIAL REPORT ===
+Company: Global Enterprise Financials Inc.
+Fiscal Year 2025 Performance Overview
+
+Quarterly Table Data:
+| Quarter | Revenue | Net Profit Margin | Operating Expense | EBITDA |
+| Q1 2025 | $100M   | 24%              | $30M              | $45M   |
+| Q2 2025 | $125M   | 26%              | $32M              | $55M   |
+| Q3 2025 | $140M   | 28%              | $35M              | $62M   |
+| Q4 2025 | $160M   | 30%              | $38M              | $70M   |
+
+Summary: Net profit margin increased steadily across fiscal quarters 1 through 4, reaching 30% in Q4 2025.

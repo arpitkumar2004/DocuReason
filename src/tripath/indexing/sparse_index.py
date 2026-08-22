@@ -35,6 +35,9 @@ from typing import Any, Dict, List
 logger = logging.getLogger(__name__)
 
 
+from src.tripath.config import DocuReasonConfig, IndexingConfig
+
+
 class BM25SIndexBuilder:
     """Build and query a BM25S sparse index per modality.
 
@@ -42,11 +45,28 @@ class BM25SIndexBuilder:
     ----------
     output_dir:
         Directory where ``bm25_{modality}/`` index folders are saved.
+    config:
+        Optional DocuReasonConfig or IndexingConfig instance.
     """
 
-    def __init__(self, output_dir: str | Path) -> None:
-        self.output_dir = Path(output_dir)
+    def __init__(
+        self,
+        output_dir: str | Path,
+        config: Optional[Union[IndexingConfig, DocuReasonConfig]] = None
+    ) -> None:
+        if isinstance(config, DocuReasonConfig):
+            idx_cfg = config.indexing
+            self.output_dir = Path(config.output_dir)
+        elif isinstance(config, IndexingConfig):
+            idx_cfg = config
+            self.output_dir = Path(output_dir)
+        else:
+            idx_cfg = None
+            self.output_dir = Path(output_dir)
+
         self.output_dir.mkdir(parents=True, exist_ok=True)
+        self.bm25_k1 = idx_cfg.bm25_k1 if idx_cfg else 1.5
+        self.bm25_b = idx_cfg.bm25_b if idx_cfg else 0.75
         self._indices: Dict[str, Any] = {}   # in-memory cache after build
         self._meta: Dict[str, List[Dict[str, Any]]] = {}
 

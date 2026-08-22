@@ -59,6 +59,6 @@ class DoclingWrapper:
             return self.load_corpus()
 
         from docureason.pipeline import DocuReasonPipeline
-        pipeline = DocuReasonPipeline(input_dir=self.input_dir, output_dir=self.output_dir)
+        pipeline = DocuReasonPipeline(input_dir=self.input_dir, output_dir=self.output_dir, verbose=False)
         pipeline.run()
         return self.load_corpus()

@@ -19,7 +19,7 @@ def test_retrieval_research_stack_components(tmp_path):
     metrics = EvaluationHarness(output_dir=tmp_path).evaluate(
         "revenue by region",
         results,
-        relevant_ids=[documents[0].id],
+        relevant_ids=[results[0]["document_id"]],
     )
     assert metrics["result_count"] >= 1
     assert "ndcg_at_5" in metrics

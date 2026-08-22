@@ -3,6 +3,13 @@
 from docureason.ingestion import DocuReasonPipeline, Phase1Pipeline
 from docureason.serving import QueryService
 from src.tripath.attribution.nli_attributor import NLIFaithfulnessAttributor
+from src.tripath.config import (
+    DocuReasonConfig,
+    DocuReasonConfigError,
+    InvalidCorpusError,
+    MissingRequiredConfigError,
+    check_system,
+)
 from src.tripath.evaluation.artifact_quality import ArtifactQualityAuditor
 from src.tripath.evaluation.dataset_exporter import DatasetExporter
 from src.tripath.evaluation.eval_harness import EvaluationHarness
@@ -14,6 +21,11 @@ __all__ = [
     "DocuReasonPipeline",
     "Phase1Pipeline",
     "QueryService",
+    "DocuReasonConfig",
+    "DocuReasonConfigError",
+    "MissingRequiredConfigError",
+    "InvalidCorpusError",
+    "check_system",
     "EvaluationHarness",
     "TableEvaluator",
     "ArtifactQualityAuditor",
@@ -21,3 +33,4 @@ __all__ = [
     "NLIFaithfulnessAttributor",
     "__version__",
 ]
+

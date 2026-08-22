@@ -21,12 +21,24 @@ class QueryService:
         self,
         input_dir: str | Path,
         output_dir: str | Path,
-        config: Optional[DocuReasonConfig] = None,
+        config: Optional[DocuReasonConfig | str] = None,
+        verbose: bool = True,
     ) -> None:
-        self.input_dir = Path(input_dir)
-        self.output_dir = Path(output_dir)
-        self.config = config or DocuReasonConfig.load_from_yaml("configs/config.yaml")
+        validation_info = DocuReasonConfig.validate_inputs(input_dir, output_dir)
+        self.input_dir = Path(validation_info["input_dir"])
+        self.output_dir = Path(validation_info["output_dir"])
+
+        if isinstance(config, DocuReasonConfig):
+            self.config = config
+        elif isinstance(config, str):
+            self.config = DocuReasonConfig.load_preset(config)
+        else:
+            self.config = DocuReasonConfig.load_from_yaml("configs/config.yaml")
+
         self.config.output_dir = str(self.output_dir)
+        self.verbose = verbose
+        if self.verbose:
+            self.config.print_summary(input_dir=self.input_dir, output_dir=self.output_dir)
 
         self.documents = DoclingWrapper(input_dir=self.input_dir, output_dir=self.output_dir).ingest()
         self.embedder = ChunkEmbedder()

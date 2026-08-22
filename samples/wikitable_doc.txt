@@ -1,0 +1,9 @@
+=== WIKITABLE BENCHMARK TABULAR DATASET ===
+Regional Financial Metrics Table:
+| Region | Average EBITDA Growth Rate | Revenue Contribution | CAGR |
+| Region 1 | 12% | $450M | 14% |
+| Region 2 | 15% | $520M | 16% |
+| Region 3 | 18% | $610M | 19% |
+| Region 4 | 20% | $700M | 22% |
+
+Summary: Calculate average EBITDA growth rate across region 1, region 2, region 3, and region 4 yields an aggregate mean of 16.25%.

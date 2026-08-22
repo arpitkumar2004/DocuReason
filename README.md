@@ -1,4 +1,4 @@
-# DocuReason v1.1.1 — Enterprise-Grade Tri-Path Multimodal RAG Framework
+# DocuReason v1.1.2 — Enterprise-Grade Tri-Path Multimodal RAG Framework
 
 [![CI Pipeline](https://github.com/arpitkumar2004/DocuReason/actions/workflows/ci.yml/badge.svg)](https://github.com/arpitkumar2004/DocuReason/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/docureason-framework.svg)](https://pypi.org/project/docureason-framework/)
@@ -341,32 +341,73 @@ When running `uvicorn src.tripath.serving.main:app --port 8000`, the server expo
 
 ---
 
-## Configuration Guide
+## Configuration Guide & Developer Transparency
 
-Pipeline parameters can be customized via `configs/pipeline_config.yaml`:
+DocuReason provides a PyTorch-like configuration experience that prioritizes **developer transparency** and **fail-fast validation**.
 
-```yaml
-version: "1.0.1"
+### Minimum Required Developer Inputs
 
-ingestion:
-  page_batch_size: 1
-  do_ocr: false
-  ocr_languages: ["en"]
+To execute any pipeline or query service, developers only need to specify **two minimum required inputs**:
 
-chunking:
-  max_tokens: 512
-  overlap: 64
+1. **`input_dir`** (Data Corpus Path): Path to local document directory containing `.pdf`, `.docx`, `.pptx`, `.xlsx`, `.html`, `.csv`, or `.txt` files.
+2. **`output_dir`** (Artifact Target Path): Writable path for generated index artifacts (`corpus.json`, `index.json`, vector stores).
 
-router:
-  threshold: 0.35
-  keywords:
-    text: ["revenue", "growth", "statement", "report"]
-    table: ["table", "quarter", "sum", "total", "average"]
-    vision: ["chart", "figure", "graph", "plot", "diagram"]
+If required inputs are omitted or point to non-existent/empty directories, DocuReason raises developer-friendly exceptions (`MissingRequiredConfigError`, `InvalidCorpusError`) before starting any heavy computation.
 
-retrieval:
-  rrf_k: 60
-  top_k: 5
+```python
+from docureason import DocuReasonPipeline, DocuReasonConfig
+
+# Minimum required developer inputs with balanced default configuration
+pipeline = DocuReasonPipeline(
+    input_dir="data/my_corpus",
+    output_dir="artifacts/my_index",
+    config="balanced",  # Or 'quality_max', 'latency_optimized', 'low_resource_cpu'
+    verbose=True,       # Displays the Configuration Transparency Summary on startup
+)
+```
+
+### PyTorch-Style Configuration Transparency
+
+When initializing `DocuReasonPipeline` or `QueryService`, DocuReason automatically logs/prints an explicit **Configuration Transparency Summary**. Developers never need to look into internal framework code to verify active baseline defaults:
+
+```text
+================================================================================
+[DocuReason Framework v1.1.2] Configuration & Pipeline Transparency
+================================================================================
+[Required Developer Inputs]:
+  - input_dir (Data Corpus Path) : data/my_corpus [VERIFIED - 12 supported file(s)]
+  - output_dir (Artifact Path)  : artifacts/my_index [VERIFIED - target ready]
+--------------------------------------------------------------------------------
+[Framework Active Layer Configurations & Defaults]:
+  - Config Preset Profile       : 'balanced' (Framework Default Preset)
+  [1. Ingestion Layer Defaults]:
+      • OCR Fallback Enabled     : True (char_threshold=50, dpi=150)
+      • Chunking Tokens          : child_chunk=256, parent_region=1024, overlap=32
+  [2. Indexing Layer Defaults]:
+      • Domain / Vector Model    : domain='general', model='Default (sentence-transformers/all-MiniLM-L6-v2)'
+      • FAISS Index Configuration: index_type='hnsw', hnsw_m=32, ef_construction=200, ef_search=64
+      • BM25S Parameters         : k1=1.5, b=0.75
+  [3. Intent Router Layer Defaults]:
+      • Activation Threshold     : 0.35 (sigmoid_lambda=1.2)
+  [4. Hybrid Retrieval Layer Defaults]:
+      • Top-K Per Modality       : text=20, table=20, vision=20 (RRF k=60)
+  [5. Cross-Encoder Reranker Defaults]:
+      • Model & Target Top-K     : model='cross-encoder/ms-marco-MiniLM-L-6-v2', final_top_k=5, parent_expansion=True
+  [6. Multimodal Generation Defaults]:
+      • Model Backend & Path     : backend='auto', model='deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B'
+      • Context Token Budget     : max_context_tokens=4096, temp=0.1, max_new_tokens=512
+  [7. Faithfulness Attribution Defaults]:
+      • NLI Model & Threshold    : enable_nli=True, model='cross-encoder/nli-deberta-v3-small', threshold=0.5
+================================================================================
+```
+
+### On-Demand Inspection & YAML Overrides
+
+Developers can inspect active configuration summaries programmatically or override settings via YAML (`configs/config.yaml`) or environment variables (`DOCUREASON_SECTION_KEY`):
+
+```python
+config = DocuReasonConfig.load_from_yaml("configs/config.yaml")
+config.print_summary(input_dir="samples", output_dir="artifacts/run")
 ```
 
 ---

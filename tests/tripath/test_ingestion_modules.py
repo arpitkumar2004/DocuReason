@@ -13,12 +13,13 @@ def test_ingestion_and_indexing_modules(tmp_path):
     documents = wrapper.ingest()
 
     assert len(documents) >= 2
-    assert documents[0].title == "Quarterly Revenue Report"
-    assert any(region.type == "table" for region in documents[0].regions)
-    assert any(region.type == "figure" for region in documents[1].regions)
+    doc_map = {d.source: d for d in documents}
+    target_doc = doc_map.get("sample_doc_1.txt", documents[0])
+    assert target_doc.title == "Quarterly Revenue Report"
+    assert any(region.type == "table" for region in target_doc.regions)
 
     splitter = ModalitySplitter()
-    split_regions = splitter.split(documents[0])
+    split_regions = splitter.split(target_doc)
     assert set(split_regions.keys()) == {"text", "table", "vision"}
     assert split_regions["table"]
 

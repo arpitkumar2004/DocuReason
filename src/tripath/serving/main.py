@@ -1,10 +1,8 @@
-from __future__ import annotations
-
 import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from fastapi import FastAPI, HTTPException
+from fastapi import Body, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -60,6 +58,11 @@ class EvaluatePayload(BaseModel):
     relevant_ids: Optional[List[str]] = None
 
 
+QueryPayload.model_rebuild()
+IngestPayload.model_rebuild()
+EvaluatePayload.model_rebuild()
+
+
 @app.get("/health")
 @app.get("/api/status")
 def status_endpoint() -> Dict[str, str]:
@@ -83,7 +86,7 @@ def report_endpoint() -> Dict[str, Any]:
 @app.post("/api/query")
 @app.post("/query")
 @trace_execution(logger=logger)
-def query_endpoint(payload: QueryPayload) -> Dict[str, Any]:
+def query_endpoint(payload: QueryPayload = Body(...)) -> Dict[str, Any]:
     global _CACHED_DOCUMENTS
     query_text = payload.query.strip()
     if not query_text:

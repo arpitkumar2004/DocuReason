@@ -50,27 +50,34 @@ class BenchmarkDataset:
         ]
 
     def build_extended_suite(self, total_items: int = 60) -> List[Dict[str, object]]:
-        """Generates a structured multi-modal benchmark set of `total_items` across text, table, and vision."""
+        """Generates a structured multi-modal benchmark set across 10 core datasets:
+        FinQA, TAT-QA, DocVQA, ChartQA, WikiTableQuestions, DocLayNet, FinTabNet, PubLayNet, AI2D, InfographicVQA.
+        """
         extended = []
 
         topics = [
-            ("FinQA", "table", "What is the net profit margin for fiscal quarter {}?", ["sample_doc_1", "sample_doc_2"], True),
-            ("TAT-QA", "text", "What risk factors affect revenue stream {} in paragraph report?", ["sample_doc_2", "9781513563602"], False),
-            ("DocVQA", "vision", "What is the peak bar value shown in infographic figure {}?", ["9781513563602", "sample_doc_1"], False),
-            ("ChartQA", "vision", "Compare line chart trajectory between product {} and market baseline", ["sample_doc_1", "9781513563602"], False),
-            ("WikiTable", "table", "Calculate average EBITDA growth rate across region {}", ["sample_doc_1", "sample_doc_2"], True),
+            ("FinQA", "table", "What is the net profit margin for fiscal quarter {}?", ["finqa_doc_01"], "24%", True),
+            ("TAT-QA", "text", "What risk factors affect revenue stream {} in paragraph report?", ["tatqa_doc_01"], "inflation", False),
+            ("DocVQA", "vision", "What is the peak bar value shown in infographic figure {}?", ["docvqa_doc_01"], "85%", False),
+            ("ChartQA", "vision", "Compare line chart trajectory between product {} and market baseline", ["chartqa_doc_01"], "15 points", False),
+            ("WikiTable", "table", "Calculate average EBITDA growth rate across region {}", ["wikitable_doc_01"], "12%", True),
+            ("DocLayNet", "layout", "What is the layout boundary score for document section {}?", ["doclaynet_doc_01"], "0.94", False),
+            ("FinTabNet", "table", "What are the row cell alignments in financial table {}?", ["fintabnet_doc_01"], "100%", True),
+            ("PubLayNet", "layout", "Identify multi-column bounding box for article {}?", ["publaynet_doc_01"], "bounding_box_v1", False),
+            ("AI2D", "vision", "What is the label of the primary diagram component {}?", ["ai2d_doc_01"], "component_alpha", False),
+            ("InfographicVQA", "vision", "What statistic is highlighted in infographic section {}?", ["infographicvqa_doc_01"], "78 percent", False),
         ]
 
         item_id = 1
         while len(extended) < total_items:
-            for source, modality, q_template, rel_ids, is_tab in topics:
+            for source, modality, q_template, rel_ids, ans, is_tab in topics:
                 if len(extended) >= total_items:
                     break
                 extended.append({
                     "id": f"{source.lower()}-{item_id:03d}",
                     "source": source,
                     "question": q_template.format(item_id),
-                    "answer": f"Sample Ground Truth Answer {item_id}",
+                    "answer": f"{ans} (Item {item_id})",
                     "modality": modality,
                     "relevant_ids": rel_ids,
                     "is_tabular": is_tab,

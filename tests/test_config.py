@@ -115,3 +115,13 @@ def test_component_injection_with_config():
 
     attributor = NLIFaithfulnessAttributor(config=config)
     assert attributor.enable_nli is True
+
+
+def test_check_system_diagnostics():
+    """Verify system readiness diagnostic check returns expected status dictionary."""
+    from docureason import check_system
+    report = check_system(verbose=True)
+    assert "python_version" in report
+    assert "device" in report
+    assert "dependencies" in report
+    assert isinstance(report["dependencies"], dict)

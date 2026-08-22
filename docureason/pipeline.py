@@ -5,6 +5,7 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+from src.tripath.config import DocuReasonConfig
 from src.tripath.indexing.artifact_writer import ArtifactWriter
 from src.tripath.indexing.dense_index import DenseIndexBuilder
 from src.tripath.indexing.sparse_index import BM25SIndexBuilder
@@ -40,18 +41,46 @@ class DocuReasonPipeline:
        ``{"columns": [...], "rows": [[...]]}`` for downstream SQL generation.
     """
 
-    def __init__(self, input_dir: str | Path, output_dir: str | Path) -> None:
-        self.input_dir = Path(input_dir)
-        self.output_dir = Path(output_dir)
-        self.output_dir.mkdir(parents=True, exist_ok=True)
+    def __init__(
+        self,
+        input_dir: str | Path,
+        output_dir: str | Path,
+        config: Optional[DocuReasonConfig | str] = None,
+        verbose: bool = True
+    ) -> None:
+        # Validate minimum required developer inputs
+        validation_info = DocuReasonConfig.validate_inputs(input_dir, output_dir)
+        self.input_dir = Path(validation_info["input_dir"])
+        self.output_dir = Path(validation_info["output_dir"])
+
+        # Resolve configuration object
+        if isinstance(config, DocuReasonConfig):
+            self.config = config
+        elif isinstance(config, str):
+            self.config = DocuReasonConfig.load_preset(config)
+        else:
+            self.config = DocuReasonConfig.load_from_yaml()
+
+        self.verbose = verbose
+        if self.verbose:
+            self.config.print_summary(input_dir=self.input_dir, output_dir=self.output_dir, logger=logger)
+
         logger.info("Initializing DocuReasonPipeline: input_dir=%s, output_dir=%s", self.input_dir, self.output_dir)
 
         self.identity = IdentityManager()
         self.artifact_writer = ArtifactWriter(self.output_dir)
         self.loader = FormatAwareLoader()
 
-        self.layout_parser = DoclingLayoutParser(page_batch_size=1, do_ocr=False)
-        log_pipeline_flag("layout_parser_batch_size", 1, "Docling single-page memory limit", logger)
+        self.layout_parser = DoclingLayoutParser(
+            page_batch_size=self.config.ingestion.page_batch_size,
+            do_ocr=False
+        )
+        log_pipeline_flag(
+            "layout_parser_batch_size",
+            self.config.ingestion.page_batch_size,
+            "Docling single-page memory limit",
+            logger
+        )
 
         self.ocr_fallback = OCRFallback(languages=["en"])
         log_pipeline_flag("ocr_languages", ["en"], "EasyOCR fallback configuration", logger)
@@ -62,8 +91,8 @@ class DocuReasonPipeline:
         log_pipeline_flag("use_blip2", True, "BLIP-2 figure captioning enabled", logger)
         log_pipeline_flag("use_clip", True, "CLIP figure embeddings enabled", logger)
 
-        self.dense_index = DenseIndexBuilder(output_dir=self.output_dir)
-        self.sparse_index = BM25SIndexBuilder(output_dir=self.output_dir)
+        self.dense_index = DenseIndexBuilder(output_dir=self.output_dir, config=self.config)
+        self.sparse_index = BM25SIndexBuilder(output_dir=self.output_dir, config=self.config)
 
     @trace_pipeline_stage("Document Ingestion & Indexing Pipeline")
     def run(self) -> Dict[str, object]:

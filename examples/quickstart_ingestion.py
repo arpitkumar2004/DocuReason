@@ -1,25 +1,39 @@
-"""DocuReason Quickstart: Ingestion and Indexing Pipeline."""
+"""DocuReason Quickstart: Ingestion and Indexing Pipeline with Configuration Transparency."""
 
-from docureason import DocuReasonPipeline
+from docureason import DocuReasonConfig, DocuReasonPipeline, MissingRequiredConfigError, InvalidCorpusError
 
 
 def main() -> None:
-    # Initialize offline ingestion pipeline
-    pipeline = DocuReasonPipeline(
-        input_dir="samples",
-        output_dir="artifacts/quickstart_run"
-    )
+    # -------------------------------------------------------------------------
+    # 1. Initialize pipeline with minimum required developer inputs:
+    #    - input_dir  : Path to local document corpus directory (Required)
+    #    - output_dir : Path to target artifact output directory (Required)
+    #    - config     : Optional profile preset ('quality_max', 'balanced', etc.)
+    # -------------------------------------------------------------------------
+    try:
+        pipeline = DocuReasonPipeline(
+            input_dir="samples",
+            output_dir="artifacts/quickstart_run",
+            config="balanced",
+            verbose=True,  # Automatically logs the Configuration Transparency Table
+        )
 
-    # Run layout segmentation, table processing, and vector indexing
-    report = pipeline.run()
+        # Access loaded framework configuration details
+        print(f"\n[Active Profile Preset]: {pipeline.config.preset}")
+        print(f"[Dense Vector Model]   : {pipeline.config.indexing.model_name or 'Default MiniLM'}")
 
-    print("Pipeline Execution Summary:")
-    print(f"Status: {report['status']}")
-    print(f"Processed Documents: {report['document_count']}")
-    print(f"Generated Chunks: {report['chunk_count']}")
-    print(f"Dense Vector Count: {report['dense_vectors']}")
-    print(f"Sparse Terms Count: {report['sparse_terms']}")
+        # Execute layout segmentation, table processing, and vector indexing
+        report = pipeline.run()
+
+        print("\nPipeline Execution Summary:")
+        print(f"Processed Documents: {report.get('document_count', 0)}")
+        print(f"Generated Chunks   : {report.get('chunk_count', 0)}")
+        print(f"Artifact Target    : {report.get('output_dir')}")
+
+    except (MissingRequiredConfigError, InvalidCorpusError) as exc:
+        print(f"\n[DocuReason Input Validation Failed]:\n{exc}")
 
 
 if __name__ == "__main__":
     main()
+
