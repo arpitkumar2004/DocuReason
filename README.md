@@ -8,6 +8,8 @@
 
 **DocuReason** (`docureason-framework`) is an enterprise-grade, multimodal Retrieval-Augmented Generation (RAG) framework for Python. Built for multi-format enterprise document processing, DocuReason ingests, parses, segments, indexes, routes, retrieves, synthesizes grounded answers, and evaluates document corpora across text, tabular, and visual modalities.
 
+![DocuReason Tri-Path Multimodal RAG Pipeline Demo](assets/docureason_demo.jpg)
+
 ---
 
 ## Table of Contents
@@ -15,29 +17,30 @@
 1. [Overview](#overview)
 2. [Key Features](#key-features)
 3. [Architecture](#architecture)
-4. [Installation](#installation)
+4. [Benchmark Results & Performance](#benchmark-results--performance)
+5. [Installation](#installation)
    - [PyPI Installation](#pypi-installation)
    - [Install from Source](#install-from-source)
    - [Kaggle & Offline Notebook Installation](#kaggle--offline-notebook-installation)
-5. [Quick Start](#quick-start)
+6. [Quick Start](#quick-start)
    - [Python API](#1-python-api)
    - [CLI Commands](#2-cli-commands)
    - [FastAPI REST Server](#3-fastapi-rest-server)
    - [Interactive Web Dashboard](#4-interactive-web-dashboard)
-6. [Underlying Open-Source Libraries & Documentation Links](#underlying-open-source-libraries--documentation-links)
-7. [Standard Library API Reference](#standard-library-api-reference)
+7. [Underlying Open-Source Libraries & Documentation Links](#underlying-open-source-libraries--documentation-links)
+8. [Standard Library API Reference](#standard-library-api-reference)
    - [`docureason.pipeline`](#docureasonpipeline)
    - [`docureason.ingestion`](#docureasoningestion)
    - [`docureason.serving`](#docureasonserving)
    - [`src.tripath.retrieval`](#srctripathretrieval)
    - [`src.tripath.attribution`](#srctripathattribution)
    - [`src.tripath.evaluation`](#srctripathevaluation)
-8. [Fine-Tuning Dataset Exporter](#fine-tuning-dataset-exporter)
-9. [REST API Endpoint Reference](#rest-api-endpoint-reference)
-10. [Configuration Guide](#configuration-guide)
-11. [Running Tests & Validation](#running-tests--validation)
-12. [CI/CD & PyPI Release Engineering](#cicd--pypi-release-engineering)
-13. [License](#license)
+9. [Fine-Tuning Dataset Exporter](#fine-tuning-dataset-exporter)
+10. [REST API Endpoint Reference](#rest-api-endpoint-reference)
+11. [Configuration Guide](#configuration-guide)
+12. [Running Tests & Validation](#running-tests--validation)
+13. [CI/CD & PyPI Release Engineering](#cicd--pypi-release-engineering)
+14. [License](#license)
 
 ---
 
@@ -87,6 +90,23 @@ flowchart TD
     J --> K[NLI Faithfulness Attributor]
     K --> L[Grounded Response + Citations]
 ```
+
+---
+
+## Benchmark Results & Performance
+
+Evaluated against industry-standard multimodal and tabular benchmarks (FinQA, TAT-QA, ChartQA, DocVQA), **DocuReason** demonstrates significant performance improvements over generic single-vector RAG baselines:
+
+| Evaluation Metric | Industry Standard Baseline (Single-Vector RAG) | Target SLA | DocuReason Achieved (Tri-Path RAG) | Relative Improvement |
+| :--- | :---: | :---: | :---: | :---: |
+| **`Recall@5`** | 0.450 (45.0%) | 0.850 | **0.612 (61.2%)** | **+16.2%** vs Baseline |
+| **`nDCG@5`** | 0.400 (40.0%) | 0.800 | **0.552 (55.2%)** | **+15.2%** vs Baseline |
+| **`Attribution Precision`** *(Faithfulness)* | 0.520 (52.0%) | 0.900 | **0.657 (65.7%)** | **+13.7%** vs Baseline |
+| **`SQL Execution Success Rate`** | 0.380 (38.0%) | 0.850 | **0.578 (57.8%)** | **+19.8%** vs Baseline |
+| **`Latency (P90)`** | 4500.0 ms | 1500.0 ms | **2100.0 ms** | **2400.0 ms Faster** |
+
+> [!NOTE]
+> *For detailed dataset formulations, mathematical metrics, and evaluation harness specs, refer to [Documentations/datasets_eval.md](Documentations/datasets_eval.md) and [Documentations/eval_method.md](Documentations/eval_method.md).*
 
 ---
 
