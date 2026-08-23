@@ -1,4 +1,4 @@
-# DocuReason v1.1.1 — CI/CD Pipeline & PyPI Release Engineering Specification
+# DocuReason v1.1.3 — CI/CD Pipeline & PyPI Release Engineering Specification
 
 This document provides a comprehensive technical reference for the Continuous Integration, Continuous Delivery (CI/CD), and PyPI deployment infrastructure powering `docureason-framework`.
 

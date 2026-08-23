@@ -1,4 +1,4 @@
-"""scripts/generate_large_evaluation.py — Large-scale evaluation runner for DocuReason v1.1.0.
+"""scripts/generate_large_evaluation.py — Large-scale evaluation runner for DocuReason v1.1.3.
 
 Usage:
     python scripts/generate_large_evaluation.py --count 50
@@ -29,7 +29,7 @@ def main():
 
     count = args.count
     print("=" * 75)
-    print(f"DocuReason v1.1.0 -- Large Scale Evaluation Suite ({count} Data Points)")
+    print(f"DocuReason v1.1.3 -- Large Scale Evaluation Suite ({count} Data Points)")
     print("=" * 75)
 
     # 1. Target Metrics (SLAs)

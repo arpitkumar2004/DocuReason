@@ -21,7 +21,7 @@ logger = get_logger(__name__)
 
 def main():
     print("=" * 70)
-    print("DocuReason v1.1.0 -- Fine-Tuning Training Dataset Exporter")
+    print("DocuReason v1.1.3 -- Fine-Tuning Training Dataset Exporter")
     print("=" * 70)
 
     # 1. Load benchmark suite

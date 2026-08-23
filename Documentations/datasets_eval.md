@@ -1,4 +1,4 @@
-# DocuReason v1.1.1 — Multimodal Benchmark Dataset Evaluation Specification
+# DocuReason v1.1.3 — Multimodal Benchmark Dataset Evaluation Specification
 
 > **The Authoritative Benchmark Dataset & Testing Specification Manual**  
 > *A Comprehensive Reference Guide Detailing Dataset Contents, Subsystem Mappings, Mathematical Formulations, Automated Metric Counts, Kaggle GPU Time Estimates, and Framework Code Implementations.*
@@ -9,7 +9,7 @@
 
 Evaluating an enterprise-grade multimodal Retrieval-Augmented Generation (RAG) framework requires testing against diverse, real-world document collections. Single-domain datasets (e.g., plain-text news articles) fail to stress-test complex RAG subsystems such as Text-to-SQL execution, OCR rendering, or chart figure understanding.
 
-**DocuReason v1.1.1** features an automated benchmark dataset evaluation suite integrated into [`src/tripath/evaluation/benchmark_dataset.py`](file:///d:/DocuReason/src/tripath/evaluation/benchmark_dataset.py) and [`src/tripath/evaluation/eval_harness.py`](file:///d:/DocuReason/src/tripath/evaluation/eval_harness.py).
+**DocuReason v1.1.3** features an automated benchmark dataset evaluation suite integrated into [`src/tripath/evaluation/benchmark_dataset.py`](file:///d:/DocuReason/src/tripath/evaluation/benchmark_dataset.py) and [`src/tripath/evaluation/eval_harness.py`](file:///d:/DocuReason/src/tripath/evaluation/eval_harness.py).
 
 This specification details all **10 Primary Benchmark Datasets** that form the system testing suite, explaining:
 1. **Dataset Purpose, Training/Testing Split & Priority Rating**
@@ -24,7 +24,7 @@ This specification details all **10 Primary Benchmark Datasets** that form the s
 ## Project Evaluation Results & Target SLA Deviation Analysis
 
 ### Evaluation Methodology & Metric Suite
-The **DocuReason v1.1.1** evaluation methodology evaluates RAG system performance across **22 distinct evaluation dimensions** spanning Retrieval Quality, Ranking Order, NLI Faithfulness, Context Compression, Tabular Structure, and Execution Latency.
+The **DocuReason v1.1.3** evaluation methodology evaluates RAG system performance across **22 distinct evaluation dimensions** spanning Retrieval Quality, Ranking Order, NLI Faithfulness, Context Compression, Tabular Structure, and Execution Latency.
 
 System targets are verified automatically via `EvaluationHarness.verify_target_achievements()`.
 
@@ -319,7 +319,7 @@ The DocuReason framework **completely automates** dataset loading, preprocessing
 
 ```python
 # ==============================================================================
-# DocuReason v1.1.1 — Automated Kaggle Benchmark Evaluation Notebook Cell
+# DocuReason v1.1.3 — Automated Kaggle Benchmark Evaluation Notebook Cell
 # ==============================================================================
 
 # 1. Install framework in Kaggle environment
@@ -330,7 +330,7 @@ from src.tripath.evaluation.benchmark_dataset import BenchmarkDataset
 from src.tripath.evaluation.eval_harness import EvaluationHarness
 
 print("=" * 70)
-print("DocuReason v1.1.1 — Kaggle Multimodal Dataset Evaluation Suite")
+print("DocuReason v1.1.3 — Kaggle Multimodal Dataset Evaluation Suite")
 print("=" * 70)
 
 # 2. Build multi-modal benchmark suite (FinQA, TAT-QA, DocVQA, ChartQA, WikiTable)

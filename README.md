@@ -1,4 +1,4 @@
-# DocuReason v1.1.2 — Enterprise-Grade Tri-Path Multimodal RAG Framework
+# DocuReason v1.1.3 — Enterprise-Grade Tri-Path Multimodal RAG Framework
 
 [![CI Pipeline](https://github.com/arpitkumar2004/DocuReason/actions/workflows/ci.yml/badge.svg)](https://github.com/arpitkumar2004/DocuReason/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/docureason-framework.svg)](https://pypi.org/project/docureason-framework/)
@@ -52,7 +52,7 @@
 
 Enterprise document collections contain a mix of prose, multi-row financial tables, and embedded diagrams or charts. Standard RAG systems treat all content as plain text, leading to severe accuracy degradation on tabular data and visual figures.
 
-**DocuReason 1.1.1** addresses this via a **Tri-Path Multimodal RAG Architecture**:
+**DocuReason 1.1.3** addresses this via a **Tri-Path Multimodal RAG Architecture**:
 1. **Text Path**: Combines dense vector embeddings ([SentenceTransformers](https://www.sbert.net/) / [Qdrant](https://qdrant.tech/)) with sparse keyword retrieval ([BM25S](https://github.com/xhluca/bm25s)).
 2. **Table / Text-to-SQL Path**: Extracts tabular regions, serializes to Markdown/HTML/JSON schemas, and executes SQL aggregations using [DuckDB](https://duckdb.org/).
 3. **Vision / Chart Path**: Uses visual feature extractors ([ColPali](https://github.com/illuin-tech/colpali) / [CLIP](https://huggingface.co/docs/transformers/model_doc/clip)) and [BLIP-2](https://huggingface.co/docs/transformers/model_doc/blip-2) figure captioning for visual chart understanding.
@@ -187,7 +187,7 @@ Verify installation:
 
 ```python
 import docureason
-print(docureason.__version__)  # Output: 1.0.1
+print(docureason.__version__)  # Output: 1.1.3
 ```
 
 ### Kaggle & Offline Notebook Installation
@@ -195,7 +195,7 @@ print(docureason.__version__)  # Output: 1.0.1
 To install in Kaggle or offline environments without internet access, upload the `.whl` package file as a Kaggle Dataset and install:
 
 ```python
-!pip install /kaggle/input/your-dataset-name/docureason_framework-1.1.1-py3-none-any.whl
+!pip install /kaggle/input/your-dataset-name/docureason_framework-1.1.3-py3-none-any.whl
 ```
 
 Or install directly from GitHub:
@@ -445,7 +445,7 @@ When initializing `DocuReasonPipeline` or `QueryService`, DocuReason automatical
 
 ```text
 ================================================================================
-[DocuReason Framework v1.1.2] Configuration & Pipeline Transparency
+[DocuReason Framework v1.1.3] Configuration & Pipeline Transparency
 ================================================================================
 [Required Developer Inputs]:
   - input_dir (Data Corpus Path) : data/my_corpus [VERIFIED - 12 supported file(s)]

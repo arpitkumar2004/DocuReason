@@ -21,7 +21,7 @@ logger = get_logger(__name__)
 
 def main():
     print("=" * 70)
-    print("DocuReason v1.1.0 -- System Target Metric Evaluation Runner")
+    print("DocuReason v1.1.3 -- System Target Metric Evaluation Runner")
     print("=" * 70)
 
     # 1. Define Target Metrics (SLAs / Planned Goals)

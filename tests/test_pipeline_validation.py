@@ -77,7 +77,7 @@ def test_valid_corpus_validation_and_transparency_summary(tmp_path: Path, capsys
 
     summary_txt = pipeline.config.summary_string(input_dir=corpus_dir, output_dir=out_dir)
 
-    assert "[DocuReason Framework v1.1.2] Configuration & Pipeline Transparency" in summary_txt
+    assert "[DocuReason Framework v1.1.3] Configuration & Pipeline Transparency" in summary_txt
     assert "input_dir (Data Corpus Path)" in summary_txt
     assert "VERIFIED - 2 supported file(s)" in summary_txt
     assert "output_dir (Artifact Path)" in summary_txt

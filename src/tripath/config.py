@@ -473,7 +473,7 @@ class DocuReasonConfig:
         """Generate a formatted PyTorch-like Configuration Transparency Summary string."""
         lines = []
         lines.append("=" * 80)
-        lines.append("[DocuReason Framework v1.1.2] Configuration & Pipeline Transparency")
+        lines.append("[DocuReason Framework v1.1.3] Configuration & Pipeline Transparency")
         lines.append("=" * 80)
 
         effective_output_dir = output_dir or self.output_dir
