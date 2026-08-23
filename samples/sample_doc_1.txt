@@ -1,1 +1,11 @@
-Fiscal Q1 Revenue was 100M. Fiscal Q2 Revenue was 125M. Growth rate was 25%. Net profit margin is 24% for fiscal quarter 1. Peak bar value is 85 in infographic figure 1. Compare line chart trajectory between product 1 and market baseline shows 35% growth.
+Quarterly Revenue Report
+
+Overview of financial performance across all operational regions.
+
+Table: Revenue Summary
+Quarter | Region | Revenue
+Q1 | North America | $10M
+Q2 | Europe | $8M
+
+Figure: Revenue Chart
+Bar chart showing quarterly revenue breakdown by region.
