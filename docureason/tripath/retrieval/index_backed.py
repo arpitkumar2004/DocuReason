@@ -25,6 +25,7 @@ This module holds the pieces the three retrievers share:
 
 from __future__ import annotations
 
+import time
 from dataclasses import dataclass, field
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
@@ -230,6 +231,13 @@ class IndexBackedRetriever:
         retrieval = getattr(self.config, "retrieval", None)
         return bool(getattr(retrieval, "enable_index_retrieval", True))
 
+    def sparse_enabled(self) -> bool:
+        """False when this modality has no sparse index, or ablation A6 turned it off."""
+        if self.sparse is None:
+            return False
+        retrieval = getattr(self.config, "retrieval", None)
+        return bool(getattr(retrieval, "enable_sparse_retrieval", True))
+
     def rrf_k(self) -> int:
         retrieval = getattr(self.config, "retrieval", None)
         return int(getattr(retrieval, "rrf_k", 60) or 60)
@@ -254,7 +262,9 @@ class IndexBackedRetriever:
                 self.last_stats = {"mode": "hybrid_index", **index_stats}
                 return results
 
+        scan_start = time.perf_counter()
         results = self.scan(query, documents)
+        index_stats["corpus_scan_ms"] = round((time.perf_counter() - scan_start) * 1000.0, 3)
         # The index attempt's statistics are carried through: a stale-index signal
         # must not be lost just because the fallback produced the answer.
         self.last_stats = {
@@ -277,15 +287,31 @@ class IndexBackedRetriever:
 
         k = fetch_k(cap)
         runs: Dict[str, List[Dict[str, Any]]] = {}
+        # Sub-step timings are recorded on the stats dict rather than through a timer
+        # argument, so the retriever keeps a signature that tests and scripts can call
+        # without knowing about instrumentation. HybridRetriever folds them into the
+        # per-query StageTimer.
+        dense_ms = sparse_ms = 0.0
         if self.dense is not None:
+            started = time.perf_counter()
             runs["dense"] = self.dense.search(query, self.modality, k=k) or []
-        if self.sparse is not None:
+            dense_ms = (time.perf_counter() - started) * 1000.0
+        if self.sparse_enabled():
+            started = time.perf_counter()
             runs["sparse"] = self.sparse.search(query, self.modality, k=k) or []
+            sparse_ms = (time.perf_counter() - started) * 1000.0
 
+        merge_start = time.perf_counter()
         merged, merge_stats = merge_index_hits(runs, lookups, rrf_k=self.rrf_k())
+        merge_ms = (time.perf_counter() - merge_start) * 1000.0
+
         stats = {
             "dense_hits": len(runs.get("dense", [])),
             "sparse_hits": len(runs.get("sparse", [])),
+            "sparse_enabled": self.sparse_enabled(),
+            "dense_ms": round(dense_ms, 3),
+            "sparse_ms": round(sparse_ms, 3),
+            "index_merge_ms": round(merge_ms, 3),
             **merge_stats,
         }
         if not merged:

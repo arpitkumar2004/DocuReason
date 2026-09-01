@@ -32,6 +32,7 @@ import io
 from pathlib import Path
 from typing import Any, List, Optional, Tuple
 
+from docureason.tripath.ingestion.rasterizer import PageRasterizer, page_index_from_region
 from docureason.tripath.model_pins import resolve_revision
 from docureason.tripath.utils import get_logger, log_pipeline_flag, trace_execution
 
@@ -71,9 +72,14 @@ class FigureCaptioner:
         self,
         use_blip2: bool = True,
         use_clip: bool = True,
+        image_rendering_dpi: int = 150,
     ) -> None:
         self.use_blip2 = use_blip2
         self.use_clip = use_clip
+        #: Rasterization DPI for figure crops. This is the first consumer of
+        #: ``IngestionConfig.image_rendering_dpi``, which the startup banner had been
+        #: reporting for a setting that reached no code (§6, P1-12).
+        self.image_rendering_dpi = int(image_rendering_dpi)
         #: Captions produced per tier during this instance's lifetime.  Recorded so a
         #: run where BLIP-2 and CLIP both failed and every caption came from the
         #: deterministic metadata fallback is distinguishable from a real vision run
@@ -81,6 +87,12 @@ class FigureCaptioner:
         self.tier_counts: dict = {"existing_text": 0, "blip2": 0, "clip": 0, "metadata": 0}
         log_pipeline_flag("figure_captioner_blip2", use_blip2, "BLIP-2 figure captioner flag", logger)
         log_pipeline_flag("figure_captioner_clip", use_clip, "CLIP chart classifier flag", logger)
+        log_pipeline_flag(
+            "image_rendering_dpi",
+            self.image_rendering_dpi,
+            "Page rasterization DPI for figure crops and OCR",
+            logger,
+        )
 
         self._blip2_model: Any = None
         self._blip2_proc: Any = None
@@ -117,6 +129,23 @@ class FigureCaptioner:
         if not figure_indices:
             return regions
 
+        # One rasterizer per document: it caches rendered pages, so a page carrying six
+        # figures is rendered once rather than six times.
+        rasterizer = PageRasterizer(path, dpi=self.image_rendering_dpi) if path.suffix.lower() == ".pdf" else None
+        try:
+            return self._caption_each(regions, figure_indices, path, doc_title, rasterizer)
+        finally:
+            if rasterizer is not None:
+                rasterizer.close()
+
+    def _caption_each(
+        self,
+        regions: List[Region],
+        figure_indices: List[int],
+        path: Path,
+        doc_title: str,
+        rasterizer: Optional[PageRasterizer],
+    ) -> List[Region]:
         for idx in figure_indices:
             region = regions[idx]
             existing_text = (region.text or "").strip()
@@ -125,7 +154,7 @@ class FigureCaptioner:
                 caption = existing_text
                 source = "existing_text"
             else:
-                generated, source = self._caption_region(region, path, doc_title)
+                generated, source = self._caption_region(region, path, doc_title, rasterizer)
                 caption = f"{existing_text} - {generated}".strip(" -") if existing_text else generated
 
             self.tier_counts[source] = self.tier_counts.get(source, 0) + 1
@@ -149,9 +178,17 @@ class FigureCaptioner:
     # Caption generation tiers
     # ------------------------------------------------------------------
 
-    def _caption_region(self, region: Region, source_path: Path, doc_title: str) -> Tuple[str, str]:
+    def _caption_region(
+        self,
+        region: Region,
+        source_path: Path,
+        doc_title: str,
+        rasterizer: Optional[PageRasterizer] = None,
+    ) -> Tuple[str, str]:
         """Try each tier in order; return ``(caption, tier_name)`` for the first that works."""
-        image_bytes = self._extract_region_image(region, source_path)
+        image_bytes = self._region_crop_bytes(region, rasterizer)
+        if image_bytes is None:
+            image_bytes = self._extract_region_image(region, source_path)
 
         if image_bytes:
             if self.use_blip2:
@@ -177,6 +214,33 @@ class FigureCaptioner:
     # ------------------------------------------------------------------
     # Image extraction
     # ------------------------------------------------------------------
+
+    def _region_crop_bytes(self, region: Region, rasterizer: Optional[PageRasterizer]) -> Optional[bytes]:
+        """A real raster crop of *this* figure, or None when there is nothing to caption.
+
+        Two behaviours the previous ``page.images[0]`` path could not have:
+
+        * every figure gets **its own** crop, taken at its own bbox (P1-3);
+        * a crop with no visual variation is refused, so an empty rectangle is no
+          longer captioned by BLIP-2 and indexed as a figure (P1-4).  Refusing routes
+          the region to the deterministic metadata caption, which is counted in
+          ``tier_counts`` and reported as ingestion degradation.
+        """
+        if rasterizer is None or not rasterizer.available:
+            return None
+
+        page_index = page_index_from_region(region.page_no, rasterizer.page_count)
+        crop = rasterizer.crop(page_index, region.bbox)
+        if crop is None:
+            return None
+        if PageRasterizer.is_blank(crop):
+            self.tier_counts["blank_crop_skipped"] = self.tier_counts.get("blank_crop_skipped", 0) + 1
+            logger.warning(
+                "FigureCaptioner: the crop for a figure on page %s is blank — refusing to caption an empty region",
+                region.page_no,
+            )
+            return None
+        return PageRasterizer.to_png_bytes(crop)
 
     def _extract_region_image(self, region: Region, source_path: Path) -> Optional[bytes]:
         """Extract image bytes for the region's page / bbox.

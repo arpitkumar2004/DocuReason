@@ -108,9 +108,16 @@ def log_sql_failure(query: str, generated_sql: str, error: str, table_data: Dict
 class TableSQLRetriever:
     """Advanced DuckDB SQL execution engine with typed schemas and self-consistency."""
 
-    def __init__(self, config: Optional[Any] = None) -> None:
+    def __init__(self, config: Optional[Any] = None, store: Optional[Any] = None) -> None:
         self.config = config
         self._duckdb_available: Optional[bool] = None
+        #: Optional :class:`~docureason.tripath.indexing.table_store.DuckDBTableStore`.
+        #: When a region is registered there, its table already exists with types
+        #: decided at ingestion, so the query does not re-create and re-insert it.
+        self.store = store
+        #: Counters for the most recent retrieve(), so the response can say which path
+        #: served each table rather than leaving the two indistinguishable.
+        self.last_stats: Dict[str, int] = {"prepared_tables": 0, "in_memory_tables": 0}
 
     def _has_duckdb(self) -> bool:
         if self._duckdb_available is None:
@@ -127,6 +134,7 @@ class TableSQLRetriever:
     def retrieve(self, query: str, documents: List[Document]) -> List[Dict[str, Any]]:
         results: List[Dict[str, Any]] = []
         lowered_query = query.lower()
+        self.last_stats = {"prepared_tables": 0, "in_memory_tables": 0}
 
         for document in documents:
             for idx, region in enumerate(document.regions):
@@ -137,17 +145,30 @@ class TableSQLRetriever:
                 if not table_data or not table_data.get("columns"):
                     continue
 
-                sql_query, sql_result, score = self._execute_sql_query(lowered_query, table_data)
+                region_id = canonical_region_id(document.id, region, idx)
+                prepared = self._prepared_table(region_id)
+                if prepared is not None:
+                    self.last_stats["prepared_tables"] += 1
+                    sql_query, sql_result, score = self._execute_sql_query(
+                        lowered_query,
+                        table_data,
+                        table_name=prepared.table_name,
+                        connection=self.store.connection(),
+                        column_types=prepared.column_types,
+                    )
+                else:
+                    self.last_stats["in_memory_tables"] += 1
+                    sql_query, sql_result, score = self._execute_sql_query(lowered_query, table_data)
 
                 if score > 0.0:
                     results.append(
                         {
                             "document_id": document.id,
-                            "region_id": canonical_region_id(document.id, region, idx),
+                            "region_id": region_id,
                             "score": round(score, 3),
                             "text": region.table_markdown or region.text,
                             "modality": "table",
-                            "mode": "typed_duckdb_sql" if self._has_duckdb() else "sql_simulation",
+                            "mode": self._mode_label(prepared is not None),
                             "sql_query": sql_query,
                             "sql_result": sql_result,
                             "table_schema": table_data.get("columns", []),
@@ -158,6 +179,20 @@ class TableSQLRetriever:
                     )
 
         return sorted(results, key=lambda item: item["score"], reverse=True)
+
+    def _prepared_table(self, region_id: str) -> Optional[Any]:
+        """The ingestion-registered table for *region_id*, when the store has one."""
+        if self.store is None or not getattr(self.store, "available", False):
+            return None
+        entry = self.store.lookup(region_id)
+        if entry is None or self.store.connection() is None:
+            return None
+        return entry
+
+    def _mode_label(self, prepared: bool) -> str:
+        if prepared:
+            return "prepared_duckdb_sql"
+        return "typed_duckdb_sql" if self._has_duckdb() else "sql_simulation"
 
     def _extract_table_data(self, region: Any) -> Optional[Dict[str, Any]]:
         if getattr(region, "table_json", None):
@@ -201,20 +236,36 @@ class TableSQLRetriever:
             return {"columns": headers, "rows": data_rows}
         return None
 
-    def _execute_sql_query(self, query: str, table_data: Dict[str, Any]) -> Tuple[str, List[Dict[str, Any]], float]:
+    def _execute_sql_query(
+        self,
+        query: str,
+        table_data: Dict[str, Any],
+        table_name: str = "doc_table",
+        connection: Optional[Any] = None,
+        column_types: Optional[Dict[str, str]] = None,
+    ) -> Tuple[str, List[Dict[str, Any]], float]:
+        """Generate one SQL statement for *query* and execute it.
+
+        Two execution modes.  With *connection* the table already exists - registered
+        at ingestion by :class:`DuckDBTableStore` with types decided once - and this
+        only runs the SELECT.  Without it, an in-memory table is created and populated
+        per call, which is what happened for every query before the store existed.
+        """
         columns = table_data.get("columns", [])
         rows = table_data.get("rows", [])
         if not columns or not rows:
             return "", [], 0.0
 
-        # Lever A: Infer column SQL types
-        column_types = {}
-        for col_idx, col in enumerate(columns):
-            col_values = [row[col_idx] for row in rows if col_idx < len(row)]
-            column_types[col] = infer_sql_type(col_values)
+        # Lever A: Infer column SQL types.  Types registered at ingestion win, so the
+        # same column cannot type differently from one query to the next.
+        if column_types is None:
+            column_types = {}
+            for col_idx, col in enumerate(columns):
+                col_values = [row[col_idx] for row in rows if col_idx < len(row)]
+                column_types[col] = infer_sql_type(col_values)
         table_data["inferred_types"] = column_types
 
-        table_name = "doc_table"
+        safe_table = quote_identifier(table_name)
         is_agg = any(agg in query for agg in ["sum", "average", "avg", "max", "min", "total sum"])
 
         # Check for year match in columns
@@ -248,30 +299,45 @@ class TableSQLRetriever:
             concept_keyword = target_concept.split()[0]
             if year_match:
                 generated_sql = (
-                    f"SELECT {quote_identifier(col_0)}, {quote_identifier(year_match)} FROM {table_name} "
+                    f"SELECT {quote_identifier(col_0)}, {quote_identifier(year_match)} FROM {safe_table} "
                     f"WHERE LOWER({quote_identifier(col_0)}) LIKE '%{concept_keyword}%'"
                 )
             else:
                 generated_sql = (
-                    f"SELECT * FROM {table_name} WHERE LOWER({quote_identifier(col_0)}) LIKE '%{concept_keyword}%'"
+                    f"SELECT * FROM {safe_table} WHERE LOWER({quote_identifier(col_0)}) LIKE '%{concept_keyword}%'"
                 )
         elif is_agg and numeric_cols:
-            generated_sql = f"SELECT SUM({quote_identifier(numeric_cols[0])}) AS total_sum FROM {table_name}"
+            generated_sql = f"SELECT SUM({quote_identifier(numeric_cols[0])}) AS total_sum FROM {safe_table}"
         elif year_match:
-            generated_sql = f"SELECT {quote_identifier(col_0)}, {quote_identifier(year_match)} FROM {table_name}"
+            generated_sql = f"SELECT {quote_identifier(col_0)}, {quote_identifier(year_match)} FROM {safe_table}"
         else:
-            generated_sql = f"SELECT * FROM {table_name}"
+            generated_sql = f"SELECT * FROM {safe_table}"
 
         # Execute the single generated statement in an in-memory DuckDB session.
         # NOTE: there is no self-consistency / majority-vote step here — one
         # template produces one statement and it is executed once.
-        if self._has_duckdb():
+        if connection is not None:
+            try:
+                # The prepared store is read-only, so a SELECT is all that can run here.
+                rel = connection.execute(generated_sql)
+                fetched_rows = rel.fetchall()
+                col_names = [desc[0] for desc in rel.description]
+                result_dicts = [dict(zip(col_names, r)) for r in fetched_rows]
+
+                col_matches = sum(1 for col in columns if str(col).lower() in query)
+                score = 0.6 + (0.3 if col_matches > 0 else 0.0)
+                return generated_sql, result_dicts, min(1.0, score)
+            except Exception as exc:
+                logger.warning("Prepared-table execution error: %s - logging failure", exc)
+                log_sql_failure(query, generated_sql, str(exc), table_data)
+
+        elif self._has_duckdb():
             try:
                 import duckdb
 
                 con = duckdb.connect(database=":memory:")
                 col_defs = ", ".join(f"{quote_identifier(col)} {column_types.get(col, 'VARCHAR')}" for col in columns)
-                con.execute(f"CREATE TABLE {table_name} ({col_defs})")
+                con.execute(f"CREATE TABLE {safe_table} ({col_defs})")
 
                 for row in rows:
                     placeholders = ", ".join(["?"] * len(columns))
@@ -281,7 +347,7 @@ class TableSQLRetriever:
                         sanitize_cell_for_sql(val, column_types.get(col, "VARCHAR"))
                         for col, val in zip(columns, row_padded[: len(columns)])
                     ]
-                    con.execute(f"INSERT INTO {table_name} VALUES ({placeholders})", sanitized_row)
+                    con.execute(f"INSERT INTO {safe_table} VALUES ({placeholders})", sanitized_row)
 
                 rel = con.execute(generated_sql)
                 fetched_rows = rel.fetchall()
@@ -289,11 +355,11 @@ class TableSQLRetriever:
                 result_dicts = [dict(zip(col_names, r)) for r in fetched_rows]
                 con.close()
 
-                col_matches = sum(1 for col in columns if col.lower() in query)
+                col_matches = sum(1 for col in columns if str(col).lower() in query)
                 score = 0.6 + (0.3 if col_matches > 0 else 0.0)
                 return generated_sql, result_dicts, min(1.0, score)
             except Exception as exc:
-                logger.warning("DuckDB execution error: %s — logging failure", exc)
+                logger.warning("DuckDB execution error: %s - logging failure", exc)
                 log_sql_failure(query, generated_sql, str(exc), table_data)
 
         # In-memory Python runner fallback

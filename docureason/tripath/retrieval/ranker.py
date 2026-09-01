@@ -33,14 +33,25 @@ class Ranker:
             self.heading_penalty_multiplier = r_cfg.heading_penalty_multiplier
             self.heading_penalty_offset = getattr(r_cfg, "heading_penalty_offset", 2.0)
             self.model_revision = resolve_revision(self.model_name, getattr(r_cfg, "model_revision", None))
+            self.enable_cross_encoder = bool(getattr(r_cfg, "enable_cross_encoder", True))
+            self.enable_heading_penalty = bool(getattr(r_cfg, "enable_heading_penalty", True))
         else:
             self.model_name = model_name or _CROSS_ENCODER_MODEL
             self.short_heading_threshold = 45
             self.heading_penalty_multiplier = 0.5
             self.heading_penalty_offset = 2.0
             self.model_revision = resolve_revision(self.model_name)
+            self.enable_cross_encoder = True
+            self.enable_heading_penalty = True
 
     def _get_cross_encoder(self) -> Optional[Any]:
+        # Ablation A3 ("remove cross-encoder reranker") routes through the same
+        # None-encoder path as a missing model, so the measured delta is the delta
+        # between the model and the Jaccard fallback the system already degrades to.
+        if not self.enable_cross_encoder:
+            logger.info("Cross-encoder disabled by config — using the token-similarity fallback reranker")
+            return None
+
         # The cache key includes the revision so pinning a different revision does
         # not silently reuse weights loaded for another one.
         cache_key = f"{self.model_name}@{self.model_revision or 'hub-default'}"
@@ -56,7 +67,28 @@ class Ranker:
             logger.info("Loaded and cached process-wide CrossEncoder model: %s", cache_key)
             return encoder
         except Exception as exc:
-            logger.warning("CrossEncoder model unavailable (%s) — using token similarity reranker fallback", exc)
+            # A pinned revision is resolved against the hub; when the hub is down but
+            # the commit is cached locally, degrading to the Jaccard scorer would be a
+            # silent quality drop for no reason. Retry against the cache first.
+            return self._load_cross_encoder_from_cache(cache_key, exc)
+
+    def _load_cross_encoder_from_cache(self, cache_key: str, first_error: Exception) -> Optional[Any]:
+        try:
+            from sentence_transformers import CrossEncoder
+
+            kwargs: Dict[str, Any] = {"local_files_only": True}
+            if self.model_revision:
+                kwargs["revision"] = self.model_revision
+            encoder = CrossEncoder(self.model_name, **kwargs)
+            _GLOBAL_CROSS_ENCODER_CACHE[cache_key] = encoder
+            logger.warning("Hub unreachable (%s) — loaded %s from the local cache", first_error, cache_key)
+            return encoder
+        except Exception as exc:
+            logger.warning(
+                "CrossEncoder unavailable (%s; cache retry: %s) — using the token-similarity fallback",
+                first_error,
+                exc,
+            )
             return None
 
     @trace_execution(logger=logger)
@@ -94,7 +126,9 @@ class Ranker:
                         body_text = body_text.split("]", 1)[-1].strip()
 
                     is_short_heading = (
-                        len(body_text) < self.short_heading_threshold and item.get("modality") == "text"
+                        self.enable_heading_penalty
+                        and len(body_text) < self.short_heading_threshold
+                        and item.get("modality") == "text"
                     )
                     if is_short_heading:
                         # Cross-encoder scores are unbounded signed logits, so the
@@ -133,7 +167,11 @@ class Ranker:
             body_text = item.get("text", "")
             if "[Context:" in body_text:
                 body_text = body_text.split("]", 1)[-1].strip()
-            is_short_heading = len(body_text) < self.short_heading_threshold and item.get("modality") == "text"
+            is_short_heading = (
+                self.enable_heading_penalty
+                and len(body_text) < self.short_heading_threshold
+                and item.get("modality") == "text"
+            )
             # The fallback score is non-negative by construction (RRF score and
             # Jaccard overlap are both >= 0), so a multiplicative penalty is
             # correctly monotone decreasing here — unlike the signed-logit path above.
@@ -143,7 +181,11 @@ class Ranker:
 
             ranked_item = dict(item)
             ranked_item["rank_score"] = round(fused_rank_score, 3)
-            ranked_item["reranker_mode"] = "token_similarity_fallback"
+            # A deliberately ablated reranker and a missing model both land here, but
+            # they mean different things to a reader of the degradation labels.
+            ranked_item["reranker_mode"] = (
+                "token_similarity_ablated" if not self.enable_cross_encoder else "token_similarity_fallback"
+            )
             ranked_item["heading_penalty_applied"] = bool(is_short_heading)
             ranked.append(ranked_item)
 

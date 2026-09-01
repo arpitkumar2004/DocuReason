@@ -1,0 +1,670 @@
+{
+  "dataset": "docureason-edgar-eval",
+  "built_at": "2026-09-01T15:04:52Z",
+  "seed": 0,
+  "form": "10-K",
+  "filing_count": 1,
+  "provenance": "Gold regions are derived programmatically from the ingested corpus, not human-annotated: table cells give a known row/column intersection, and prose and figure anchors are phrases verified unique across the corpus. Derivable queries over-represent lookup and cannot express multi-hop reasoning.",
+  "generation_report": {
+    "query_count": 36,
+    "documents": 1,
+    "regions_scanned": 1169,
+    "per_stratum": {
+      "tabular_lookup": 12,
+      "numeric": 12,
+      "prose": 12
+    },
+    "rejected": {
+      "tabular_lookup:no_cell": 1,
+      "numeric:no_cell": 5,
+      "prose:too_short": 23,
+      "prose:no_unique_phrase": 3,
+      "figure:no_regions_in_corpus": 1
+    }
+  },
+  "validation": {
+    "queries": 36,
+    "regions_in_corpus": 1169,
+    "dangling_gold_ids": [],
+    "non_unique_anchors": [],
+    "valid": true
+  },
+  "queries": [
+    {
+      "id": "q-0001",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting U.S., what value is shown for col_11?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-984"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": "35664",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "U.S.",
+        "column": "col_11",
+        "cell_value": "35664"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0002",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Ending\n                                balances, what value is shown for col_4?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-799"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": "$",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Ending\n                                balances",
+        "column": "col_4",
+        "cell_value": "$"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0003",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Thereafter, what value is shown for col_3?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-904"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": "Thereafter",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Thereafter",
+        "column": "col_3",
+        "cell_value": "Thereafter"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0004",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Other\n                                non-current assets, what value is shown for col_3?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-761"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": "Other\n                                non-current assets",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Other\n                                non-current assets",
+        "column": "col_3",
+        "cell_value": "Other\n                                non-current assets"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0005",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Exhibit\n                        Number, what value is shown for col_26?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-1097"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": "Filing\n                        Date/\nPeriod End Date",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Exhibit\n                        Number",
+        "column": "col_26",
+        "cell_value": "Filing\n                        Date/\nPeriod End Date"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0006",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Services\n                                (1), what value is shown for col_2?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-670"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": "Services\n                                (1)",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Services\n                                (1)",
+        "column": "col_2",
+        "cell_value": "Services\n                                (1)"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0007",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting One Apple Park\n                            Way, what value is shown for col_3?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-19"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": "One Apple Park\n                            Way",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "One Apple Park\n                            Way",
+        "column": "col_3",
+        "cell_value": "One Apple Park\n                            Way"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0008",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting 0.000% Notes due 2025, what value is shown for col_2?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-27"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": "0.000% Notes due 2025",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "0.000% Notes due 2025",
+        "column": "col_2",
+        "cell_value": "0.000% Notes due 2025"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0009",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Total\n                                term debt principal, what value is shown for col_5?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-865"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": "91281",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Total\n                                term debt principal",
+        "column": "col_5",
+        "cell_value": "91281"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0010",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Exhibit\n                        Number, what value is shown for col_8?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-1148"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": "Exhibit\n                        Description",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Exhibit\n                        Number",
+        "column": "col_8",
+        "cell_value": "Exhibit\n                        Description"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0011",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Basic\n                                earnings per share, what value is shown for col_5?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-677"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": "7.49",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Basic\n                                earnings per share",
+        "column": "col_5",
+        "cell_value": "7.49"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0012",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Net\n                        income, what value is shown for col_5?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-515"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": "112010",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Net\n                        income",
+        "column": "col_5",
+        "cell_value": "112010"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0013",
+      "stratum": "numeric",
+      "query": "What is the Municipal\n                                securities figure reported under col_23?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-702"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": "405",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Municipal\n                                securities",
+        "column": "col_23",
+        "cell_value": "405"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0014",
+      "stratum": "numeric",
+      "query": "What is the Cost\n                                of sales figure reported under col_10?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-917"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": "-58617",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Cost\n                                of sales",
+        "column": "col_10",
+        "cell_value": "-58617"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0015",
+      "stratum": "numeric",
+      "query": "What is the iPad figure reported under col_11?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-670"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": "26694",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "iPad",
+        "column": "col_11",
+        "cell_value": "26694"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0016",
+      "stratum": "numeric",
+      "query": "What is the Total\n                        operating expenses figure reported under col_11?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-426"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": "8",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Total\n                        operating expenses",
+        "column": "col_11",
+        "cell_value": "8"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0017",
+      "stratum": "numeric",
+      "query": "What is the Consolidated Statements of Cash Flows for\n                                the years ended September 27, 2025, September 28, 2024 and September 30, 2023 figure reported under col_8?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-1065"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": "33",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Consolidated Statements of Cash Flows for\n                                the years ended September 27, 2025, September 28, 2024 and September 30, 2023",
+        "column": "col_8",
+        "cell_value": "33"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0018",
+      "stratum": "numeric",
+      "query": "What is the Foreign\n                                exchange contracts figure reported under col_11?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-744"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": "64069",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Foreign\n                                exchange contracts",
+        "column": "col_11",
+        "cell_value": "64069"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0019",
+      "stratum": "numeric",
+      "query": "What is the S&P\n                        500 Index figure reported under col_38?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-352"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": "217",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "S&P\n                        500 Index",
+        "column": "col_38",
+        "cell_value": "217"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0020",
+      "stratum": "numeric",
+      "query": "What is the Research\n                        and development figure reported under col_4?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-504"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": "34550",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Research\n                        and development",
+        "column": "col_4",
+        "cell_value": "34550"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0021",
+      "stratum": "numeric",
+      "query": "What is the Interest\n                            Rate\nSensitive\n                            Instrument figure reported under col_21?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-474"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": "2025",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Interest\n                            Rate\nSensitive\n                            Instrument",
+        "column": "col_21",
+        "cell_value": "2025"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0022",
+      "stratum": "numeric",
+      "query": "What is the Operating\n                                income/(loss) figure reported under col_23?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-938"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": "12454",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Operating\n                                income/(loss)",
+        "column": "col_23",
+        "cell_value": "12454"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0023",
+      "stratum": "numeric",
+      "query": "What is the Other\n                                non-current assets figure reported under col_11?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-761"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": "55335",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Other\n                                non-current assets",
+        "column": "col_11",
+        "cell_value": "55335"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0024",
+      "stratum": "numeric",
+      "query": "What is the Decreases\n                                related to settlements with taxing authorities figure reported under col_17?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-799"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": "-19",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Decreases\n                                related to settlements with taxing authorities",
+        "column": "col_17",
+        "cell_value": "-19"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0025",
+      "stratum": "prose",
+      "query": "What does the filing say about its success and could?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-245"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "its success and could",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0026",
+      "stratum": "prose",
+      "query": "What does the filing say about the company's own advertising?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-151"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "the company's own advertising",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0027",
+      "stratum": "prose",
+      "query": "What does the filing say about first quarter of the?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-377"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "first quarter of the",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0028",
+      "stratum": "prose",
+      "query": "What does the filing say about targeted improvements to the?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-457"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "targeted improvements to the",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0029",
+      "stratum": "prose",
+      "query": "What does the filing say about of supplier arrangements licensed?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-903"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "of supplier arrangements licensed",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0030",
+      "stratum": "prose",
+      "query": "What does the filing say about company's share repurchase programs?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-869"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "company's share repurchase programs",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0031",
+      "stratum": "prose",
+      "query": "What does the filing say about affected products services and?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-203"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "affected products services and",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0032",
+      "stratum": "prose",
+      "query": "What does the filing say about make judgments assumptions and?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-463"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "make judgments assumptions and",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0033",
+      "stratum": "prose",
+      "query": "What does the filing say about unsecured obligations with interest?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-839"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "unsecured obligations with interest",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0034",
+      "stratum": "prose",
+      "query": "What does the filing say about company combines and accounts?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-660"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "company combines and accounts",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0035",
+      "stratum": "prose",
+      "query": "What does the filing say about inc the company as?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-991"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "inc the company as",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0036",
+      "stratum": "prose",
+      "query": "What does the filing say about claims such insurance coverage?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-5e604ff0e793065a-region-269"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-5e604ff0e793065a",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "claims such insurance coverage",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    }
+  ]
+}

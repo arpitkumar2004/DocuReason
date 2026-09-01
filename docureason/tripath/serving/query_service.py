@@ -29,18 +29,25 @@ Response contract
       "generation": {...},           # full generator payload
       "attribution": {...},
       "retrieval_stats": {...},
+      "latency_breakdown": {...},    # per-stage ms, plus total and signed residual
       "degradation": [str],          # every fallback that fired, [] on a clean run
+      "cached": bool,                # True when served from the response cache
       "preset": str,
     }
 """
 
 from __future__ import annotations
 
+import hashlib
+import json
+import threading
+from collections import OrderedDict
+from copy import deepcopy
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from docureason.tripath.config import DocuReasonConfig
-from docureason.tripath.utils import get_logger, trace_execution
+from docureason.tripath.utils import StageTimer, get_logger, trace_execution
 
 from ..attribution.claim_attributor import ClaimSupportAttributor
 from ..generation.generate import GenerationModule
@@ -86,6 +93,15 @@ class QueryService:
         self.generator = GenerationModule(config=self.config)
         self.attributor = ClaimSupportAttributor(config=self.config)
 
+        # Response cache. Keyed on the query *and* a fingerprint of the effective
+        # config, so a per-query override can never be served a response produced
+        # under different parameters. Bounded LRU; the corpus is fixed for the life
+        # of this service, and /api/ingest drops the service outright, so a stale
+        # corpus cannot be served from here.
+        self._cache: "OrderedDict[str, Dict[str, Any]]" = OrderedDict()
+        self._cache_lock = threading.Lock()
+        self.cache_stats: Dict[str, int] = {"hits": 0, "misses": 0, "evictions": 0}
+
     # ------------------------------------------------------------------
     # Public API
     # ------------------------------------------------------------------
@@ -102,7 +118,13 @@ class QueryService:
 
     @trace_execution(logger=logger)
     def query(self, text: str, overrides: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        timer = StageTimer()
         effective_config = self.config.apply_query_overrides(overrides or {})
+
+        cache_key = self._cache_key(text, effective_config)
+        cached = self._cache_get(cache_key, timer)
+        if cached is not None:
+            return cached
 
         if overrides:
             # A per-query override changes retrieval and generation parameters, so
@@ -118,16 +140,21 @@ class QueryService:
             retriever, generator, attributor = self.retriever, self.generator, self.attributor
 
         router = retriever.router
-        route_flags = router.route(text)
-        probabilities = router.route_probabilities(text)
-        weights = router.get_route_weights(text)
+        with timer.stage("route"):
+            route_flags = router.route(text)
+            probabilities = router.route_probabilities(text)
+            weights = router.get_route_weights(text)
 
-        results = retriever.retrieve(text, self.documents) if self.documents else []
+        results = retriever.retrieve(text, self.documents, timer=timer) if self.documents else []
+        # The SQL path already ran inside retrieve(), which timed it into the shared
+        # timer as the "table_sql" stage; this only shapes the payload.
         sql_payload = self._build_sql_payload(retriever, route_flags, probabilities)
 
-        generation = generator.generate(text, results, sql_payload)
+        with timer.stage("generate"):
+            generation = generator.generate(text, results, sql_payload)
         answer_text = generation.get("answer", "")
-        attribution = attributor.attribute(answer_text, results)
+        with timer.stage("attribute"):
+            attribution = attributor.attribute(answer_text, results)
 
         degradation = list(retriever.last_degradation)
         degradation.extend(self._generation_degradation(generation))
@@ -135,7 +162,7 @@ class QueryService:
         if not self.documents:
             degradation.append("corpus:empty")
 
-        return {
+        response = {
             "query": text,
             "route": route_flags,
             "router": {
@@ -153,9 +180,82 @@ class QueryService:
             "generation": generation,
             "attribution": attribution,
             "retrieval_stats": dict(retriever.last_stats),
+            "latency_breakdown": timer.as_dict(),
             "degradation": degradation,
+            "cached": False,
             "preset": effective_config.preset,
         }
+        self._cache_put(cache_key, response, effective_config)
+        return response
+
+    # ------------------------------------------------------------------
+    # Response cache
+    # ------------------------------------------------------------------
+
+    @staticmethod
+    def _cache_key(text: str, config: DocuReasonConfig) -> str:
+        """Digest of the query and everything about the config that changes the answer.
+
+        ``output_dir`` and ``source_map`` are excluded: they record *where* artifacts
+        went and *why* a value was chosen, neither of which affects the response.
+        Every other field is included, so an ablation switch or a ``final_top_k``
+        override can never be served a response computed under the other setting.
+        """
+        payload = config.summary_dict()
+        payload.pop("source_map", None)
+        payload.pop("output_dir", None)
+        blob = json.dumps({"query": text.strip(), "config": payload}, sort_keys=True, default=str)
+        return hashlib.sha256(blob.encode("utf-8")).hexdigest()
+
+    def _cache_capacity(self, config: Optional[DocuReasonConfig] = None) -> int:
+        serving = getattr(config or self.config, "serving", None)
+        return max(0, int(getattr(serving, "response_cache_size", 0) or 0))
+
+    def _cache_get(self, key: str, timer: StageTimer) -> Optional[Dict[str, Any]]:
+        """A deep copy of the cached response, or None.
+
+        The copy is not defensive pedantry: callers mutate responses (the eval harness
+        stamps metrics onto them), and a shared dict would let one query's annotations
+        leak into the next caller's answer.
+
+        The returned ``latency_breakdown`` describes *this* call - a cache lookup -
+        with the original run's breakdown preserved under
+        ``latency_breakdown_first_run``.  Replaying the original timings would quietly
+        credit the pipeline with work it did not do and drag every reported percentile
+        toward the cache's.
+        """
+        if self._cache_capacity() == 0:
+            return None
+
+        with self._cache_lock:
+            stored = self._cache.get(key)
+            if stored is None:
+                self.cache_stats["misses"] += 1
+                return None
+            self._cache.move_to_end(key)
+            self.cache_stats["hits"] += 1
+            response = deepcopy(stored)
+
+        response["cached"] = True
+        response["latency_breakdown_first_run"] = stored.get("latency_breakdown")
+        response["latency_breakdown"] = timer.as_dict()
+        return response
+
+    def _cache_put(self, key: str, response: Dict[str, Any], config: DocuReasonConfig) -> None:
+        capacity = self._cache_capacity(config)
+        if capacity == 0:
+            return
+        with self._cache_lock:
+            self._cache[key] = deepcopy(response)
+            self._cache.move_to_end(key)
+            while len(self._cache) > capacity:
+                self._cache.popitem(last=False)
+                self.cache_stats["evictions"] += 1
+
+    def clear_cache(self) -> None:
+        """Drop every cached response.  Call after the corpus or indexes change."""
+        with self._cache_lock:
+            self._cache.clear()
 
     # ------------------------------------------------------------------
     # Internals

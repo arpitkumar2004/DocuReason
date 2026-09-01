@@ -14,6 +14,7 @@ Supports:
 from __future__ import annotations
 
 import os
+from copy import deepcopy
 from dataclasses import asdict, dataclass, field
 from dataclasses import fields as dataclass_fields
 from pathlib import Path
@@ -167,6 +168,10 @@ class IngestionConfig:
     # two undocumented environment variables, so CPU users silently got degraded
     # table parsing while the docs claimed TableFormer had run (audit P0-6).
     enable_table_structure: Optional[bool] = None
+    # Ingestion-time ablation switch for the Docling layout parse (ablation A1).
+    # False forces the rule-based line segmenter that used to be reachable only by
+    # making Docling fail, so "no layout parser" can be measured rather than assumed.
+    enable_layout_parser: bool = True
 
 
 @dataclass
@@ -230,6 +235,11 @@ class RetrievalConfig:
     # readable.  Set False to force the legacy scan (used by the retrieval
     # ablation and by tests that must not touch an index).
     enable_index_retrieval: bool = True
+    # Query-time ablation switches. Each names a retrieval path that the ablation
+    # matrix in Documentations/eval_method.md claims a delta for; without a switch
+    # those deltas could only be asserted, never measured.
+    enable_sparse_retrieval: bool = True
+    enable_table_sql: bool = True
 
 
 @dataclass
@@ -251,6 +261,12 @@ class RerankerConfig:
     heading_penalty_multiplier: float = 0.5
     final_top_k: int = 5
     enable_parent_expansion: bool = True
+    # False forces the non-model Jaccard fallback scorer, which is what a
+    # "no cross-encoder" ablation means (ablation A3).
+    enable_cross_encoder: bool = True
+    # False disables the short-heading penalty entirely (ablation A5). Distinct from
+    # setting the offset to 0.0, which would still record the penalty as active.
+    enable_heading_penalty: bool = True
 
 
 @dataclass
@@ -266,6 +282,22 @@ class GenerationConfig:
 
 
 @dataclass
+class ServingConfig:
+    """Online serving behaviour: concurrency and caching.
+
+    ``configs/serving.yaml`` existed but was never loaded (``load_from_yaml`` reads
+    ``config.yaml`` only), so both of these were previously unreachable settings for
+    behaviour the service did not have.
+    """
+
+    #: Distinct (query, config) responses kept in the per-service LRU. 0 disables it.
+    response_cache_size: int = 64
+    #: Run the three modality retrievers concurrently instead of one after another.
+    #: Results are collected in a fixed order, so this changes latency, not ranking.
+    enable_parallel_paths: bool = True
+
+
+@dataclass
 class AttributionConfig:
     """Sentence-Level NLI Faithfulness Attribution Parameters."""
 
@@ -273,6 +305,58 @@ class AttributionConfig:
     entailment_threshold: float = 0.5
     flag_threshold_precision: float = 0.5
     enable_nli: bool = True
+
+
+#: Every configurable layer, in banner order.  One tuple, so adding a section does
+#: not mean remembering to add it to the YAML loader, the env-override scan and the
+#: summary independently.
+_CONFIG_SECTIONS = (
+    "ingestion",
+    "indexing",
+    "router",
+    "retrieval",
+    "reranker",
+    "generation",
+    "attribution",
+    "serving",
+)
+
+
+def _as_bool(value: Any) -> bool:
+    """Coerce a JSON or CLI value to bool, rejecting anything ambiguous."""
+    if isinstance(value, bool):
+        return value
+    token = str(value).strip().lower()
+    if token in _TRUE_TOKENS:
+        return True
+    if token in _FALSE_TOKENS:
+        return False
+    raise ValueError(f"expected a boolean, got {value!r}")
+
+
+#: Per-query override name -> (section, field, caster).  One table, so a field is
+#: addressable from a REST request body and from an ablation definition by the same
+#: name; adding an ablation switch means adding one row here.
+_QUERY_OVERRIDES: Dict[str, tuple] = {
+    "domain": ("indexing", "domain", str),
+    "index_type": ("indexing", "index_type", str),
+    "max_context_tokens": ("generation", "max_context_tokens", int),
+    "gen_backend": ("generation", "backend", str),
+    "final_top_k": ("reranker", "final_top_k", int),
+    "top_k_text": ("retrieval", "top_k_text", int),
+    "top_k_table": ("retrieval", "top_k_table", int),
+    "top_k_vision": ("retrieval", "top_k_vision", int),
+    # Ablation switches (Documentations/eval_method.md §21).
+    "enable_index_retrieval": ("retrieval", "enable_index_retrieval", _as_bool),
+    "enable_sparse_retrieval": ("retrieval", "enable_sparse_retrieval", _as_bool),
+    "enable_table_sql": ("retrieval", "enable_table_sql", _as_bool),
+    "enable_cross_encoder": ("reranker", "enable_cross_encoder", _as_bool),
+    "enable_heading_penalty": ("reranker", "enable_heading_penalty", _as_bool),
+    "enable_parent_expansion": ("reranker", "enable_parent_expansion", _as_bool),
+    "enable_nli": ("attribution", "enable_nli", _as_bool),
+    "enable_parallel_paths": ("serving", "enable_parallel_paths", _as_bool),
+    "response_cache_size": ("serving", "response_cache_size", int),
+}
 
 
 # ----------------------------------------------------------------------
@@ -293,6 +377,7 @@ class DocuReasonConfig:
     reranker: RerankerConfig = field(default_factory=RerankerConfig)
     generation: GenerationConfig = field(default_factory=GenerationConfig)
     attribution: AttributionConfig = field(default_factory=AttributionConfig)
+    serving: ServingConfig = field(default_factory=ServingConfig)
     source_map: Dict[str, str] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
@@ -449,7 +534,7 @@ class DocuReasonConfig:
             config.output_dir = data["output_dir"]
             config.source_map["output_dir"] = f"YAML File: {path}"
 
-        for section_name in ["ingestion", "indexing", "router", "retrieval", "reranker", "generation", "attribution"]:
+        for section_name in _CONFIG_SECTIONS:
             if section_name in data and isinstance(data[section_name], dict):
                 section_obj = getattr(config, section_name)
                 for k, v in data[section_name].items():
@@ -457,7 +542,7 @@ class DocuReasonConfig:
                         setattr(section_obj, k, v)
                         config.source_map[f"{section_name}.{k}"] = f"YAML File: {path}"
 
-        sections = ["ingestion", "indexing", "router", "retrieval", "reranker", "generation", "attribution"]
+        sections = list(_CONFIG_SECTIONS)
         for env_key, env_val in os.environ.items():
             if not env_key.startswith("DOCUREASON_"):
                 continue
@@ -488,27 +573,44 @@ class DocuReasonConfig:
         return config
 
     def apply_query_overrides(self, overrides: Dict[str, Any]) -> DocuReasonConfig:
-        """Apply dynamic runtime per-query overrides (for FastAPI JSON requests)."""
+        """Return a **copy** of this config with per-query overrides applied.
+
+        This used to mutate ``self`` and return it, so a single request carrying
+        ``{"final_top_k": 1}`` permanently narrowed the shared ``QueryService`` for
+        every request that followed, and an ablation run would leave its own switches
+        behind for the next one.  Overrides are per query by definition; deep-copying
+        is what makes that true.
+
+        Unknown keys are ignored but recorded in ``source_map`` under
+        ``"unknown_overrides"``, so a typo in a request body is visible rather than
+        silently doing nothing.
+        """
         if not overrides:
             return self
 
-        if "domain" in overrides:
-            self.indexing.domain = str(overrides["domain"])
-            self.source_map["indexing.domain"] = "Per-Query Runtime Override"
-        if "max_context_tokens" in overrides:
-            self.generation.max_context_tokens = int(overrides["max_context_tokens"])
-            self.source_map["generation.max_context_tokens"] = "Per-Query Runtime Override"
-        if "final_top_k" in overrides:
-            self.reranker.final_top_k = int(overrides["final_top_k"])
-            self.source_map["reranker.final_top_k"] = "Per-Query Runtime Override"
-        if "index_type" in overrides:
-            self.indexing.index_type = str(overrides["index_type"])
-            self.source_map["indexing.index_type"] = "Per-Query Runtime Override"
-        if "gen_backend" in overrides:
-            self.generation.backend = str(overrides["gen_backend"])
-            self.source_map["generation.backend"] = "Per-Query Runtime Override"
+        clone = deepcopy(self)
+        unknown: List[str] = []
 
-        return self
+        for key, raw in overrides.items():
+            spec = _QUERY_OVERRIDES.get(key)
+            if spec is None:
+                unknown.append(str(key))
+                continue
+            section_name, field_name, caster = spec
+            section = getattr(clone, section_name)
+            try:
+                setattr(section, field_name, caster(raw))
+            except (TypeError, ValueError) as exc:
+                logger.warning("Ignoring per-query override %s=%r: %s", key, raw, exc)
+                unknown.append(str(key))
+                continue
+            clone.source_map[f"{section_name}.{field_name}"] = "Per-Query Runtime Override"
+
+        if unknown:
+            clone.source_map["unknown_overrides"] = ", ".join(sorted(unknown))
+            logger.warning("Per-query overrides ignored (unknown or invalid): %s", sorted(unknown))
+
+        return clone
 
     def summary_dict(self) -> Dict[str, Any]:
         """Return structured summary dictionary of active framework settings."""
@@ -522,6 +624,7 @@ class DocuReasonConfig:
             "reranker": asdict(self.reranker),
             "generation": asdict(self.generation),
             "attribution": asdict(self.attribution),
+            "serving": asdict(self.serving),
             "source_map": self.source_map,
         }
 

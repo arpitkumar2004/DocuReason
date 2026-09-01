@@ -123,3 +123,30 @@ attribution:
   entailment_threshold: 0.5         # Minimum probability to classify claim as entailed
   flag_threshold_precision: 0.5     # Response precision threshold to flag 'needs_review'
   enable_nli: true                  # Enable automated hallucination verification pass
+
+# ------------------------------------------------------------------------------
+# 8. Online Serving Layer
+# ------------------------------------------------------------------------------
+# These two settings previously lived in configs/serving.yaml, which load_from_yaml
+# never read (it loads config.yaml only), so both described behaviour the service did
+# not have.
+serving:
+  response_cache_size: 64           # Distinct (query, config) responses kept per service; 0 disables
+  enable_parallel_paths: true       # Run the text/table/vision retrievers concurrently
+
+# ------------------------------------------------------------------------------
+# Ablation switches (Documentations/eval_method.md §21)
+# ------------------------------------------------------------------------------
+# Left at their defaults here and flipped per query by scripts/run_ablations.py. Each
+# one names a component the ablation matrix claims a delta for; before these existed,
+# four of the seven rows could not be measured because the component could not be
+# turned off. Setting any of them to false is reported in the response `degradation`
+# list, so an ablated run is never mistaken for a healthy one:
+#
+#   ingestion.enable_layout_parser     false -> rule-based segmentation (needs re-ingestion)
+#   retrieval.enable_sparse_retrieval  false -> dense-only retrieval
+#   retrieval.enable_table_sql         false -> no DuckDB text-to-SQL path
+#   reranker.enable_cross_encoder      false -> token-similarity fallback reranker
+#   reranker.enable_heading_penalty    false -> no short-heading penalty
+#   reranker.enable_parent_expansion   false -> child chunks only
+#   attribution.enable_nli             false -> no claim-support verification

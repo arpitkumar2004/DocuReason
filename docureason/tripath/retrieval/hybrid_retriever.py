@@ -17,14 +17,17 @@ rule-based layout parse is distinguishable from a fully functioning one.
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+import time
+from concurrent.futures import ThreadPoolExecutor
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from docureason.tripath.config import DocuReasonConfig
-from docureason.tripath.utils import get_logger, trace_execution
+from docureason.tripath.utils import StageTimer, get_logger, trace_execution
 
 from ..fusion.fuse import Fuser
 from ..indexing.dense_index import DenseIndexBuilder
 from ..indexing.sparse_index import BM25SIndexBuilder
+from ..indexing.table_store import DuckDBTableStore
 from ..ingestion.schema import Document
 from ..router.configurable_router import ConfigurableRouter
 from .chart_understanding import ChartUnderstandingModule
@@ -63,7 +66,11 @@ class HybridRetriever:
         # The pipeline builds BM25S for text-bearing modalities only, so the vision
         # path has a dense run and no sparse run.
         self.vision_retrieval = VisionRetrieval(dense=self.dense, sparse=None, config=self.config)
-        self.table_sql_retrieval = TableSQLRetriever()
+        # The prepared table store lives beside the corpus these indexes describe.
+        # When it is absent (an older run, or duckdb missing) the retriever falls back
+        # to building each table in memory per query.
+        self.table_store = DuckDBTableStore(self.config.output_dir)
+        self.table_sql_retrieval = TableSQLRetriever(config=self.config, store=self.table_store)
         self.chart_module = ChartUnderstandingModule()
         self.fuser = Fuser(rrf_k=self.config.retrieval.rrf_k, per_run_cap=self.candidate_caps())
         self.ranker = Ranker(config=self.config)
@@ -74,6 +81,10 @@ class HybridRetriever:
         #: SQL candidates from the most recent query, so the serving layer can build
         #: its SQL payload without running the DuckDB path a second time.
         self.last_sql_results: List[Dict[str, Any]] = []
+        #: Per-stage timings from the most recent query, for the response's
+        #: ``latency_breakdown``.  Owned here rather than in the serving layer because
+        #: this is where the stages are.
+        self.last_timer: StageTimer = StageTimer()
 
     def candidate_caps(self) -> Dict[str, int]:
         """Per-modality candidate caps read from ``RetrievalConfig``."""
@@ -86,45 +97,63 @@ class HybridRetriever:
         }
 
     @trace_execution(logger=logger)
-    def retrieve(self, query: str, documents: List[Document]) -> List[Dict[str, Any]]:
-        route_flags = self.router.route(query)
-        router_weights = self.router.get_route_weights(query)
+    def retrieve(
+        self,
+        query: str,
+        documents: List[Document],
+        timer: Optional[StageTimer] = None,
+    ) -> List[Dict[str, Any]]:
+        timer = timer or StageTimer()
+        self.last_timer = timer
+
+        with timer.stage("route"):
+            route_flags = self.router.route(query)
+            router_weights = self.router.get_route_weights(query)
         logger.info("HybridRetriever router flags for query '%s': %s (weights: %s)", query, route_flags, router_weights)
 
-        batches: List[List[Dict[str, Any]]] = []
         modality_modes: Dict[str, Any] = {}
         self.last_sql_results = []
 
-        # 1. Modality retrieval, each capped at top_k_{modality}.
-        if route_flags.get("text", True):
-            batches.append(self.text_retrieval.retrieve(query, documents))
-            modality_modes["text"] = self.text_retrieval.last_stats
+        # 1. Modality retrieval, each capped at top_k_{modality}.  The paths are
+        #    independent, so they run concurrently when enabled; results are collected
+        #    in the fixed order the tasks were declared, which keeps fusion input -
+        #    and therefore ranking - identical either way.
+        tasks = self._build_tasks(route_flags, query, documents)
+        outcomes = self._dispatch(tasks)
 
-        if route_flags.get("table", True):
-            batches.append(self.table_retrieval.retrieve(query, documents))
-            modality_modes["table"] = self.table_retrieval.last_stats
-            self.last_sql_results = self.table_sql_retrieval.retrieve(query, documents)
-            batches.append(self.last_sql_results)
-
-        if route_flags.get("vision", True):
-            batches.append(self.vision_retrieval.retrieve(query, documents))
-            modality_modes["vision"] = self.vision_retrieval.last_stats
+        batches: List[List[Dict[str, Any]]] = []
+        for name, batch, stats, elapsed_ms in outcomes:
+            batches.append(batch)
+            if name == "table_sql":
+                self.last_sql_results = batch
+                # The SQL path reports no sub-steps of its own, so its wall time is
+                # the stage. The modality paths are accounted by the dense/sparse/merge
+                # timings they report; whatever they spend outside those shows up in
+                # the timer's residual rather than being invented here.
+                timer.add("table_sql", elapsed_ms)
+            else:
+                modality_modes[name] = stats
+                self._fold_path_timings(timer, stats)
 
         pre_fusion = sum(len(batch) for batch in batches)
 
         # 2. Reciprocal Rank Fusion, re-applying the caps.
-        fused = self.fuser.fuse(batches, router_weights=router_weights)
+        with timer.stage("fuse"):
+            fused = self.fuser.fuse(batches, router_weights=router_weights)
 
         # 3. Chart enrichment, in place — this used to append a second copy of every
         #    visual candidate, which is why the duplicate-rank ratio was so high.
-        candidates = self.chart_module.understand(query, fused)
+        with timer.stage("chart_enrich"):
+            candidates = self.chart_module.understand(query, fused)
 
         # 4. Parent-child expansion (config-gated; the flag was never checked before).
         if self.config.reranker.enable_parent_expansion:
-            candidates = self._expand_parents(candidates)
+            with timer.stage("parent_expand"):
+                candidates = self._expand_parents(candidates)
 
         # 5. Cross-encoder reranking down to final_top_k.
-        reranked = self.ranker.rank(query, candidates)
+        with timer.stage("rerank"):
+            reranked = self.ranker.rank(query, candidates)
         top_k = self.config.reranker.final_top_k
         final = reranked[:top_k] if top_k > 0 else reranked
 
@@ -136,6 +165,8 @@ class HybridRetriever:
             "returned": len(final),
             "charts_enriched": self.chart_module.charts_enriched,
             "sql_candidates": len(self.last_sql_results),
+            "parallel_paths": self._parallel_enabled() and len(tasks) > 1,
+            "paths_run": [name for name, *_ in tasks],
         }
         self.last_degradation = self._collect_degradation(modality_modes, final)
         if self.last_degradation:
@@ -145,6 +176,95 @@ class HybridRetriever:
     # ------------------------------------------------------------------
     # Internals
     # ------------------------------------------------------------------
+
+    def _parallel_enabled(self) -> bool:
+        serving = getattr(self.config, "serving", None)
+        return bool(getattr(serving, "enable_parallel_paths", True))
+
+    def _build_tasks(
+        self,
+        route_flags: Dict[str, bool],
+        query: str,
+        documents: List[Document],
+    ) -> List[Tuple[str, Callable[[], List[Dict[str, Any]]], Any]]:
+        """The retrieval calls this query needs, in a fixed, deterministic order.
+
+        Each entry is ``(name, thunk, stats_source)``.  ``stats_source`` is the
+        retriever whose ``last_stats`` describes the call, read only after the thunk
+        has returned.
+        """
+        tasks: List[Tuple[str, Callable[[], List[Dict[str, Any]]], Any]] = []
+
+        if route_flags.get("text", True):
+            tasks.append(("text", lambda: self.text_retrieval.retrieve(query, documents), self.text_retrieval))
+
+        if route_flags.get("table", True):
+            tasks.append(("table", lambda: self.table_retrieval.retrieve(query, documents), self.table_retrieval))
+            # Ablation A2 ("remove the DuckDB text-to-SQL retriever") switches the
+            # whole SQL path off rather than letting it run and discarding the rows,
+            # so the measured delta includes its latency as well as its accuracy.
+            if self.config.retrieval.enable_table_sql:
+                tasks.append(("table_sql", lambda: self.table_sql_retrieval.retrieve(query, documents), None))
+
+        if route_flags.get("vision", True):
+            tasks.append(("vision", lambda: self.vision_retrieval.retrieve(query, documents), self.vision_retrieval))
+
+        return tasks
+
+    def _dispatch(
+        self,
+        tasks: List[Tuple[str, Callable[[], List[Dict[str, Any]]], Any]],
+    ) -> List[Tuple[str, List[Dict[str, Any]], Any, float]]:
+        """Run *tasks*, concurrently when enabled, returning results in task order.
+
+        A failing path must not take the query down with it: the remaining paths still
+        answer, and the failure is logged and surfaces as a missing modality in
+        ``modality_modes`` rather than a 500.  Sequential mode raises nothing extra
+        either, so the two dispatch modes fail the same way.
+        """
+        if not tasks:
+            return []
+
+        def run(index: int) -> Tuple[str, List[Dict[str, Any]], Any, float]:
+            name, thunk, source = tasks[index]
+            started = time.perf_counter()
+            try:
+                batch = thunk() or []
+            except Exception as exc:  # one dead path, not a dead query
+                elapsed = (time.perf_counter() - started) * 1000.0
+                logger.error("Retrieval path %r failed: %s", name, exc)
+                return name, [], {"mode": "failed", "error": str(exc)}, elapsed
+            elapsed = (time.perf_counter() - started) * 1000.0
+            stats = getattr(source, "last_stats", None) if source is not None else None
+            return name, batch, stats, elapsed
+
+        if not self._parallel_enabled() or len(tasks) == 1:
+            return [run(i) for i in range(len(tasks))]
+
+        # max_workers is bounded by the task count: the paths are I/O- and
+        # torch-bound (both release the GIL), so more threads than paths buys nothing.
+        with ThreadPoolExecutor(max_workers=len(tasks), thread_name_prefix="docureason-path") as pool:
+            return list(pool.map(run, range(len(tasks))))
+
+    @staticmethod
+    def _fold_path_timings(timer: StageTimer, stats: Any) -> None:
+        """Add a retriever's self-reported sub-step timings to the query timer.
+
+        Under parallel dispatch these sum to more than the wall time they occupied,
+        which is why :meth:`StageTimer.as_dict` reports a signed residual instead of
+        pretending the stages partition the request.
+        """
+        if not isinstance(stats, dict):
+            return
+        for stat_key, stage in (
+            ("dense_ms", "dense_search"),
+            ("sparse_ms", "sparse_search"),
+            ("index_merge_ms", "index_merge"),
+            ("corpus_scan_ms", "corpus_scan"),
+        ):
+            value = stats.get(stat_key)
+            if value:
+                timer.add(stage, float(value))
 
     @staticmethod
     def _expand_parents(candidates: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
@@ -182,6 +302,19 @@ class HybridRetriever:
         modes = {item.get("reranker_mode") for item in final if item.get("reranker_mode")}
         for mode in sorted(m for m in modes if m and m != "cross_encoder"):
             labels.append(f"reranker:{mode}")
+
+        # Ablations are deliberate, but they still change what the response means, so
+        # they are reported through the same channel as an accidental degradation.
+        if not self.config.retrieval.enable_sparse_retrieval:
+            labels.append("ablation:sparse_retrieval_disabled")
+        if not self.config.retrieval.enable_table_sql:
+            labels.append("ablation:table_sql_disabled")
+        if not self.config.reranker.enable_parent_expansion:
+            labels.append("ablation:parent_expansion_disabled")
+        if not self.config.reranker.enable_heading_penalty:
+            labels.append("ablation:heading_penalty_disabled")
+        if not self.config.retrieval.enable_index_retrieval:
+            labels.append("ablation:index_retrieval_disabled")
 
         sql_modes = {item.get("mode") for item in self.last_sql_results}
         if "sql_simulation" in sql_modes:

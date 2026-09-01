@@ -77,6 +77,13 @@ jobs:
           key: hf-${{ runner.os }}-${{ hashFiles('pyproject.toml') }}
           restore-keys: hf-${{ runner.os }}-
 
+      - name: Metric regression gate
+        # 359 lines of metric arithmetic had no test that would notice a change. This
+        # scores a frozen fixture (no models, no network) and fails on any movement
+        # beyond one percentage point. It is a blocking gate, not advisory: an advisory
+        # metric check reads as enforced and is worse than none (audit P3-6).
+        run: python scripts/check_metric_regression.py --tolerance 0.01
+
       - name: Run pytest with coverage
         run: |
           pytest --cov=docureason --cov-report=xml --cov-report=term-missing tests/
