@@ -2,20 +2,19 @@
 
 from docureason.ingestion import DocuReasonPipeline, Phase1Pipeline
 from docureason.serving import QueryService
-from src.tripath.attribution.nli_attributor import NLIFaithfulnessAttributor
-from src.tripath.config import (
+from docureason.tripath.attribution.claim_attributor import ClaimSupportAttributor, NLIFaithfulnessAttributor
+from docureason.tripath.config import (
     DocuReasonConfig,
     DocuReasonConfigError,
     InvalidCorpusError,
     MissingRequiredConfigError,
     check_system,
 )
-from src.tripath.evaluation.artifact_quality import ArtifactQualityAuditor
-from src.tripath.evaluation.dataset_exporter import DatasetExporter
-from src.tripath.evaluation.eval_harness import EvaluationHarness
-from src.tripath.evaluation.table_eval import TableEvaluator
-
-__version__ = "1.1.3"
+from docureason.tripath.evaluation.artifact_quality import ArtifactQualityAuditor
+from docureason.tripath.evaluation.dataset_exporter import DatasetExporter
+from docureason.tripath.evaluation.eval_harness import EvaluationHarness, resolve_gold_ids
+from docureason.tripath.evaluation.table_eval import TableEvaluator
+from docureason.tripath.version import __version__
 
 __all__ = [
     "DocuReasonPipeline",
@@ -27,9 +26,12 @@ __all__ = [
     "InvalidCorpusError",
     "check_system",
     "EvaluationHarness",
+    "resolve_gold_ids",
     "TableEvaluator",
     "ArtifactQualityAuditor",
     "DatasetExporter",
+    "ClaimSupportAttributor",
+    # Deprecated alias, retained for backward compatibility.
     "NLIFaithfulnessAttributor",
     "__version__",
 ]

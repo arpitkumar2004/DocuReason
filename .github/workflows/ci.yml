@@ -38,7 +38,7 @@ jobs:
         continue-on-error: true
 
       - name: Run Mypy Type Checker
-        run: mypy src docureason
+        run: mypy docureason
         continue-on-error: true
 
       - name: Dependency Vulnerability Audit
@@ -67,9 +67,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e .[test]
 
+      - name: Cache HuggingFace models
+        uses: actions/cache@v4
+        with:
+          # Several tests construct real Ranker / DenseIndexBuilder instances, which
+          # download models. Without this cache every matrix leg re-downloads them and
+          # a hub outage turns into a red build with no code change.
+          path: ~/.cache/huggingface
+          key: hf-${{ runner.os }}-${{ hashFiles('pyproject.toml') }}
+          restore-keys: hf-${{ runner.os }}-
+
       - name: Run pytest with coverage
         run: |
-          pytest --cov=src --cov=docureason --cov-report=xml --cov-report=term-missing tests/
+          pytest --cov=docureason --cov-report=xml --cov-report=term-missing tests/
 
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
@@ -102,7 +112,19 @@ jobs:
         run: twine check --strict dist/*
 
       - name: Inspect Wheel Contents
-        run: check-wheel-contents --ignore W005,W009 dist/*.whl
+        # W005/W009 ignores dropped: the wheel now ships a single top-level package.
+        run: check-wheel-contents dist/*.whl
+
+      - name: Install wheel in a clean venv and exercise the entry points
+        # The console script previously pointed at src.tripath.cli:main, a module that
+        # does not exist, so `pip install docureason-framework && docureason` failed for
+        # every user. Nothing in CI exercised it. This step closes that gap.
+        run: |
+          python -m venv /tmp/smoke
+          /tmp/smoke/bin/pip install --upgrade pip
+          /tmp/smoke/bin/pip install dist/*.whl
+          /tmp/smoke/bin/docureason --help
+          /tmp/smoke/bin/python -c "import docureason; print('version:', docureason.__version__)"
 
       - name: Upload Dist Artifacts
         uses: actions/upload-artifact@v4

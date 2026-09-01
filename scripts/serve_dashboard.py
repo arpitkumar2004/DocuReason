@@ -6,12 +6,15 @@ from pathlib import Path
 import uvicorn
 
 ROOT = Path(__file__).resolve().parents[1]
-for path in [ROOT, ROOT / "src"]:
-    if str(path) not in sys.path:
-        sys.path.insert(0, str(path))
+# Only the repository root goes on sys.path.  Adding ROOT/"src" as well used to make
+# the same files importable as both ``tripath.X`` and ``src.tripath.X``, creating two
+# distinct module objects per file — so ``isinstance(config, DocuReasonConfig)`` failed
+# across the boundary and model caches were duplicated.  There is now one import root.
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
-from tripath.serving.main import app
-from tripath.utils import setup_logger
+from docureason.tripath.serving.main import app
+from docureason.tripath.utils import setup_logger
 
 logger = setup_logger("scripts.serve_dashboard")
 

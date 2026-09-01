@@ -3,8 +3,8 @@ from pathlib import Path
 
 import pytest
 
-from src.tripath.utils.logger import log_pipeline_flag, setup_logger
-from src.tripath.utils.tracing import trace_execution, trace_pipeline_stage
+from docureason.tripath.utils.logger import log_pipeline_flag, setup_logger
+from docureason.tripath.utils.tracing import trace_execution, trace_pipeline_stage
 
 
 def test_logger_setup(tmp_path: Path):
@@ -33,7 +33,7 @@ def test_log_pipeline_flag(tmp_path: Path):
 
 def test_trace_execution_decorator(tmp_path: Path):
     log_file = tmp_path / "trace_test.log"
-    logger = setup_logger("src.tripath.test_func", log_level="DEBUG", log_file=log_file)
+    logger = setup_logger("docureason.tripath.test_func", log_level="DEBUG", log_file=log_file)
 
     @trace_execution(level=logging.DEBUG, logger=logger, log_args=True)
     def sample_func(x: int, y: int) -> int:
@@ -49,7 +49,7 @@ def test_trace_execution_decorator(tmp_path: Path):
 
 def test_trace_execution_decorator_exception(tmp_path: Path):
     log_file = tmp_path / "trace_exc.log"
-    logger = setup_logger("src.tripath.test_exc", log_level="DEBUG", log_file=log_file)
+    logger = setup_logger("docureason.tripath.test_exc", log_level="DEBUG", log_file=log_file)
 
     @trace_execution(level=logging.DEBUG, logger=logger)
     def failing_func():

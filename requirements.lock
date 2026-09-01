@@ -1,0 +1,107 @@
+# requirements.lock - fully pinned runtime closure of pyproject.toml [project.dependencies].
+#
+# Generated, do not edit by hand:  python scripts/lock_requirements.py
+# Check for staleness:             python scripts/lock_requirements.py --check
+#
+# python   : 3.10.11
+# platform : win32 / AMD64
+#
+# Runtime dependencies only - test, lint and build extras are deliberately absent.
+# Model weights are pinned separately, by commit, in docureason/tripath/model_pins.py.
+#
+# Platform scope: markers were evaluated on the platform above, so this is that
+# platform's closure. Installing it elsewhere still pins every package listed;
+# packages that only another platform requires (the CUDA runtime wheels torch
+# pulls in on linux, for instance) are resolved by pip at install time and are
+# not pinned here. Regenerate on a target platform to pin those too.
+
+annotated-doc==0.0.5
+annotated-types==0.8.0
+anyio==4.14.2
+attrs==26.1.0
+bm25s==0.3.10
+certifi==2026.7.22
+charset-normalizer==3.4.9
+click==8.4.2
+colorama==0.4.6
+defusedxml==0.7.1
+doclang==0.7.3
+docling==2.117.0
+docling-core==2.89.0
+docling-slim==2.117.0
+duckdb==1.5.5
+easyocr==1.7.2
+exceptiongroup==1.3.1
+faiss-cpu==1.15.0
+fastapi==0.141.1
+filelock==3.32.2
+filetype==1.2.0
+fsspec==2026.7.0
+h11==0.16.0
+hf-xet==1.5.2
+httpcore==1.0.9
+httpx==0.28.1
+huggingface-hub==1.26.0
+idna==3.18
+imageio==2.37.4
+jinja2==3.1.6
+joblib==1.5.3
+jsonref==1.1.0
+jsonschema==4.26.0
+jsonschema-specifications==2025.9.1
+latex2mathml==3.81.0
+lazy-loader==0.5
+lxml==6.1.1
+markdown-it-py==4.2.0
+markupsafe==3.0.3
+mdurl==0.1.2
+mpmath==1.3.0
+networkx==3.4.2
+ninja==1.13.0
+numpy==2.2.6
+opencv-python-headless==5.0.0.93
+packaging==26.2
+pandas==2.3.3
+pillow==12.3.0
+pluggy==1.6.0
+pyclipper==1.4.0
+pydantic==2.13.4
+pydantic-core==2.46.4
+pydantic-settings==2.14.2
+pygments==2.20.0
+pypdf==6.14.2
+python-bidi==0.6.11
+python-dateutil==2.9.0.post0
+python-dotenv==1.2.2
+pytz==2026.3.post1
+pyyaml==6.0.3
+referencing==0.37.0
+regex==2026.7.19
+requests==2.34.2
+rich==15.0.0
+rpds-py==0.30.0
+safetensors==0.8.0
+scikit-image==0.25.2
+scikit-learn==1.7.2
+scipy==1.15.3
+sentence-transformers==5.6.1
+setuptools==83.0.0
+shapely==2.1.2
+shellingham==1.5.4
+six==1.17.0
+starlette==1.3.1
+sympy==1.14.0
+tabulate==0.10.0
+threadpoolctl==3.6.0
+tifffile==2025.5.10
+tokenizers==0.22.2
+torch==2.13.0
+torchvision==0.28.0
+tqdm==4.70.0
+transformers==5.14.1
+typer==0.26.8
+typing-extensions==4.16.0
+typing-inspection==0.4.2
+tzdata==2026.3
+urllib3==2.7.0
+uvicorn==0.52.1

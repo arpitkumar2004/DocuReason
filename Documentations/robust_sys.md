@@ -228,7 +228,7 @@ DocuReason Robustness Profile:
 ## Detailed Implementation Breakdown of Newly Added Features
 
 ### 1. Domain-Specific Embedding Selection
-**Implementation File**: `src/tripath/indexing/dense_index.py`
+**Implementation File**: `docureason/tripath/indexing/dense_index.py`
 
 `DenseIndexBuilder` now supports built-in domain presets and dynamic embedding dimension auto-detection:
 
@@ -251,7 +251,7 @@ builder = DenseIndexBuilder(
 ---
 
 ### 2. FAISS HNSW Graph Parameter Tuning
-**Implementation File**: `src/tripath/indexing/dense_index.py`
+**Implementation File**: `docureason/tripath/indexing/dense_index.py`
 
 Support for high-scale Approximate Nearest Neighbor (ANN) HNSW indexing with fine-tuned graph connectivity and search depth parameters:
 
@@ -271,7 +271,7 @@ builder = DenseIndexBuilder(
 ---
 
 ### 3. Extremely Large Multi-Document Prompt Context Management
-**Implementation File**: `src/tripath/generation/generate.py`
+**Implementation File**: `docureason/tripath/generation/generate.py`
 
 `GenerationModule` now incorporates a **Context Token Budget Manager**:
 

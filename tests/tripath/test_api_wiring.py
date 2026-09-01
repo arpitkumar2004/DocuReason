@@ -1,8 +1,8 @@
 import httpx
 import pytest
 
-import src.tripath.serving.main as main_module
-from src.tripath.ingestion.schema import Document, Region
+import docureason.tripath.serving.main as main_module
+from docureason.tripath.ingestion.schema import Document, Region
 
 
 @pytest.fixture

@@ -1,8 +1,8 @@
 from pathlib import Path
 
-from src.tripath.evaluation.benchmark_dataset import BenchmarkDataset
-from src.tripath.ingestion.chunker import SectionAwareChunker
-from src.tripath.ingestion.docling_wrapper import DoclingWrapper
+from docureason.tripath.evaluation.benchmark_dataset import BenchmarkDataset
+from docureason.tripath.ingestion.chunker import SectionAwareChunker
+from docureason.tripath.ingestion.docling_wrapper import DoclingWrapper
 
 
 def test_chunking_and_benchmark_dataset(tmp_path):

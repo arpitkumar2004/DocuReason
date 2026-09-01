@@ -9,7 +9,7 @@
 
 Evaluating an enterprise-grade multimodal Retrieval-Augmented Generation (RAG) framework requires testing against diverse, real-world document collections. Single-domain datasets (e.g., plain-text news articles) fail to stress-test complex RAG subsystems such as Text-to-SQL execution, OCR rendering, or chart figure understanding.
 
-**DocuReason v1.1.3** features an automated benchmark dataset evaluation suite integrated into [`src/tripath/evaluation/benchmark_dataset.py`](file:///d:/DocuReason/src/tripath/evaluation/benchmark_dataset.py) and [`src/tripath/evaluation/eval_harness.py`](file:///d:/DocuReason/src/tripath/evaluation/eval_harness.py).
+**DocuReason v1.1.3** features an automated benchmark dataset evaluation suite integrated into [`docureason/tripath/evaluation/benchmark_dataset.py`](file:///d:/DocuReason/docureason/tripath/evaluation/benchmark_dataset.py) and [`docureason/tripath/evaluation/eval_harness.py`](file:///d:/DocuReason/docureason/tripath/evaluation/eval_harness.py).
 
 This specification details all **10 Primary Benchmark Datasets** that form the system testing suite, explaining:
 1. **Dataset Purpose, Training/Testing Split & Priority Rating**
@@ -75,7 +75,7 @@ Crucially, while not exceeding planned targets, these achieved scores are **sign
 - **Challenge**: Requires multi-step numerical calculation (`SUM`, `AVG`, `PERCENTAGE_CHANGE`, `GROWTH_RATE`) across aligned table cells. Plain-text vector LLMs fail completely on this dataset due to vector arithmetic hallucinations.
 
 #### Targeted Framework Subsystem & Processing Path
-- **Primary Subsystem**: **Tabular / Text-to-SQL Path** ([`src/tripath/retrieval/table_sql.py`](file:///d:/DocuReason/src/tripath/retrieval/table_sql.py)).
+- **Primary Subsystem**: **Tabular / Text-to-SQL Path** ([`docureason/tripath/retrieval/table_sql.py`](file:///d:/DocuReason/docureason/tripath/retrieval/table_sql.py)).
 - **Mechanism**: Extracts tabular regions, serializes to GFM Markdown and HTML/JSON schemas, synthesizes SQL queries, and executes aggregations in-memory via [DuckDB](https://duckdb.org/).
 
 #### Automated Output Metrics (10 Metrics)
@@ -108,7 +108,7 @@ Fully automated via `BenchmarkDataset().load_from_huggingface("fin_qa")` or `bui
 - **Challenge**: Stress-tests multi-path candidate collection and late fusion score aggregation.
 
 #### Targeted Framework Subsystem & Processing Path
-- **Primary Subsystem**: **Hybrid RRF Fusion & Intent Router** ([`src/tripath/fusion/fuse.py`](file:///d:/DocuReason/src/tripath/fusion/fuse.py) & [`src/tripath/router/configurable_router.py`](file:///d:/DocuReason/src/tripath/router/configurable_router.py)).
+- **Primary Subsystem**: **Hybrid RRF Fusion & Intent Router** ([`docureason/tripath/fusion/fuse.py`](file:///d:/DocuReason/docureason/tripath/fusion/fuse.py) & [`docureason/tripath/router/configurable_router.py`](file:///d:/DocuReason/docureason/tripath/router/configurable_router.py)).
 - **Mechanism**: Soft probability routing dispatches parallel queries across Text (Dense bi-encoder + BM25S) and Table (DuckDB) streams, fusing hit lists using Weighted Reciprocal Rank Fusion ($k=60$).
 
 #### Automated Output Metrics (11 Metrics)
@@ -142,7 +142,7 @@ Fully automated via `BenchmarkDataset().load_from_huggingface("tat_qa")`.
 - **Challenge**: Tests optical character recognition error recovery and reading order preservation on non-native, image-only documents.
 
 #### Targeted Framework Subsystem & Processing Path
-- **Primary Subsystem**: **Ingestion & OCR Fallback Subsystem** ([`src/tripath/ingestion/docling_wrapper.py`](file:///d:/DocuReason/src/tripath/ingestion/docling_wrapper.py) & [`src/tripath/ingestion/ocr_fallback.py`](file:///d:/DocuReason/src/tripath/ingestion/ocr_fallback.py)).
+- **Primary Subsystem**: **Ingestion & OCR Fallback Subsystem** ([`docureason/tripath/ingestion/docling_wrapper.py`](file:///d:/DocuReason/docureason/tripath/ingestion/docling_wrapper.py) & [`docureason/tripath/ingestion/ocr_fallback.py`](file:///d:/DocuReason/docureason/tripath/ingestion/ocr_fallback.py)).
 - **Mechanism**: Evaluates per-page character density ($\text{char\_count} < 50$). Automatically renders high-DPI page images and passes them to EasyOCR.
 
 #### Automated Output Metrics (9 Metrics)
@@ -174,7 +174,7 @@ Fully automated via `DoclingWrapper(input_dir=...).ingest()` and `ArtifactQualit
 - **Challenge**: Tests visual region feature extraction without destroying graphic context into plain text.
 
 #### Targeted Framework Subsystem & Processing Path
-- **Primary Subsystem**: **Vision / Chart Path** ([`src/tripath/retrieval/vision_retrieval.py`](file:///d:/DocuReason/src/tripath/retrieval/vision_retrieval.py) & [`src/tripath/ingestion/figure_captioner.py`](file:///d:/DocuReason/src/tripath/ingestion/figure_captioner.py)).
+- **Primary Subsystem**: **Vision / Chart Path** ([`docureason/tripath/retrieval/vision_retrieval.py`](file:///d:/DocuReason/docureason/tripath/retrieval/vision_retrieval.py) & [`docureason/tripath/ingestion/figure_captioner.py`](file:///d:/DocuReason/docureason/tripath/ingestion/figure_captioner.py)).
 - **Mechanism**: Uses ColPali visual embeddings + BLIP-2 figure captioning to index chart figures alongside surrounding text.
 
 #### Automated Output Metrics (8 Metrics)
@@ -205,7 +205,7 @@ Fully automated via `BenchmarkDataset().load_from_huggingface("chartqa")`.
 - **Challenge**: Tests table schema serialization and DuckDB SQL execution across non-financial, highly diverse data schemas.
 
 #### Targeted Framework Subsystem & Processing Path
-- **Primary Subsystem**: **Table Serializer & SQL Execution** ([`src/tripath/ingestion/table_serializer.py`](file:///d:/DocuReason/src/tripath/ingestion/table_serializer.py)).
+- **Primary Subsystem**: **Table Serializer & SQL Execution** ([`docureason/tripath/ingestion/table_serializer.py`](file:///d:/DocuReason/docureason/tripath/ingestion/table_serializer.py)).
 - **Mechanism**: Converts raw HTML/Markdown table grids into normalized GFM tables and JSON schema payloads `{"columns": [...], "rows": [[...]]}` for DuckDB Text-to-SQL.
 
 #### Automated Output Metrics (8 Metrics)
@@ -236,7 +236,7 @@ Fully automated via `BenchmarkDataset().load_from_huggingface("wikitablequestion
 - **Challenge**: Measures layout region segmentation accuracy (Text, Table, Picture, Header, Footer) and reading order reconstruction.
 
 #### Targeted Framework Subsystem & Processing Path
-- **Primary Subsystem**: **Layout Parsing & Chunking Subsystem** ([`src/tripath/ingestion/docling_layout_parser.py`](file:///d:/DocuReason/src/tripath/ingestion/docling_layout_parser.py)).
+- **Primary Subsystem**: **Layout Parsing & Chunking Subsystem** ([`docureason/tripath/ingestion/docling_layout_parser.py`](file:///d:/DocuReason/docureason/tripath/ingestion/docling_layout_parser.py)).
 - **Mechanism**: Evaluates TableFormer + DocLayNet region classification, character density, empty chunk ratios, and sentence split prevention.
 
 #### Automated Output Metrics (7 Metrics)
@@ -266,7 +266,7 @@ Fully automated via `DoclingLayoutParser()` and `ArtifactQualityAuditor().audit_
 - **Role & Purpose**: Train & Test — Validates table structural reconstruction, HTML/GFM alignment, and multi-header row extraction.
 
 #### Targeted Framework Subsystem & Processing Path
-- **Primary Subsystem**: **Structured Table Grid Parsing & Serialization** ([`src/tripath/ingestion/table_serializer.py`](file:///d:/DocuReason/src/tripath/ingestion/table_serializer.py)).
+- **Primary Subsystem**: **Structured Table Grid Parsing & Serialization** ([`docureason/tripath/ingestion/table_serializer.py`](file:///d:/DocuReason/docureason/tripath/ingestion/table_serializer.py)).
 - **Mechanism**: Converts complex financial tables into GFM Markdown and JSON schema arrays for DuckDB SQL querying.
 
 ---
@@ -279,7 +279,7 @@ Fully automated via `DoclingLayoutParser()` and `ArtifactQualityAuditor().audit_
 - **Role & Purpose**: Optional Layout Pretraining — Stress-tests reading order reconstruction across dense multi-column scientific layouts.
 
 #### Targeted Framework Subsystem & Processing Path
-- **Primary Subsystem**: **Layout Region Classification** ([`src/tripath/ingestion/docling_layout_parser.py`](file:///d:/DocuReason/src/tripath/ingestion/docling_layout_parser.py)).
+- **Primary Subsystem**: **Layout Region Classification** ([`docureason/tripath/ingestion/docling_layout_parser.py`](file:///d:/DocuReason/docureason/tripath/ingestion/docling_layout_parser.py)).
 - **Mechanism**: Classifies title, text, header, table, and figure bounding boxes across multi-column pages.
 
 ---
@@ -292,7 +292,7 @@ Fully automated via `DoclingLayoutParser()` and `ArtifactQualityAuditor().audit_
 - **Role & Purpose**: Optional Test — Evaluates vision retrieval on structured biological, physical, and chemical diagrams.
 
 #### Targeted Framework Subsystem & Processing Path
-- **Primary Subsystem**: **Diagram Vision Processing** ([`src/tripath/retrieval/vision_retrieval.py`](file:///d:/DocuReason/src/tripath/retrieval/vision_retrieval.py)).
+- **Primary Subsystem**: **Diagram Vision Processing** ([`docureason/tripath/retrieval/vision_retrieval.py`](file:///d:/DocuReason/docureason/tripath/retrieval/vision_retrieval.py)).
 - **Mechanism**: Processes visual diagram images using CLIP / ColPali visual embeddings and indexes label metadata.
 
 ---
@@ -305,7 +305,7 @@ Fully automated via `DoclingLayoutParser()` and `ArtifactQualityAuditor().audit_
 - **Role & Purpose**: Optional Test — Evaluates OCR recovery and graphic region question answering on dense visual infographics.
 
 #### Targeted Framework Subsystem & Processing Path
-- **Primary Subsystem**: **Graphic Region Visual QA** ([`src/tripath/ingestion/figure_captioner.py`](file:///d:/DocuReason/src/tripath/ingestion/figure_captioner.py) & [`src/tripath/retrieval/vision_retrieval.py`](file:///d:/DocuReason/src/tripath/retrieval/vision_retrieval.py)).
+- **Primary Subsystem**: **Graphic Region Visual QA** ([`docureason/tripath/ingestion/figure_captioner.py`](file:///d:/DocuReason/docureason/tripath/ingestion/figure_captioner.py) & [`docureason/tripath/retrieval/vision_retrieval.py`](file:///d:/DocuReason/docureason/tripath/retrieval/vision_retrieval.py)).
 - **Mechanism**: Uses BLIP-2 figure captioning + EasyOCR text extraction to index infographic visual regions.
 
 ---
@@ -326,8 +326,8 @@ The DocuReason framework **completely automates** dataset loading, preprocessing
 !pip install docureason-framework
 
 import sys
-from src.tripath.evaluation.benchmark_dataset import BenchmarkDataset
-from src.tripath.evaluation.eval_harness import EvaluationHarness
+from docureason.tripath.evaluation.benchmark_dataset import BenchmarkDataset
+from docureason.tripath.evaluation.eval_harness import EvaluationHarness
 
 print("=" * 70)
 print("DocuReason v1.1.3 — Kaggle Multimodal Dataset Evaluation Suite")

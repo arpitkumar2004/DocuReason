@@ -1,5 +1,5 @@
-from src.tripath.generation.generate import GenerationModule
-from src.tripath.retrieval.chart_understanding import ChartUnderstandingModule
+from docureason.tripath.generation.generate import GenerationModule
+from docureason.tripath.retrieval.chart_understanding import ChartUnderstandingModule
 
 
 def test_dynamic_chart_linearization():
@@ -19,10 +19,20 @@ def test_dynamic_chart_linearization():
     ]
 
     understood = chart_module.understand("adoption chart trend", evidence)
-    assert len(understood) == 1
-    assert understood[0]["chart_type"] == "bar_chart"
-    assert "[BAR_CHART - Page 4]" in understood[0]["linearized"]
-    assert "Quarterly adoption" in understood[0]["linearized"]
+
+    # Visual candidates are enriched *in place*: understand() returns the whole list,
+    # not just the visual subset. Returning the subset as new dicts meant the caller
+    # concatenated them onto the fused list and every chart appeared twice.
+    assert len(understood) == len(evidence)
+    assert chart_module.charts_enriched == 1
+
+    chart, passthrough = understood
+    assert chart["id"] == "doc1-fig1"
+    assert chart["chart_type"] == "bar_chart"
+    assert "[BAR_CHART - Page 4]" in chart["linearized"]
+    assert "Quarterly adoption" in chart["linearized"]
+
+    assert passthrough == evidence[1], "a non-visual candidate must pass through untouched"
 
 
 def test_deepseek_r1_reasoning_extraction():

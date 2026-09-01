@@ -88,7 +88,7 @@ Below is the complete block-by-block technical breakdown of all 16 core componen
 ---
 
 ### Block 1: Multi-Format Document Loader (`FormatAwareLoader`)
- **Implementation File**: [format_loader.py](file:///d:/DocuReason/src/tripath/ingestion/format_loader.py)
+ **Implementation File**: [format_loader.py](file:///d:/DocuReason/docureason/tripath/ingestion/format_loader.py)
 
 #### What We Implemented
 A unified document ingestion component capable of parsing 8 distinct file formats (`.pdf`, `.docx`, `.pptx`, `.xlsx`, `.csv`, `.html`, `.md`, `.txt`). It provides a lightweight fast-path text extraction (`load`) as well as a deep-path layout parsing loader (`load_deep`) using Docling's engine.
@@ -103,7 +103,7 @@ Enterprise documents arrive in heterogeneous formats. Requiring users to manuall
 ---
 
 ### Block 2: Deep Vision Layout Parsing (`DoclingLayoutParser`)
- **Implementation File**: [docling_layout_parser.py](file:///d:/DocuReason/src/tripath/ingestion/docling_layout_parser.py)
+ **Implementation File**: [docling_layout_parser.py](file:///d:/DocuReason/docureason/tripath/ingestion/docling_layout_parser.py)
 
 #### What We Implemented
 Integration of Docling's layout parser combining **DocLayNet** (object detection for layout elements) and **TableFormer** (structure recognition for tables). It segments raw documents into typed `Region` objects: `text`, `table`, `figure`, `code`, `title`, and `section_header`.
@@ -121,7 +121,7 @@ Single-page page batching (`page_batch_size=1`) and fallback to fast-path text e
 ---
 
 ### Block 3: OCR Fallback Engine (`OCRFallback`)
- **Implementation File**: [ocr_fallback.py](file:///d:/DocuReason/src/tripath/ingestion/ocr_fallback.py)
+ **Implementation File**: [ocr_fallback.py](file:///d:/DocuReason/docureason/tripath/ingestion/ocr_fallback.py)
 
 #### What We Implemented
 An automatic optical character recognition fallback trigger powered by **EasyOCR**. It monitors the character count density of extracted document pages. If a page falls below a minimum threshold ($\text{char\_count} < 50$), it flags the page as scanned or image-only and runs OCR over rendering buffers.
@@ -136,7 +136,7 @@ Enterprise PDF repositories frequently contain scanned contracts, legacy receipt
 ---
 
 ### Block 4: Table Serialization & Schema Normalization (`TableSerializer`)
- **Implementation File**: [table_serializer.py](file:///d:/DocuReason/src/tripath/ingestion/table_serializer.py)
+ **Implementation File**: [table_serializer.py](file:///d:/DocuReason/docureason/tripath/ingestion/table_serializer.py)
 
 #### What We Implemented
 A multi-representation transformer for tabular regions. Every detected table is simultaneously serialized into 3 formats:
@@ -154,7 +154,7 @@ No single representation is optimal for all tasks. LLMs understand Markdown tabl
 ---
 
 ### Block 5: Figure Captioning & Visual Feature Extraction (`FigureCaptioner`)
- **Implementation File**: [figure_captioner.py](file:///d:/DocuReason/src/tripath/ingestion/figure_captioner.py)
+ **Implementation File**: [figure_captioner.py](file:///d:/DocuReason/docureason/tripath/ingestion/figure_captioner.py)
 
 #### What We Implemented
 A vision-language enrichment module that processes document figure/image regions. It utilizes **BLIP-2** to generate descriptive natural language captions (e.g., *"A line chart comparing Q1 to Q4 revenue growth"*) and **CLIP** (or ColPali) to produce normalized visual feature embeddings.
@@ -169,7 +169,7 @@ Visual charts, flowcharts, and architecture diagrams contain vital information t
 ---
 
 ### Block 6: Deterministic Identity & Lineage Tracking (`IdentityManager`)
- **Implementation File**: [identity.py](file:///d:/DocuReason/src/tripath/ingestion/identity.py)
+ **Implementation File**: [identity.py](file:///d:/DocuReason/docureason/tripath/ingestion/identity.py)
 
 #### What We Implemented
 A deterministic cryptographic hashing engine using SHA-256 to build repeatable, unique identifiers:
@@ -187,7 +187,7 @@ Essential for enterprise auditability and caching. Random UUIDs prevent exact de
 ---
 
 ### Block 7: Dual Multi-Modality Indexing (`DenseIndexBuilder`, `BM25SIndexBuilder`, `ArtifactWriter`)
- **Implementation Files**: [dense_index.py](file:///d:/DocuReason/src/tripath/indexing/dense_index.py), [sparse_index.py](file:///d:/DocuReason/src/tripath/indexing/sparse_index.py), [artifact_writer.py](file:///d:/DocuReason/src/tripath/indexing/artifact_writer.py)
+ **Implementation Files**: [dense_index.py](file:///d:/DocuReason/docureason/tripath/indexing/dense_index.py), [sparse_index.py](file:///d:/DocuReason/docureason/tripath/indexing/sparse_index.py), [artifact_writer.py](file:///d:/DocuReason/docureason/tripath/indexing/artifact_writer.py)
 
 #### What We Implemented
 A hybrid indexing layer combining:
@@ -205,7 +205,7 @@ Dense embeddings capture conceptual semantic similarity but often miss exact tec
 ---
 
 ### Block 8: Intent-Based Query Router (`ConfigurableRouter`)
- **Implementation File**: [configurable_router.py](file:///d:/DocuReason/src/tripath/router/configurable_router.py)
+ **Implementation File**: [configurable_router.py](file:///d:/DocuReason/docureason/tripath/router/configurable_router.py)
 
 #### What We Implemented
 A dynamic query router evaluating incoming user queries against modality keyword dictionaries (`text`, `table`, `vision`). It computes normalized match scores and transforms them into soft routing probabilities using a sigmoid scaling function:
@@ -224,7 +224,7 @@ Hard binary classification routers fail on hybrid queries (e.g., *"Show me the t
 ---
 
 ### Block 9: Hybrid Tri-Path Retrieval Engine (`HybridRetriever`)
- **Implementation File**: [hybrid_retriever.py](file:///d:/DocuReason/src/tripath/retrieval/hybrid_retriever.py)
+ **Implementation File**: [hybrid_retriever.py](file:///d:/DocuReason/docureason/tripath/retrieval/hybrid_retriever.py)
 
 #### What We Implemented
 The orchestration layer for online retrieval. Based on router probability weights, it triggers search in parallel across:
@@ -242,7 +242,7 @@ Integrates specialized retrievers into a single cohesive interface, ensuring can
 ---
 
 ### Block 10: Text-to-SQL Execution Engine (`TableSQLRetriever`)
- **Implementation File**: [table_sql.py](file:///d:/DocuReason/src/tripath/retrieval/table_sql.py)
+ **Implementation File**: [table_sql.py](file:///d:/DocuReason/docureason/tripath/retrieval/table_sql.py)
 
 #### What We Implemented
 An in-memory structured data retriever using **DuckDB**. Upon receiving candidate table JSON schemas, it registers them as temporary SQL tables in DuckDB, translates natural language numerical questions (e.g., *"Calculate total sum of Q3 sales"*) into SQL queries, executes them deterministically, and formats the output into clean markdown result sets.
@@ -257,7 +257,7 @@ LLMs are notoriously inaccurate when performing multi-step math or aggregations 
 ---
 
 ### Block 11: Late Score Fusion via Reciprocal Rank Fusion (`Fuser`)
- **Implementation File**: [fuse.py](file:///d:/DocuReason/src/tripath/fusion/fuse.py)
+ **Implementation File**: [fuse.py](file:///d:/DocuReason/docureason/tripath/fusion/fuse.py)
 
 #### What We Implemented
 A rank fusion engine implementing weighted **Reciprocal Rank Fusion (RRF)**:
@@ -276,7 +276,7 @@ Raw similarity scores from vector search, BM25, and SQL matching operate on unca
 ---
 
 ### Block 12: Cross-Encoder Reranking & Parent-Child Expansion (`Ranker`)
- **Implementation File**: [ranker.py](file:///d:/DocuReason/src/tripath/retrieval/ranker.py)
+ **Implementation File**: [ranker.py](file:///d:/DocuReason/docureason/tripath/retrieval/ranker.py)
 
 #### What We Implemented
 A two-stage candidate refinement block:
@@ -293,7 +293,7 @@ Bi-encoder vector search evaluates query and document embeddings independently. 
 ---
 
 ### Block 13: Grounded Multimodal Generation (`GenerationModule`)
- **Implementation File**: [generate.py](file:///d:/DocuReason/src/tripath/generation/generate.py)
+ **Implementation File**: [generate.py](file:///d:/DocuReason/docureason/tripath/generation/generate.py)
 
 #### What We Implemented
 A flexible answer synthesis module supporting local Small Language Models (SLMs) such as `DeepSeek-R1-Distill-Qwen-1.5B` (via vLLM / HuggingFace) as well as Cloud LLMs (Gemini / OpenAI). It incorporates a **Context Token Budget Manager** (`max_context_tokens=4096`) with smart relevance truncation to allocate token budget across multi-document context blocks while preventing context window overflows.
@@ -308,7 +308,7 @@ Isolates generation logic from specific model providers, prevents context trunca
 ---
 
 ### Block 14: Sentence-Level NLI Faithfulness Attribution (`NLIFaithfulnessAttributor`)
- **Implementation File**: [nli_attributor.py](file:///d:/DocuReason/src/tripath/attribution/nli_attributor.py)
+ **Implementation File**: [nli_attributor.py](file:///d:/DocuReason/docureason/tripath/attribution/nli_attributor.py)
 
 #### What We Implemented
 An automated hallucination check based on Natural Language Inference (NLI). It breaks the generated LLM response into individual sentence claims, and runs an NLI model (`cross-encoder/nli-deberta-v3-small`) comparing each claim against the retrieved evidence chunks. It computes an overall **Attribution Precision Score**:
@@ -327,7 +327,7 @@ Enterprise deployments require strict safety guarantees. Relying blindly on LLM 
 ---
 
 ### Block 15: Enterprise Evaluation & Benchmarking Harness (`EvaluationHarness`)
- **Implementation File**: [eval_harness.py](file:///d:/DocuReason/src/tripath/evaluation/eval_harness.py)
+ **Implementation File**: [eval_harness.py](file:///d:/DocuReason/docureason/tripath/evaluation/eval_harness.py)
 
 #### Measured vs. Targeted Metrics Performance Data Points
 
@@ -354,7 +354,7 @@ Required for continuous integration and benchmark validation. Allows engineers t
 ---
 
 ### Block 16: REST API Serving & Interactive Dashboard (`QueryService`, FastAPI, REST, HTML Dashboard)
- **Implementation Files**: [query_service.py](file:///d:/DocuReason/src/tripath/serving/query_service.py), [main.py](file:///d:/DocuReason/src/tripath/serving/main.py), `scripts/serve_dashboard.py`
+ **Implementation Files**: [query_service.py](file:///d:/DocuReason/docureason/tripath/serving/query_service.py), [main.py](file:///d:/DocuReason/docureason/tripath/serving/main.py), `scripts/serve_dashboard.py`
 
 #### What We Implemented
 - **QueryService**: Thread-safe orchestrator encapsulating the full query lifecycle.

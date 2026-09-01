@@ -12,16 +12,16 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from docureason import DatasetExporter
-from src.tripath.evaluation.benchmark_dataset import BenchmarkDataset
-from src.tripath.serving.query_service import QueryService
-from src.tripath.utils import get_logger
+from docureason.tripath.evaluation.benchmark_dataset import BenchmarkDataset
+from docureason.tripath.serving.query_service import QueryService
+from docureason.tripath.utils import get_logger
 
 logger = get_logger(__name__)
 
 
 def main():
     print("=" * 70)
-    print("DocuReason v1.1.3 -- Fine-Tuning Training Dataset Exporter")
+    print("DocuReason v1.1.4 -- Fine-Tuning Training Dataset Exporter")
     print("=" * 70)
 
     # 1. Load benchmark suite

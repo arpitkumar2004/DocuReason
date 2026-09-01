@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from docureason.pipeline import DocuReasonPipeline
-from src.tripath.ingestion.format_loader import FormatAwareLoader
+from docureason.tripath.ingestion.format_loader import FormatAwareLoader
 
 
 def test_format_aware_loader_supports_common_documents(tmp_path):

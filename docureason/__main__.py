@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from src.tripath.utils import get_logger, setup_logger
+from docureason.tripath.utils import get_logger, setup_logger
 
 from .pipeline import DocuReasonPipeline
 

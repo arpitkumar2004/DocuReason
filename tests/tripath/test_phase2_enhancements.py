@@ -2,14 +2,14 @@ from pathlib import Path
 
 import pytest
 
-from src.tripath.fusion.late_fusion import ReciprocalRankFuser
-from src.tripath.ingestion.schema import Document, Region
-from src.tripath.retrieval.hybrid_retriever import HybridRetriever
-from src.tripath.retrieval.ranker import Ranker
-from src.tripath.retrieval.table_sql import TableSQLRetriever
-from src.tripath.router.configurable_router import ConfigurableRouter
-from src.tripath.router.infer_router import Router
-from src.tripath.router.train_router import RouterTrainer
+from docureason.tripath.fusion.late_fusion import ReciprocalRankFuser
+from docureason.tripath.ingestion.schema import Document, Region
+from docureason.tripath.retrieval.hybrid_retriever import HybridRetriever
+from docureason.tripath.retrieval.ranker import Ranker
+from docureason.tripath.retrieval.table_sql import TableSQLRetriever
+from docureason.tripath.router.configurable_router import ConfigurableRouter
+from docureason.tripath.router.infer_router import Router
+from docureason.tripath.router.train_router import RouterTrainer
 
 
 def test_configurable_router_probabilities_and_weights():

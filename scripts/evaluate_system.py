@@ -7,21 +7,22 @@ Usage:
 from __future__ import annotations
 
 import sys
+import time
 from pathlib import Path
 
 # Ensure workspace root is in sys.path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from src.tripath.evaluation.eval_harness import EvaluationHarness
-from src.tripath.serving.query_service import QueryService
-from src.tripath.utils import get_logger
+from docureason.tripath.evaluation.eval_harness import EvaluationHarness, resolve_gold_ids
+from docureason.tripath.serving.query_service import QueryService
+from docureason.tripath.utils import get_logger
 
 logger = get_logger(__name__)
 
 
 def main():
     print("=" * 70)
-    print("DocuReason v1.1.3 -- System Target Metric Evaluation Runner")
+    print("DocuReason v1.1.4 -- System Target Metric Evaluation Runner")
     print("=" * 70)
 
     # 1. Define Target Metrics (SLAs / Planned Goals)
@@ -63,25 +64,34 @@ def main():
         query = case["query"]
         print(f"\n  [{idx}/{len(test_cases)}] Query: '{query}'")
 
-        # Run query pipeline
+        # Time the actual pipeline call.  Without an explicit latency_ms the harness
+        # falls back to timing its own metric computation, which is why previous
+        # reports showed sub-millisecond p50 and four-figure QPS.
+        started = time.perf_counter()
         response = service.query(query)
-        sql_res = response.get("sql_results", {})
+        latency_ms = (time.perf_counter() - started) * 1000.0
+        print(f"      pipeline latency: {latency_ms:.1f} ms")
 
-        # Only evaluate sql_executed for tabular queries
-        sql_executed = None
-        if case.get("is_tabular"):
-            sql_executed = bool(sql_res.get("executed") or case.get("predicted_table") is not None)
+        # QueryService now exposes the DuckDB block it actually executed, so this is a
+        # measurement rather than the fixture-presence proxy it used to be.
+        sql_execution = response.get("sql_execution", {})
+        sql_executed = bool(sql_execution.get("executed")) if case.get("is_tabular") else None
+
+        # Gold IDs in the fixture are readable stems; resolve them to the canonical
+        # content-addressed corpus IDs before exact matching.
+        gold_ids = sorted(resolve_gold_ids(case.get("relevant_ids", []), service.documents))
 
         eval_cases.append(
             {
                 "query": query,
                 "results": response.get("results", []),
-                "relevant_ids": case.get("relevant_ids", []),
+                "relevant_ids": gold_ids,
                 "answer": response.get("answer", ""),
                 "evidence": response.get("results", []),
                 "predicted_table": case.get("predicted_table"),
                 "ground_truth_table": case.get("ground_truth_table"),
                 "sql_executed": sql_executed,
+                "latency_ms": latency_ms,
             }
         )
 

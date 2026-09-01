@@ -1,12 +1,16 @@
-from src.tripath.evaluation.table_eval import TableEvaluator
-from src.tripath.ingestion.table_serializer import (
+import pytest
+
+from docureason.tripath.evaluation.table_eval import TableEvaluator
+from docureason.tripath.ingestion.table_serializer import (
     TableSerializer,
     build_header_hierarchy,
     extract_unit_multiplier,
     flatten_column_name,
     normalize_numeric_cell,
 )
-from src.tripath.retrieval.table_sql import TableSQLRetriever, infer_sql_type
+from docureason.tripath.retrieval.table_sql import TableSQLRetriever, infer_sql_type
+
+pytestmark = pytest.mark.unit
 
 
 def test_build_header_hierarchy_and_flattening():

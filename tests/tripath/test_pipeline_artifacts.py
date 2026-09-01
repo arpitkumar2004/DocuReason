@@ -2,8 +2,8 @@ import json
 from pathlib import Path
 
 from docureason.pipeline import DocuReasonPipeline
-from src.tripath.evaluation.mlflow_tracker import MLflowTracker
-from src.tripath.serving.query_service import QueryService
+from docureason.tripath.evaluation.mlflow_tracker import MLflowTracker
+from docureason.tripath.serving.query_service import QueryService
 
 
 def test_pipeline_artifacts_and_query_answer(tmp_path):

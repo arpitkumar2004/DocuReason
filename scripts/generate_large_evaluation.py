@@ -1,4 +1,4 @@
-"""scripts/generate_large_evaluation.py — Large-scale evaluation runner for DocuReason v1.1.3.
+"""scripts/generate_large_evaluation.py — Large-scale evaluation runner for DocuReason v1.1.4.
 
 Usage:
     python scripts/generate_large_evaluation.py --count 50
@@ -8,14 +8,15 @@ from __future__ import annotations
 
 import argparse
 import sys
+import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from src.tripath.evaluation.benchmark_dataset import BenchmarkDataset
-from src.tripath.evaluation.eval_harness import EvaluationHarness
-from src.tripath.serving.query_service import QueryService
-from src.tripath.utils import get_logger
+from docureason.tripath.evaluation.benchmark_dataset import BenchmarkDataset
+from docureason.tripath.evaluation.eval_harness import EvaluationHarness, resolve_gold_ids
+from docureason.tripath.serving.query_service import QueryService
+from docureason.tripath.utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -29,7 +30,7 @@ def main():
 
     count = args.count
     print("=" * 75)
-    print(f"DocuReason v1.1.3 -- Large Scale Evaluation Suite ({count} Data Points)")
+    print(f"DocuReason v1.1.4 -- Large Scale Evaluation Suite ({count} Data Points)")
     print("=" * 75)
 
     # 1. Target Metrics (SLAs)
@@ -59,23 +60,28 @@ def main():
         if idx % 5 == 1 or idx == len(test_cases):
             print(f"  Progress: [{idx}/{len(test_cases)}] Query: '{query}'")
 
+        # Measure the pipeline, not the metric loop (see EvaluationHarness.evaluate_suite).
+        started = time.perf_counter()
         response = service.query(query)
-        sql_res = response.get("sql_results", {})
+        latency_ms = (time.perf_counter() - started) * 1000.0
 
-        sql_executed = None
-        if case.get("is_tabular"):
-            sql_executed = bool(sql_res.get("executed") or case.get("predicted_table") is not None)
+        # Measured, not inferred: QueryService reports the DuckDB block it executed.
+        sql_execution = response.get("sql_execution", {})
+        sql_executed = bool(sql_execution.get("executed")) if case.get("is_tabular") else None
+
+        gold_ids = sorted(resolve_gold_ids(case.get("relevant_ids", []), service.documents))
 
         eval_cases.append(
             {
                 "query": query,
                 "results": response.get("results", []),
-                "relevant_ids": case.get("relevant_ids", []),
+                "relevant_ids": gold_ids,
                 "answer": response.get("answer", ""),
                 "evidence": response.get("results", []),
                 "predicted_table": case.get("predicted_table"),
                 "ground_truth_table": case.get("ground_truth_table"),
                 "sql_executed": sql_executed,
+                "latency_ms": latency_ms,
             }
         )
 

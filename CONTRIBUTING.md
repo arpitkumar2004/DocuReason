@@ -48,7 +48,7 @@ Before submitting a Pull Request, run the local verification suite:
 
 3. **Type Check**:
    ```bash
-   mypy src docureason
+   mypy docureason
    ```
 
 4. **Security Vulnerability Audit**:
@@ -65,7 +65,7 @@ Before submitting a Pull Request, run the local verification suite:
 
 ## Contribution Guidelines
 
-1. **Modular Architecture**: Ensure new retrievers, routers, or encoders adhere to the `src/tripath/` modular folder structure.
+1. **Modular Architecture**: Ensure new retrievers, routers, or encoders adhere to the `docureason/tripath/` modular folder structure.
 2. **Type Annotations & Docstrings**: Include type hints (`typing`) and clear docstrings for all new classes and methods.
 3. **No Breaking Changes**: Maintain backward compatibility with the high-level `docureason` package interface (`DocuReasonPipeline`, `QueryService`).
 4. **Clean Code Style**: Format code using `ruff` and adhere to PEP 8 standards.

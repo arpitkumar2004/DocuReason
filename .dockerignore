@@ -1,0 +1,30 @@
+# Keep the build context small and the image free of local state.
+.git
+.github
+.venv
+.pytest_cache
+.ruff_cache
+__pycache__
+**/__pycache__
+*.pyc
+*.pyo
+
+# Build and publish outputs
+dist
+build
+*.egg-info
+
+# Local run output — the image gets a fresh /app/artifacts volume instead.
+artifacts
+notebooks
+scratch
+data
+
+# Documents and reports that do not belong in a runtime image
+Documentations
+plan
+*.pdf
+agent.md
+cv.md
+interview.md
+update.md

@@ -6,17 +6,20 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-for path in [ROOT, ROOT / "src"]:
-    if str(path) not in sys.path:
-        sys.path.insert(0, str(path))
+# Only the repository root goes on sys.path.  Adding ROOT/"src" as well used to make
+# the same files importable as both ``tripath.X`` and ``src.tripath.X``, creating two
+# distinct module objects per file — so ``isinstance(config, DocuReasonConfig)`` failed
+# across the boundary and model caches were duplicated.  There is now one import root.
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
-from tripath.evaluation.benchmark_dataset import BenchmarkDataset
-from tripath.evaluation.eval_harness import EvaluationHarness
-from tripath.ingestion.chunker import SectionAwareChunker
-from tripath.ingestion.docling_wrapper import DoclingWrapper
-from tripath.retrieval.hybrid_retriever import HybridRetriever
-from tripath.router.configurable_router import ConfigurableRouter
-from tripath.utils import setup_logger, trace_pipeline_stage
+from docureason.tripath.evaluation.benchmark_dataset import BenchmarkDataset
+from docureason.tripath.evaluation.eval_harness import EvaluationHarness
+from docureason.tripath.ingestion.chunker import SectionAwareChunker
+from docureason.tripath.ingestion.docling_wrapper import DoclingWrapper
+from docureason.tripath.retrieval.hybrid_retriever import HybridRetriever
+from docureason.tripath.router.configurable_router import ConfigurableRouter
+from docureason.tripath.utils import setup_logger, trace_pipeline_stage
 
 
 def parse_args() -> argparse.Namespace:

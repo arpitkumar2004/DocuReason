@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from src.tripath.serving.async_query_service import AsyncQueryService
+from docureason.tripath.serving.async_query_service import AsyncQueryService
 
 
 def test_async_query_service_components(tmp_path):

@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-cell_1_md = """# DocuReason v1.1.1 — Fail-Fast Kaggle Evaluation Notebook for Research Publication
+cell_1_md = """# DocuReason v1.1.3 — Fail-Fast Kaggle Evaluation Notebook for Research Publication
 
 > **An Authoritative Benchmark Execution & Granular Research Logging Notebook**  
 > *Designed for smooth execution on Kaggle GPUs (NVIDIA T4 / P100) with Fail-Fast Gates, per-PDF ingestion logging, per-query retrieval/reasoning/attribution tracing, and automated LaTeX table generation for paper submissions.*
@@ -79,14 +79,14 @@ cell_3_code = """print("=" * 70)
 print("GATE 3: SUBMODULE INTEGRITY SANITY AUDIT")
 print("=" * 70)
 
-from src.tripath.config import DocuReasonConfig
-from src.tripath.router.configurable_router import ConfigurableRouter
-from src.tripath.retrieval.table_sql import TableSQLRetriever
-from src.tripath.attribution.nli_attributor import NLIFaithfulnessAttributor
-from src.tripath.evaluation.table_eval import TableEvaluator
-from src.tripath.evaluation.artifact_quality import ArtifactQualityAuditor
-from src.tripath.evaluation.eval_harness import EvaluationHarness
-from src.tripath.evaluation.benchmark_dataset import BenchmarkDataset
+from docureason.tripath.config import DocuReasonConfig
+from docureason.tripath.router.configurable_router import ConfigurableRouter
+from docureason.tripath.retrieval.table_sql import TableSQLRetriever
+from docureason.tripath.attribution.nli_attributor import NLIFaithfulnessAttributor
+from docureason.tripath.evaluation.table_eval import TableEvaluator
+from docureason.tripath.evaluation.artifact_quality import ArtifactQualityAuditor
+from docureason.tripath.evaluation.eval_harness import EvaluationHarness
+from docureason.tripath.evaluation.benchmark_dataset import BenchmarkDataset
 
 cfg = DocuReasonConfig()
 router = ConfigurableRouter(config=cfg)
@@ -106,7 +106,7 @@ print("\\nGATE 3 PASSED: All Submodules Initialized with 0 Errors!")
 print("=" * 70)"""
 
 cell_4_code = """from pathlib import Path
-from src.tripath.serving.query_service import QueryService
+from docureason.tripath.serving.query_service import QueryService
 
 print("=" * 70)
 print("GATE 4: END-TO-END SINGLE QUERY SMOKE TEST")
@@ -189,7 +189,7 @@ import shutil
 import time
 import torch
 from pathlib import Path
-from src.tripath.ingestion.docling_wrapper import DoclingWrapper
+from docureason.tripath.ingestion.docling_wrapper import DoclingWrapper
 
 print("=" * 70)
 print("GATE 6: REAL MULTIMODAL BENCHMARK DATASET INGESTION & RESEARCH LOGGING")
@@ -384,7 +384,7 @@ summary = full_report["summary_metrics"]
 latex_lines = [
     "\\\\begin{table}[ht]",
     "\\\\centering",
-    "\\\\caption{DocuReason v1.1.1 Multimodal RAG Benchmark Performance across 22 Evaluation Metrics.}",
+    "\\\\caption{DocuReason v1.1.3 Multimodal RAG Benchmark Performance across 22 Evaluation Metrics.}",
     "\\\\label{tab:docureason_results}",
     "\\\\begin{tabular}{lcc}",
     "\\\\hline",

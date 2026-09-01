@@ -1,8 +1,8 @@
 from pathlib import Path
 
-from src.tripath.indexing.text_encoder import TextEncoder
-from src.tripath.ingestion.docling_wrapper import DoclingWrapper
-from src.tripath.ingestion.modality_splitter import ModalitySplitter
+from docureason.tripath.indexing.text_encoder import TextEncoder
+from docureason.tripath.ingestion.docling_wrapper import DoclingWrapper
+from docureason.tripath.ingestion.modality_splitter import ModalitySplitter
 
 
 def test_ingestion_and_indexing_modules(tmp_path):

@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from src.tripath.evaluation.eval_harness import EvaluationHarness
-from src.tripath.ingestion.docling_wrapper import DoclingWrapper
-from src.tripath.retrieval.hybrid_retriever import HybridRetriever
-from src.tripath.router.train_router import RouterTrainer
+from docureason.tripath.evaluation.eval_harness import EvaluationHarness
+from docureason.tripath.ingestion.docling_wrapper import DoclingWrapper
+from docureason.tripath.retrieval.hybrid_retriever import HybridRetriever
+from docureason.tripath.router.train_router import RouterTrainer
 
 
 def test_retrieval_research_stack_components(tmp_path):

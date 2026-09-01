@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from src.tripath.evaluation.ablation import AblationStudy
-from src.tripath.evaluation.benchmark_runner import BenchmarkRunner
+from docureason.tripath.evaluation.ablation import AblationStudy
+from docureason.tripath.evaluation.benchmark_runner import BenchmarkRunner
 
 
 def test_benchmark_and_ablation(tmp_path):

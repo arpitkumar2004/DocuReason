@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from src.tripath.serving.query_service import QueryService
+from docureason.tripath.serving.query_service import QueryService
 
 
 def test_query_service_returns_ranked_results(tmp_path):
@@ -11,4 +11,6 @@ def test_query_service_returns_ranked_results(tmp_path):
     assert response["route"]["text"] is True
     assert response["route"]["table"] is True
     assert response["results"]
-    assert response["embeddings"]
+    # "embeddings" was removed in v1.1.4: it held non-semantic hash vectors
+    # recomputed over the whole corpus on every query and never consumed.
+    assert "embeddings" not in response

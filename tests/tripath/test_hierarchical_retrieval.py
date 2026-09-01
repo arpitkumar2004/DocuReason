@@ -1,6 +1,6 @@
-from src.tripath.ingestion.chunker import SectionAwareChunker, build_ancestry_metadata_header
-from src.tripath.ingestion.schema import Document, Region
-from src.tripath.retrieval.ranker import Ranker
+from docureason.tripath.ingestion.chunker import SectionAwareChunker, build_ancestry_metadata_header
+from docureason.tripath.ingestion.schema import Document, Region
+from docureason.tripath.retrieval.ranker import Ranker
 
 
 def test_build_ancestry_metadata_header():

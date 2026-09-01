@@ -628,19 +628,19 @@ Provides executive summary KPIs for production deployment readiness.
 
 ## Codebase Implementation Guide
 
-All evaluation modules are located in `src/tripath/evaluation/` and `src/tripath/attribution/`:
+All evaluation modules are located in `docureason/tripath/evaluation/` and `docureason/tripath/attribution/`:
 
-1. **[`src/tripath/evaluation/eval_harness.py`](file:///d:/DocuReason/src/tripath/evaluation/eval_harness.py)**:
+1. **[`docureason/tripath/evaluation/eval_harness.py`](file:///d:/DocuReason/docureason/tripath/evaluation/eval_harness.py)**:
    Main evaluation engine calculating Recall@K, nDCG@K, MRR, Precision@K, Attribution Precision, Latency P50/P90/P99, and SLA target verification (`verify_target_achievements`).
-2. **[`src/tripath/evaluation/table_eval.py`](file:///d:/DocuReason/src/tripath/evaluation/table_eval.py)**:
+2. **[`docureason/tripath/evaluation/table_eval.py`](file:///d:/DocuReason/docureason/tripath/evaluation/table_eval.py)**:
    Evaluates TEDS structural layout similarity and cell value content accuracy.
-3. **[`src/tripath/evaluation/artifact_quality.py`](file:///d:/DocuReason/src/tripath/evaluation/artifact_quality.py)**:
+3. **[`docureason/tripath/evaluation/artifact_quality.py`](file:///d:/DocuReason/docureason/tripath/evaluation/artifact_quality.py)**:
    Audits processed Document/Chunk dictionaries for character density, empty chunks, and OCR fallback counts.
-4. **[`src/tripath/evaluation/dataset_exporter.py`](file:///d:/DocuReason/src/tripath/evaluation/dataset_exporter.py)**:
+4. **[`docureason/tripath/evaluation/dataset_exporter.py`](file:///d:/DocuReason/docureason/tripath/evaluation/dataset_exporter.py)**:
    Exports fine-tuning datasets for external AI model training.
-5. **[`src/tripath/attribution/nli_attributor.py`](file:///d:/DocuReason/src/tripath/attribution/nli_attributor.py)**:
+5. **[`docureason/tripath/attribution/nli_attributor.py`](file:///d:/DocuReason/docureason/tripath/attribution/nli_attributor.py)**:
    Deconstructs answers into sentence claims and evaluates NLI evidence support.
-6. **[`src/tripath/evaluation/benchmark_dataset.py`](file:///d:/DocuReason/src/tripath/evaluation/benchmark_dataset.py)**:
+6. **[`docureason/tripath/evaluation/benchmark_dataset.py`](file:///d:/DocuReason/docureason/tripath/evaluation/benchmark_dataset.py)**:
    Loads standard benchmark datasets (**FinQA**, **TAT-QA**, **DocVQA**, **ChartQA**, **WikiTableQuestions**) with pre-annotated ground-truth pairs.
 
 ---
@@ -667,5 +667,5 @@ All evaluation modules are located in `src/tripath/evaluation/` and `src/tripath
 python scripts/evaluate_system.py
 
 # Run ablation studies
-python -c "from src.tripath.evaluation.ablation import AblationStudy; AblationStudy().run()"
+python -c "from docureason.tripath.evaluation.ablation import AblationStudy; AblationStudy().run()"
 ```
