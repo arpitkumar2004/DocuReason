@@ -33,7 +33,7 @@ dependencies = [
     "docling>=2.0.0,<3.0.0",
     "easyocr>=1.7.0,<2.0.0",
     "faiss-cpu>=1.8.0,<2.0.0",
-    "pypdf>=5.0.0,<7.0.0",
+    "pypdf>=6.16.2,<7.0.0",
     # Page rasterization for figure crops and OCR (docureason/tripath/ingestion/rasterizer.py).
     # Arrived transitively via docling; declared now that it is imported directly.
     "pypdfium2>=4.0.0,<6.0.0",
