@@ -76,7 +76,20 @@ def setup_logger(
     if not any(
         isinstance(h, logging.StreamHandler) and not isinstance(h, logging.FileHandler) for h in logger.handlers
     ):
-        console_handler = logging.StreamHandler(sys.stdout)
+        # Log messages contain arrows and em dashes. On a Windows console
+        # (cp1252 by default) every such line raised UnicodeEncodeError inside
+        # logging and printed a traceback instead of the message, so ingestion logs
+        # were unreadable exactly where they were most needed. Reconfiguring the
+        # stream is preferable to policing the character set of every log string.
+        stream = sys.stdout
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure is not None:
+            try:
+                reconfigure(encoding="utf-8", errors="replace")
+            except (ValueError, OSError):
+                # Detached or non-text stream: fall through and accept the codepage.
+                pass
+        console_handler = logging.StreamHandler(stream)
         console_handler.setLevel(level)
         console_handler.setFormatter(formatter)
         logger.addHandler(console_handler)

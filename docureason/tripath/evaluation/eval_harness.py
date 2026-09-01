@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Set, Union
 
 from docureason.tripath.attribution.nli_attributor import ClaimSupportAttributor
+from docureason.tripath.evaluation.statistics import DEFAULT_ITERATIONS, bootstrap_ci
 from docureason.tripath.evaluation.table_eval import TableEvaluator
 from docureason.tripath.utils import get_logger, trace_execution
 
@@ -86,6 +87,14 @@ class EvaluationHarness:
             value = item.get(field)
             if value is not None and str(value) in gold:
                 return str(value)
+
+        # A retriever whose units do not align to the gold units (the naive baseline
+        # splits across region boundaries by design) reports every region a chunk
+        # overlaps. Scoring such a chunk as a miss because its *dominant* region was
+        # the neighbour of the gold one would measure the label format, not retrieval.
+        for value in item.get("region_ids") or ():
+            if value is not None and str(value) in gold:
+                return str(value)
         return None
 
     def evaluate(
@@ -112,8 +121,16 @@ class EvaluationHarness:
         sql_executed: Optional[bool] = None,
         latency_ms: Optional[float] = None,
         k_values: Optional[List[int]] = None,
+        stratum: Optional[str] = None,
+        latency_breakdown: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
-        """Evaluates a single query run across 22 multi-dimensional evaluation metrics."""
+        """Evaluates a single query run across 22 multi-dimensional evaluation metrics.
+
+        *stratum* and *latency_breakdown* are carried through rather than computed: the
+        first lets :meth:`evaluate_suite` report per-stratum means (a corpus-wide mean
+        hides that tabular lookup and prose behave nothing alike), and the second lets
+        it decompose the latency the caller measured instead of only totalling it.
+        """
         k_values = k_values or [5, 10, 20]
         relevant_ids = relevant_ids or []
         gold: Set[str] = {str(r) for r in relevant_ids}
@@ -232,6 +249,11 @@ class EvaluationHarness:
         est_cost_per_query = (est_tokens / 1_000_000.0) * 0.15 + 0.00005
         metrics["est_cost_per_1k_queries_usd"] = round(est_cost_per_query * 1000.0, 5)
 
+        if stratum:
+            metrics["stratum"] = str(stratum)
+        if latency_breakdown:
+            metrics["latency_breakdown"] = latency_breakdown
+
         return metrics
 
     def evaluate_suite(
@@ -258,6 +280,8 @@ class EvaluationHarness:
                 ground_truth_table=case.get("ground_truth_table"),
                 sql_executed=case.get("sql_executed"),
                 latency_ms=case.get("latency_ms"),
+                stratum=case.get("stratum"),
+                latency_breakdown=case.get("latency_breakdown"),
             )
             elapsed_ms = (time.perf_counter() - start_t) * 1000
             if "latency_ms" not in m:
@@ -278,9 +302,100 @@ class EvaluationHarness:
             "suite_duration_sec": round(total_suite_sec, 3),
             "queries_per_second_qps": round(qps, 2),
             "summary_metrics": summary,
+            # A mean with no interval cannot distinguish a real gain from resampling
+            # noise, which on a suite this size is the difference of one query.
+            "confidence_intervals": self.confidence_intervals(results),
+            "stage_latency_ms": self.stage_latency_summary(results),
+            "per_stratum": self.stratified_summary(results),
             "target_verification": target_check,
             "detailed_results": results,
         }
+
+    #: Metrics that get a bootstrap interval. Deliberately short: an interval per
+    #: metric on all 22 would bury the four numbers any comparison actually turns on.
+    CI_METRICS = ("recall_at_5", "ndcg_at_5", "mrr", "map_at_10", "attribution_precision", "latency_ms")
+
+    def confidence_intervals(
+        self,
+        results: List[Dict[str, Any]],
+        metrics: Optional[Iterable[str]] = None,
+        confidence: float = 0.95,
+        seed: int = 0,
+        iterations: int = DEFAULT_ITERATIONS,
+    ) -> Dict[str, Any]:
+        """95% percentile-bootstrap interval per headline metric.
+
+        *iterations* is a parameter because the caller knows what the numbers are for:
+        a published report wants the default 10,000, while an ablation sweep computing
+        intervals for eight systems and every stratum wants far fewer and says so in
+        the artifact.
+        """
+        out: Dict[str, Any] = {}
+        for name in metrics or self.CI_METRICS:
+            values = [r[name] for r in results if isinstance(r.get(name), (int, float))]
+            if not values:
+                continue
+            out[name] = bootstrap_ci(values, confidence=confidence, seed=seed, iterations=iterations).as_dict()
+        return out
+
+    @staticmethod
+    def stage_latency_summary(results: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Per-stage mean and p95 across the suite, from each case's breakdown.
+
+        Answers "which stage regressed", which a single end-to-end number never could.
+        Cases served from the response cache are excluded: their breakdown describes a
+        cache lookup, and averaging those in would flatter every stage at once.
+        """
+        collected: Dict[str, List[float]] = {}
+        counted = 0
+        for record in results:
+            breakdown = record.get("latency_breakdown") or {}
+            stages = breakdown.get("stages_ms") or {}
+            if not stages or breakdown.get("cached"):
+                continue
+            counted += 1
+            for stage, elapsed in stages.items():
+                collected.setdefault(stage, []).append(float(elapsed))
+
+        if not counted:
+            return {}
+
+        summary: Dict[str, Any] = {"cases_with_breakdown": counted}
+        for stage, values in collected.items():
+            ordered = sorted(values)
+            p95_index = max(0, int(round(0.95 * (len(ordered) - 1))))
+            summary[stage] = {
+                "mean_ms": round(sum(ordered) / len(ordered), 3),
+                "p95_ms": round(ordered[p95_index], 3),
+                "observations": len(ordered),
+            }
+        return summary
+
+    def stratified_summary(
+        self,
+        results: List[Dict[str, Any]],
+        iterations: int = DEFAULT_ITERATIONS,
+    ) -> Dict[str, Any]:
+        """Headline metrics per query stratum, with the interval for each.
+
+        A corpus-wide mean can hold steady while tabular lookup collapses and prose
+        improves; the strata are the only place that shows.
+        """
+        buckets: Dict[str, List[Dict[str, Any]]] = {}
+        for record in results:
+            stratum = record.get("stratum")
+            if stratum:
+                buckets.setdefault(str(stratum), []).append(record)
+
+        out: Dict[str, Any] = {}
+        for stratum, records in sorted(buckets.items()):
+            latencies = [r.get("latency_ms", 0.0) for r in records]
+            out[stratum] = {
+                "n": len(records),
+                "summary_metrics": self._aggregate_summary(records, latencies),
+                "confidence_intervals": self.confidence_intervals(records, iterations=iterations),
+            }
+        return out
 
     def verify_target_achievements(self, summary: Dict[str, float], targets: Dict[str, float]) -> Dict[str, Any]:
         """Compares achieved summary metrics against planned target thresholds."""

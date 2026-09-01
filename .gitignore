@@ -1,6 +1,12 @@
 plan/
 artifacts/
-notebooks/
+# notebooks/* rather than notebooks/: git cannot re-include a file inside an excluded
+# directory, so the negation below would never fire against a directory pattern.
+notebooks/*
+# ...except the generated Kaggle runner: it is the only way to reproduce the full
+# evaluation without a local GPU, so it is worth reviewing. Regenerate it with
+# scripts/build_kaggle_eval_notebook.py rather than editing the JSON.
+!notebooks/docureason_full_eval_kaggle.ipynb
 .ipynb_checkpoints/
 
 
@@ -223,3 +229,25 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ---------------------------------------------------------------------------
+# Evaluation corpus build output (scripts/build_eval_corpus.py)
+# ---------------------------------------------------------------------------
+# Ingested corpora and raw filings are large (1.2 GB for eight 10-Ks) and fully
+# regenerable: provenance.json carries every filing URL plus its SHA-256, and the
+# corpus is a deterministic function of those filings and the pipeline config.
+#
+# queries.json and provenance.json are NOT ignored — together they are the dataset
+# definition, and a query set that lives only on one machine cannot be evaluated
+# against by anyone else.
+# This is an allowlist, not a denylist, on purpose: the previous rule was
+# `data/eval*/corpus/`, which matched data/eval/corpus/ but not the second corpus at
+# data/eval/corpus_no_layout/, so 3.3 GB of build output was committed and GitHub
+# rejected the push. Naming what may be committed cannot miss a new directory name.
+data/*
+!data/eval*/
+data/eval*/*
+!data/eval*/queries.json
+!data/eval*/filings/
+data/eval*/filings/*
+!data/eval*/filings/provenance.json

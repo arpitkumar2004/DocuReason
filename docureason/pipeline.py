@@ -10,6 +10,7 @@ from docureason.tripath.evaluation.artifact_quality import ArtifactQualityAudito
 from docureason.tripath.indexing.artifact_writer import ArtifactWriter, build_provenance
 from docureason.tripath.indexing.dense_index import DenseIndexBuilder
 from docureason.tripath.indexing.sparse_index import BM25SIndexBuilder
+from docureason.tripath.indexing.table_store import DuckDBTableStore
 from docureason.tripath.ingestion.chunker import SectionAwareChunker
 from docureason.tripath.ingestion.docling_layout_parser import DoclingLayoutParser
 from docureason.tripath.ingestion.figure_captioner import FigureCaptioner
@@ -26,6 +27,10 @@ from docureason.tripath.utils import (
 )
 
 logger = setup_logger("docureason.pipeline")
+
+#: Formats handed to the Docling layout parser. Anything else falls through to the
+#: rule-based segmenter, which cannot recover tables or reading order.
+_LAYOUT_PARSED_SUFFIXES = frozenset({".pdf", ".docx", ".pptx", ".xlsx", ".html", ".htm"})
 
 
 class DocuReasonPipeline:
@@ -105,6 +110,7 @@ class DocuReasonPipeline:
         self.ocr_fallback = OCRFallback(
             languages=["en"],
             min_chars_threshold=self.config.ingestion.ocr_fallback_char_threshold,
+            image_rendering_dpi=self.config.ingestion.image_rendering_dpi,
         )
         log_pipeline_flag(
             "ocr_languages",
@@ -125,12 +131,17 @@ class DocuReasonPipeline:
         )
         self.quality_auditor = ArtifactQualityAuditor()
 
-        self.figure_captioner = FigureCaptioner(use_blip2=True, use_clip=True)
+        self.figure_captioner = FigureCaptioner(
+            use_blip2=True,
+            use_clip=True,
+            image_rendering_dpi=self.config.ingestion.image_rendering_dpi,
+        )
         log_pipeline_flag("use_blip2", True, "BLIP-2 figure captioning enabled", logger)
         log_pipeline_flag("use_clip", True, "CLIP figure embeddings enabled", logger)
 
         self.dense_index = DenseIndexBuilder(output_dir=self.output_dir, config=self.config)
         self.sparse_index = BM25SIndexBuilder(output_dir=self.output_dir, config=self.config)
+        self.table_store = DuckDBTableStore(self.output_dir)
 
     @trace_pipeline_stage("Document Ingestion & Indexing Pipeline")
     def run(self) -> Dict[str, object]:
@@ -175,6 +186,11 @@ class DocuReasonPipeline:
         # Built before the audit is written so index_stats records what actually
         # landed on disk rather than what was requested.
         index_stats = self._build_indices(chunks)
+
+        # Register every table region as a real DuckDB table, so the SQL retriever
+        # stops re-creating and re-populating each table on every query.
+        table_store_stats = self.table_store.build(document_objects).as_dict()
+        index_stats["tables"] = table_store_stats
 
         audit = self._build_audit(document_objects, index_stats)
 
@@ -308,9 +324,11 @@ class DocuReasonPipeline:
             "structured_tables_serialized": structured_tables,
             "table_structure_enabled": self.layout_parser.table_structure_enabled,
             "table_structure_requested": self.config.ingestion.enable_table_structure,
+            "layout_parser_enabled": self.config.ingestion.enable_layout_parser,
             "caption_tier_counts": dict(self.figure_captioner.tier_counts),
             "ocr_fallback_enabled": self.config.ingestion.enable_ocr_fallback,
             "ocr_char_threshold": self.config.ingestion.ocr_fallback_char_threshold,
+            "image_rendering_dpi": self.config.ingestion.image_rendering_dpi,
             "chunking": {
                 "child_chunk_size": self.chunker.chunk_size,
                 "chunk_overlap": self.chunker.overlap,
@@ -322,6 +340,7 @@ class DocuReasonPipeline:
             "dense_index_type": self.dense_index.index_type,
             "bm25_params": {"k1": self.sparse_index.bm25_k1, "b": self.sparse_index.bm25_b},
             "index_stats": index_stats,
+            "table_store": index_stats.get("tables", {}),
         }
         audit["degradation"] = self._ingestion_degradation(layout_source_counts, index_stats)
         audit["provenance"] = build_provenance({"preset": self.config.preset})
@@ -341,6 +360,8 @@ class DocuReasonPipeline:
         rule_regions = layout_source_counts.get("rule", 0)
         if total_regions and rule_regions / total_regions > 0.5:
             labels.append(f"layout:rule_fallback={rule_regions}/{total_regions}")
+        if not self.config.ingestion.enable_layout_parser:
+            labels.append("ablation:layout_parser_disabled")
         if self.layout_parser.table_structure_enabled is False:
             labels.append("table_structure:disabled")
         if self.layout_parser.table_structure_enabled is None and total_regions:
@@ -356,6 +377,10 @@ class DocuReasonPipeline:
         for modality, stats in (index_stats.get("sparse") or {}).items():
             if stats.get("degraded"):
                 labels.append(f"sparse_index:{modality}:{stats['degraded']}")
+
+        table_stats = index_stats.get("tables") or {}
+        if table_stats.get("degraded"):
+            labels.append(f"table_store:{table_stats['degraded']}")
 
         return labels
 
@@ -432,8 +457,15 @@ class DocuReasonPipeline:
         regions: List[Region] = []
         raw_tables: Dict[int, Any] = {}
 
-        # Step 1 — vision-based layout parse.
-        if path.suffix.lower() in {".pdf", ".docx", ".pptx", ".xlsx"}:
+        # Step 1 — vision-based layout parse.  Ablation A1 ("remove the Docling layout
+        # parser") skips it outright; previously the only way to reach the rule-based
+        # segmenter was to make Docling fail, so the -42.5% the ablation matrix claims
+        # for this component had never been measured.
+        # HTML is in this set because SEC filings are HTML: routing them to the loader
+        # instead meant the rule-based segmenter saw raw markup, so a 10-K's financial
+        # tables produced no table regions at all and the tabular strata of the
+        # evaluation corpus could not exist.
+        if self.config.ingestion.enable_layout_parser and path.suffix.lower() in _LAYOUT_PARSED_SUFFIXES:
             try:
                 regions, raw_tables = self.layout_parser.parse(path)
                 logger.debug("DoclingLayoutParser: %d region(s) from %s", len(regions), path.name)
@@ -447,7 +479,8 @@ class DocuReasonPipeline:
             text = str(payload.get("text", ""))
             regions = self._segment_regions_rule_based(text)
 
-        # Step 3 — OCR supplement for scanned pages (PDF only, config-gated).
+        # Step 3 — OCR supplement for scanned pages (PDF only: there is no page raster
+        # to OCR for an HTML or Office document).
         if path.suffix.lower() == ".pdf" and self.config.ingestion.enable_ocr_fallback:
             try:
                 ocr_regions = self.ocr_fallback.run(path, regions)

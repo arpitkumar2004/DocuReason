@@ -30,6 +30,7 @@ from __future__ import annotations
 import json
 import logging
 import re
+import threading
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
@@ -77,6 +78,9 @@ class BM25SIndexBuilder:
         self.bm25_b = idx_cfg.bm25_b if idx_cfg else 0.75
         self._indices: Dict[str, Any] = {}  # in-memory cache after build
         self._meta: Dict[str, List[Dict[str, Any]]] = {}
+        #: Guards the lazy search-time load; the parallel modality dispatch calls
+        #: search() for text and table concurrently against this one builder.
+        self._load_lock = threading.Lock()
         #: Per-modality build observations: {"records", "indexed", "degraded"}.
         self.build_stats: Dict[str, Dict[str, Any]] = {}
 
@@ -190,9 +194,12 @@ class BM25SIndexBuilder:
             meta_path = index_dir / "meta.json"
             if not meta_path.exists():
                 return []
-            # Cached: this file was re-read from disk on every single query before.
-            meta = json.loads(meta_path.read_text(encoding="utf-8"))
-            self._meta[modality] = meta
+            with self._load_lock:
+                meta = self._meta.get(modality)
+                if meta is None:
+                    # Cached: this file was re-read from disk on every single query before.
+                    meta = json.loads(meta_path.read_text(encoding="utf-8"))
+                    self._meta[modality] = meta
         if not meta:
             return []
 
@@ -203,8 +210,11 @@ class BM25SIndexBuilder:
             import bm25s
 
             if retriever is None:
-                retriever = bm25s.BM25.load(str(index_dir), load_corpus=False)
-                self._indices[modality] = retriever
+                with self._load_lock:
+                    retriever = self._indices.get(modality)
+                    if retriever is None:
+                        retriever = bm25s.BM25.load(str(index_dir), load_corpus=False)
+                        self._indices[modality] = retriever
 
             query_tokens = bm25s.tokenize([query], stopwords="en")
             results, scores = retriever.retrieve(query_tokens, k=min(k, len(meta)))

@@ -7,6 +7,7 @@ domain-specific embedding presets and HNSW graph parameter tuning.
 from __future__ import annotations
 
 import json
+import threading
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
@@ -92,6 +93,13 @@ class DenseIndexBuilder:
         self._model: Any = None  # lazy-loaded SentenceTransformer
         #: Per-modality FAISS index cache so search() does not re-read from disk per query.
         self._index_cache: Dict[str, Any] = {}
+        #: Per-modality metadata cache. search() used to json.loads the whole sidecar on
+        #: every query, which on a large corpus cost more than the vector search itself.
+        self._meta_cache: Dict[str, List[Dict[str, Any]]] = {}
+        #: Guards the lazy model load and the two caches. The parallel modality
+        #: dispatch calls search() from three threads against this one builder, and
+        #: without the lock all three could load the embedding model concurrently.
+        self._load_lock = threading.Lock()
         log_pipeline_flag("dense_index_model", self.model_name, f"FAISS model (domain={self.domain})", logger)
         log_pipeline_flag("dense_index_type", self.index_type, f"FAISS index type (hnsw_m={self.hnsw_m})", logger)
         log_pipeline_flag(
@@ -193,6 +201,11 @@ class DenseIndexBuilder:
 
             faiss.write_index(index, str(index_path))
             meta_path.write_text(meta_json, encoding="utf-8")
+            # A rebuild invalidates both caches; without this, search() in the same
+            # process would keep answering from the index this call just replaced.
+            with self._load_lock:
+                self._index_cache.pop(modality, None)
+                self._meta_cache.pop(modality, None)
             self.build_stats[modality] = {
                 "records": len(records),
                 "ntotal": int(index.ntotal),
@@ -262,11 +275,20 @@ class DenseIndexBuilder:
             if model is None:
                 return []
 
-            meta = json.loads(meta_path.read_text(encoding="utf-8"))
+            meta = self._meta_cache.get(modality)
             index = self._index_cache.get(modality)
-            if index is None:
-                index = faiss.read_index(str(index_path))
-                self._index_cache[modality] = index
+            if meta is None or index is None:
+                with self._load_lock:
+                    # Re-check inside the lock: another thread may have loaded both
+                    # while this one waited.
+                    meta = self._meta_cache.get(modality)
+                    if meta is None:
+                        meta = json.loads(meta_path.read_text(encoding="utf-8"))
+                        self._meta_cache[modality] = meta
+                    index = self._index_cache.get(modality)
+                    if index is None:
+                        index = faiss.read_index(str(index_path))
+                        self._index_cache[modality] = index
 
             if hasattr(index, "hnsw"):
                 index.hnsw.efSearch = self.hnsw_ef_search
@@ -292,9 +314,15 @@ class DenseIndexBuilder:
             return []
 
     def _get_model(self) -> Optional[Any]:
-        """Lazy-load and cache the SentenceTransformer model."""
+        """Lazy-load and cache the SentenceTransformer model (thread-safe)."""
         if self._model is not None:
             return self._model
+        with self._load_lock:
+            if self._model is not None:
+                return self._model
+            return self._load_model_locked()
+
+    def _load_model_locked(self) -> Optional[Any]:
         try:
             from sentence_transformers import SentenceTransformer
 
@@ -308,6 +336,34 @@ class DenseIndexBuilder:
                 self.model_revision or "hub-default",
             )
         except Exception as exc:
-            logger.warning("Failed to load SentenceTransformer (%s) — using fallback", exc)
-            self._model = None
+            # Pinning a revision makes the loader resolve that commit against the hub.
+            # When the hub is unreachable but the commit is already in the local cache,
+            # the right answer is the cached weights, not a degraded index — so retry
+            # offline before giving up. Without this, adding a pin turned every
+            # network hiccup into a silently empty dense index.
+            self._model = self._load_from_cache(exc)
         return self._model
+
+    def _load_from_cache(self, first_error: Exception) -> Optional[Any]:
+        """Second attempt at the pinned weights, restricted to the local cache."""
+        try:
+            from sentence_transformers import SentenceTransformer
+
+            kwargs: Dict[str, Any] = {"local_files_only": True}
+            if self.model_revision:
+                kwargs["revision"] = self.model_revision
+            model = SentenceTransformer(self.model_name, **kwargs)
+            logger.warning(
+                "Hub unreachable (%s) — loaded %s from the local cache at revision %s",
+                first_error,
+                self.model_name,
+                self.model_revision or "hub-default",
+            )
+            return model
+        except Exception as exc:
+            logger.warning(
+                "Failed to load SentenceTransformer (%s; cache retry: %s) — dense retrieval will degrade",
+                first_error,
+                exc,
+            )
+            return None

@@ -595,6 +595,25 @@ Quantifies the exact contribution of each architectural block by measuring perfo
 
 $$\Delta \text{Metric} = \text{Metric}_{\text{Full\_Pipeline}} - \text{Metric}_{\text{Ablated\_Pipeline}}$$
 
+> **Status of the numbers in this table.** The deltas below were published before any
+> runner existed that could produce them, and four of the seven components had no switch
+> to turn them off, so "remove X and re-measure" was not an operation this system
+> supported. Treat every figure in the last two columns as an **unverified expectation**.
+>
+> `docureason/tripath/evaluation/ablation.py` now executes the matrix for real:
+>
+> ```bash
+> python scripts/run_ablations.py --queries data/eval/queries.json --limit 20 --stratified
+> ```
+>
+> It re-runs every query with the component disabled, reports a paired delta with a
+> bootstrap confidence interval and a sign-flip p-value, and prints each measured delta
+> **beside the claim below** with a verdict (`consistent_in_magnitude`, `same_direction_different_magnitude`,
+> `contradicted`, `not_significant`, `not_measurable`). `no_layout_parser` is
+> ingestion-scoped and is reported as *not executed* until a corpus ingested with
+> `ingestion.enable_layout_parser: false` is supplied. Where the measurement and this
+> table disagree, the measurement is the result.
+
 #### Master Ablation Test Matrix Table
 
 | Ablated Component | Primary Metric Impact | Expected Performance Drop ($\Delta$) | Diagnostic Conclusion |
@@ -666,6 +685,7 @@ All evaluation modules are located in `docureason/tripath/evaluation/` and `docu
 # Execute automated evaluation harness
 python scripts/evaluate_system.py
 
-# Run ablation studies
-python -c "from docureason.tripath.evaluation.ablation import AblationStudy; AblationStudy().run()"
+# Run ablation studies (the old AblationStudy().run() had no callers and computed
+# nothing; it now raises and points here)
+python scripts/run_ablations.py --queries data/eval/queries.json --limit 20 --stratified
 ```

@@ -32,12 +32,12 @@ Usage
 
 from __future__ import annotations
 
-import io
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from docureason.tripath.utils import get_logger, log_pipeline_flag, trace_execution
 
+from .rasterizer import PageRasterizer, page_index_from_region
 from .schema import Region
 
 logger = get_logger(__name__)
@@ -68,10 +68,14 @@ class OCRFallback:
         languages: List[str] | None = None,
         gpu: bool | None = None,
         min_chars_threshold: int = _MIN_CHARS_THRESHOLD,
+        image_rendering_dpi: int = 150,
     ) -> None:
         self.languages = languages or ["en"]
         self.gpu = gpu
         self.min_chars_threshold = min_chars_threshold
+        #: DPI for the page rasters handed to EasyOCR. OCR accuracy is sensitive to
+        #: resolution, and this setting previously reached nothing at all.
+        self.image_rendering_dpi = int(image_rendering_dpi)
         log_pipeline_flag(
             "ocr_min_chars_threshold", min_chars_threshold, "Character threshold to detect scanned PDF pages", logger
         )
@@ -119,18 +123,21 @@ class OCRFallback:
             return []
 
         ocr_regions: List[Region] = []
-        for page_no, page_image_bytes in scanned_pages.items():
+        for page_index, page_image_bytes in scanned_pages.items():
             text = self._ocr_image(reader, page_image_bytes)
             if text.strip():
                 ocr_regions.append(
                     Region(
                         type="body",
                         text=text.strip(),
-                        page_no=page_no,
+                        # Emitted 1-based, matching Docling's convention: these regions
+                        # are appended to Docling's, and two page-numbering conventions
+                        # in one document is how the off-by-one above came about.
+                        page_no=page_index + 1,
                         layout_source="ocr",
                     )
                 )
-                logger.debug("OCRFallback: page %d → %d chars", page_no, len(text))
+                logger.debug("OCRFallback: page index %d -> %d chars", page_index, len(text))
 
         return ocr_regions
 
@@ -139,14 +146,20 @@ class OCRFallback:
     # ------------------------------------------------------------------
 
     @staticmethod
-    def _count_chars_per_page(regions: List[Region]) -> Dict[int, int]:
-        """Sum character counts per page_no from existing regions."""
+    def _count_chars_per_page(regions: List[Region], page_count: int = 0) -> Dict[int, int]:
+        """Characters per **0-based page index**, from the regions already extracted.
+
+        Docling reports ``page_no`` 1-based while the page loop below indexes from 0
+        (audit P1-2).  Counting under one convention and looking up under the other
+        meant page N's character count was compared against page N+1's content, so the
+        scanned-page detector was reliably off by one page.
+        """
         counts: Dict[int, int] = {}
         for region in regions:
-            p = region.page_no
-            if p < 0:
+            if region.page_no is None or region.page_no < 0:
                 continue
-            counts[p] = counts.get(p, 0) + len(region.text)
+            index = page_index_from_region(region.page_no, page_count or region.page_no + 1)
+            counts[index] = counts.get(index, 0) + len(region.text)
         return counts
 
     def _detect_scanned_pages(
@@ -154,50 +167,38 @@ class OCRFallback:
         pdf_path: Path,
         page_char_counts: Dict[int, int],
     ) -> Dict[int, bytes]:
-        """Return a mapping of page_no → raw image bytes for scanned pages."""
-        scanned: Dict[int, bytes] = {}
-        try:
-            import pypdf
+        """Map 0-based page index -> a PNG raster of the whole page, for scanned pages.
 
-            reader = pypdf.PdfReader(str(pdf_path))
-            for page_no, page in enumerate(reader.pages):
-                if page_char_counts.get(page_no, 0) >= self.min_chars_threshold:
+        The page is **rendered**, not scavenged.  Taking ``page.images[0]`` returned one
+        embedded image per page, so a scan split across two images OCR'd only the first
+        half (P2-13) - and when a page had no embedded image at all, the previous code
+        handed EasyOCR a blank white canvas, which costs seconds per page to read
+        nothing. A rendered page contains whatever is actually on it.
+        """
+        scanned: Dict[int, bytes] = {}
+        rasterizer = PageRasterizer(pdf_path, dpi=self.image_rendering_dpi)
+        if not rasterizer.available:
+            logger.warning("OCRFallback: cannot rasterize %s — skipping OCR entirely", pdf_path.name)
+            return scanned
+
+        try:
+            for page_index in range(rasterizer.page_count):
+                if page_char_counts.get(page_index, 0) >= self.min_chars_threshold:
                     continue  # Docling already extracted enough text here
-                # Try to grab the first embedded raster image from the page.
-                image_bytes = self._extract_page_image(page, page_no)
-                if image_bytes:
-                    scanned[page_no] = image_bytes
+                image = rasterizer.render(page_index)
+                if image is None:
+                    continue
+                if PageRasterizer.is_blank(image):
+                    logger.debug("OCRFallback: page %d renders blank — nothing to OCR", page_index)
+                    continue
+                payload = PageRasterizer.to_png_bytes(image)
+                if payload:
+                    scanned[page_index] = payload
         except Exception as exc:
             logger.warning("Could not inspect pages of %s: %s", pdf_path.name, exc)
+        finally:
+            rasterizer.close()
         return scanned
-
-    @staticmethod
-    def _extract_page_image(page: Any, page_no: int) -> Optional[bytes]:
-        """Extract the first raster image embedded in a pypdf page object.
-
-        Falls back to a blank-white PIL image rendered at a fixed DPI when no
-        embedded images are found (so EasyOCR at least gets something).
-        """
-        try:
-            images = list(page.images)
-            if images:
-                return images[0].data  # raw bytes (JPEG / PNG etc.)
-        except Exception:
-            pass
-
-        # Fallback: render page as a plain white PIL image.
-        try:
-            from PIL import Image
-
-            width = int(float(page.mediabox.width))
-            height = int(float(page.mediabox.height))
-            img = Image.new("RGB", (max(width, 100), max(height, 100)), color=(255, 255, 255))
-            buf = io.BytesIO()
-            img.save(buf, format="PNG")
-            return buf.getvalue()
-        except Exception as exc:
-            logger.debug("Could not render fallback image for page %d: %s", page_no, exc)
-            return None
 
     def _get_reader(self) -> Optional[Any]:
         """Return a cached EasyOCR Reader, initialising it on first use."""

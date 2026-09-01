@@ -1,0 +1,1088 @@
+{
+  "fixture": "metric-regression",
+  "note": "Frozen retrieval output, not a pipeline run. Regenerating this file changes what the gate measures; the baseline must be re-recorded alongside it.",
+  "seed": 20260901,
+  "case_count": 20,
+  "cases": [
+    {
+      "id": "fx-000",
+      "stratum": "tabular_lookup",
+      "query": "What operating revenue is reported in tabular_lookup case 0?",
+      "relevant_ids": [
+        "doc-fixture00-region-0"
+      ],
+      "results": [
+        {
+          "document_id": "doc-fixture00",
+          "region_id": "doc-fixture00-region-0",
+          "text": "Segment 0 of tabular_lookup evidence discussing operating revenue of $1000 thousand.",
+          "score": 1.0,
+          "modality": "table",
+          "rank": 1
+        },
+        {
+          "document_id": "doc-fixture00",
+          "region_id": "doc-fixture00-region-91",
+          "text": "Segment 1 of tabular_lookup evidence discussing operating revenue of $1000 thousand.",
+          "score": 0.9,
+          "modality": "table",
+          "rank": 2
+        },
+        {
+          "document_id": "doc-fixture00",
+          "region_id": "doc-fixture00-region-92",
+          "text": "Segment 2 of tabular_lookup evidence discussing operating revenue of $1000 thousand.",
+          "score": 0.8,
+          "modality": "table",
+          "rank": 3
+        },
+        {
+          "document_id": "doc-fixture00",
+          "region_id": "doc-fixture00-region-93",
+          "text": "Segment 3 of tabular_lookup evidence discussing operating revenue of $1000 thousand.",
+          "score": 0.7,
+          "modality": "table",
+          "rank": 4
+        },
+        {
+          "document_id": "doc-fixture00",
+          "region_id": "doc-fixture00-region-94",
+          "text": "Segment 4 of tabular_lookup evidence discussing operating revenue of $1000 thousand.",
+          "score": 0.6,
+          "modality": "table",
+          "rank": 5
+        }
+      ],
+      "answer": "Operating revenue was $1000 thousand [Source: doc-fixture00].",
+      "ground_truth_answer": "$1000 thousand",
+      "sql_executed": true,
+      "latency_ms": 100.0
+    },
+    {
+      "id": "fx-001",
+      "stratum": "numeric",
+      "query": "What operating revenue is reported in numeric case 1?",
+      "relevant_ids": [
+        "doc-fixture00-region-1"
+      ],
+      "results": [
+        {
+          "document_id": "doc-fixture00",
+          "region_id": "doc-fixture00-region-90",
+          "text": "Segment 0 of numeric evidence discussing operating revenue of $1037 thousand.",
+          "score": 1.0,
+          "modality": "table",
+          "rank": 1
+        },
+        {
+          "document_id": "doc-fixture00",
+          "region_id": "doc-fixture00-region-1",
+          "text": "Segment 1 of numeric evidence discussing operating revenue of $1037 thousand.",
+          "score": 0.9,
+          "modality": "table",
+          "rank": 2
+        },
+        {
+          "document_id": "doc-fixture00",
+          "region_id": "doc-fixture00-region-92",
+          "text": "Segment 2 of numeric evidence discussing operating revenue of $1037 thousand.",
+          "score": 0.8,
+          "modality": "table",
+          "rank": 3
+        },
+        {
+          "document_id": "doc-fixture00",
+          "region_id": "doc-fixture00-region-93",
+          "text": "Segment 3 of numeric evidence discussing operating revenue of $1037 thousand.",
+          "score": 0.7,
+          "modality": "table",
+          "rank": 4
+        },
+        {
+          "document_id": "doc-fixture00",
+          "region_id": "doc-fixture00-region-94",
+          "text": "Segment 4 of numeric evidence discussing operating revenue of $1037 thousand.",
+          "score": 0.6,
+          "modality": "table",
+          "rank": 5
+        }
+      ],
+      "answer": "Operating revenue was $1037 thousand [Source: doc-fixture00].",
+      "ground_truth_answer": "$1037 thousand",
+      "sql_executed": true,
+      "latency_ms": 101.0
+    },
+    {
+      "id": "fx-002",
+      "stratum": "prose",
+      "query": "What operating revenue is reported in prose case 2?",
+      "relevant_ids": [
+        "doc-fixture00-region-2"
+      ],
+      "results": [
+        {
+          "document_id": "doc-fixture00",
+          "region_id": "doc-fixture00-region-90",
+          "text": "Segment 0 of prose evidence discussing operating revenue of $1074 thousand.",
+          "score": 1.0,
+          "modality": "text",
+          "rank": 1
+        },
+        {
+          "document_id": "doc-fixture00",
+          "region_id": "doc-fixture00-region-91",
+          "text": "Segment 1 of prose evidence discussing operating revenue of $1074 thousand.",
+          "score": 0.9,
+          "modality": "text",
+          "rank": 2
+        },
+        {
+          "document_id": "doc-fixture00",
+          "region_id": "doc-fixture00-region-92",
+          "text": "Segment 2 of prose evidence discussing operating revenue of $1074 thousand.",
+          "score": 0.8,
+          "modality": "text",
+          "rank": 3
+        },
+        {
+          "document_id": "doc-fixture00",
+          "region_id": "doc-fixture00-region-2",
+          "text": "Segment 3 of prose evidence discussing operating revenue of $1074 thousand.",
+          "score": 0.7,
+          "modality": "text",
+          "rank": 4
+        },
+        {
+          "document_id": "doc-fixture00",
+          "region_id": "doc-fixture00-region-94",
+          "text": "Segment 4 of prose evidence discussing operating revenue of $1074 thousand.",
+          "score": 0.6,
+          "modality": "text",
+          "rank": 5
+        }
+      ],
+      "answer": "Operating revenue was $1074 thousand [Source: doc-fixture00].",
+      "ground_truth_answer": "$1074 thousand",
+      "sql_executed": false,
+      "latency_ms": 102.0
+    },
+    {
+      "id": "fx-003",
+      "stratum": "figure",
+      "query": "What operating revenue is reported in figure case 3?",
+      "relevant_ids": [
+        "doc-fixture00-region-3"
+      ],
+      "results": [
+        {
+          "document_id": "doc-fixture00",
+          "region_id": "doc-fixture00-region-90",
+          "text": "Segment 0 of figure evidence discussing operating revenue of $1111 thousand.",
+          "score": 1.0,
+          "modality": "vision",
+          "rank": 1
+        },
+        {
+          "document_id": "doc-fixture00",
+          "region_id": "doc-fixture00-region-91",
+          "text": "Segment 1 of figure evidence discussing operating revenue of $1111 thousand.",
+          "score": 0.9,
+          "modality": "vision",
+          "rank": 2
+        },
+        {
+          "document_id": "doc-fixture00",
+          "region_id": "doc-fixture00-region-92",
+          "text": "Segment 2 of figure evidence discussing operating revenue of $1111 thousand.",
+          "score": 0.8,
+          "modality": "vision",
+          "rank": 3
+        },
+        {
+          "document_id": "doc-fixture00",
+          "region_id": "doc-fixture00-region-93",
+          "text": "Segment 3 of figure evidence discussing operating revenue of $1111 thousand.",
+          "score": 0.7,
+          "modality": "vision",
+          "rank": 4
+        },
+        {
+          "document_id": "doc-fixture00",
+          "region_id": "doc-fixture00-region-94",
+          "text": "Segment 4 of figure evidence discussing operating revenue of $1111 thousand.",
+          "score": 0.6,
+          "modality": "vision",
+          "rank": 5
+        }
+      ],
+      "answer": "Operating revenue was $1111 thousand [Source: doc-fixture00].",
+      "ground_truth_answer": "$1111 thousand",
+      "sql_executed": false,
+      "latency_ms": 103.0
+    },
+    {
+      "id": "fx-004",
+      "stratum": "tabular_lookup",
+      "query": "What operating revenue is reported in tabular_lookup case 4?",
+      "relevant_ids": [
+        "doc-fixture01-region-0"
+      ],
+      "results": [
+        {
+          "document_id": "doc-fixture01",
+          "region_id": "doc-fixture01-region-0",
+          "text": "Segment 0 of tabular_lookup evidence discussing operating revenue of $1148 thousand.",
+          "score": 1.0,
+          "modality": "table",
+          "rank": 1
+        },
+        {
+          "document_id": "doc-fixture01",
+          "region_id": "doc-fixture01-region-91",
+          "text": "Segment 1 of tabular_lookup evidence discussing operating revenue of $1148 thousand.",
+          "score": 0.9,
+          "modality": "table",
+          "rank": 2
+        },
+        {
+          "document_id": "doc-fixture01",
+          "region_id": "doc-fixture01-region-92",
+          "text": "Segment 2 of tabular_lookup evidence discussing operating revenue of $1148 thousand.",
+          "score": 0.8,
+          "modality": "table",
+          "rank": 3
+        },
+        {
+          "document_id": "doc-fixture01",
+          "region_id": "doc-fixture01-region-93",
+          "text": "Segment 3 of tabular_lookup evidence discussing operating revenue of $1148 thousand.",
+          "score": 0.7,
+          "modality": "table",
+          "rank": 4
+        },
+        {
+          "document_id": "doc-fixture01",
+          "region_id": "doc-fixture01-region-94",
+          "text": "Segment 4 of tabular_lookup evidence discussing operating revenue of $1148 thousand.",
+          "score": 0.6,
+          "modality": "table",
+          "rank": 5
+        }
+      ],
+      "answer": "Operating revenue was $1148 thousand [Source: doc-fixture01].",
+      "ground_truth_answer": "$1148 thousand",
+      "sql_executed": true,
+      "latency_ms": 104.0
+    },
+    {
+      "id": "fx-005",
+      "stratum": "numeric",
+      "query": "What operating revenue is reported in numeric case 5?",
+      "relevant_ids": [
+        "doc-fixture01-region-1"
+      ],
+      "results": [
+        {
+          "document_id": "doc-fixture01",
+          "region_id": "doc-fixture01-region-90",
+          "text": "Segment 0 of numeric evidence discussing operating revenue of $1185 thousand.",
+          "score": 1.0,
+          "modality": "table",
+          "rank": 1
+        },
+        {
+          "document_id": "doc-fixture01",
+          "region_id": "doc-fixture01-region-1",
+          "text": "Segment 1 of numeric evidence discussing operating revenue of $1185 thousand.",
+          "score": 0.9,
+          "modality": "table",
+          "rank": 2
+        },
+        {
+          "document_id": "doc-fixture01",
+          "region_id": "doc-fixture01-region-92",
+          "text": "Segment 2 of numeric evidence discussing operating revenue of $1185 thousand.",
+          "score": 0.8,
+          "modality": "table",
+          "rank": 3
+        },
+        {
+          "document_id": "doc-fixture01",
+          "region_id": "doc-fixture01-region-93",
+          "text": "Segment 3 of numeric evidence discussing operating revenue of $1185 thousand.",
+          "score": 0.7,
+          "modality": "table",
+          "rank": 4
+        },
+        {
+          "document_id": "doc-fixture01",
+          "region_id": "doc-fixture01-region-94",
+          "text": "Segment 4 of numeric evidence discussing operating revenue of $1185 thousand.",
+          "score": 0.6,
+          "modality": "table",
+          "rank": 5
+        }
+      ],
+      "answer": "Operating revenue was $1185 thousand [Source: doc-fixture01].",
+      "ground_truth_answer": "$1185 thousand",
+      "sql_executed": true,
+      "latency_ms": 105.0
+    },
+    {
+      "id": "fx-006",
+      "stratum": "prose",
+      "query": "What operating revenue is reported in prose case 6?",
+      "relevant_ids": [
+        "doc-fixture01-region-2"
+      ],
+      "results": [
+        {
+          "document_id": "doc-fixture01",
+          "region_id": "doc-fixture01-region-90",
+          "text": "Segment 0 of prose evidence discussing operating revenue of $1222 thousand.",
+          "score": 1.0,
+          "modality": "text",
+          "rank": 1
+        },
+        {
+          "document_id": "doc-fixture01",
+          "region_id": "doc-fixture01-region-91",
+          "text": "Segment 1 of prose evidence discussing operating revenue of $1222 thousand.",
+          "score": 0.9,
+          "modality": "text",
+          "rank": 2
+        },
+        {
+          "document_id": "doc-fixture01",
+          "region_id": "doc-fixture01-region-92",
+          "text": "Segment 2 of prose evidence discussing operating revenue of $1222 thousand.",
+          "score": 0.8,
+          "modality": "text",
+          "rank": 3
+        },
+        {
+          "document_id": "doc-fixture01",
+          "region_id": "doc-fixture01-region-2",
+          "text": "Segment 3 of prose evidence discussing operating revenue of $1222 thousand.",
+          "score": 0.7,
+          "modality": "text",
+          "rank": 4
+        },
+        {
+          "document_id": "doc-fixture01",
+          "region_id": "doc-fixture01-region-94",
+          "text": "Segment 4 of prose evidence discussing operating revenue of $1222 thousand.",
+          "score": 0.6,
+          "modality": "text",
+          "rank": 5
+        }
+      ],
+      "answer": "Operating revenue was $1222 thousand [Source: doc-fixture01].",
+      "ground_truth_answer": "$1222 thousand",
+      "sql_executed": false,
+      "latency_ms": 106.0
+    },
+    {
+      "id": "fx-007",
+      "stratum": "figure",
+      "query": "What operating revenue is reported in figure case 7?",
+      "relevant_ids": [
+        "doc-fixture01-region-3"
+      ],
+      "results": [
+        {
+          "document_id": "doc-fixture01",
+          "region_id": "doc-fixture01-region-90",
+          "text": "Segment 0 of figure evidence discussing operating revenue of $1259 thousand.",
+          "score": 1.0,
+          "modality": "vision",
+          "rank": 1
+        },
+        {
+          "document_id": "doc-fixture01",
+          "region_id": "doc-fixture01-region-91",
+          "text": "Segment 1 of figure evidence discussing operating revenue of $1259 thousand.",
+          "score": 0.9,
+          "modality": "vision",
+          "rank": 2
+        },
+        {
+          "document_id": "doc-fixture01",
+          "region_id": "doc-fixture01-region-92",
+          "text": "Segment 2 of figure evidence discussing operating revenue of $1259 thousand.",
+          "score": 0.8,
+          "modality": "vision",
+          "rank": 3
+        },
+        {
+          "document_id": "doc-fixture01",
+          "region_id": "doc-fixture01-region-93",
+          "text": "Segment 3 of figure evidence discussing operating revenue of $1259 thousand.",
+          "score": 0.7,
+          "modality": "vision",
+          "rank": 4
+        },
+        {
+          "document_id": "doc-fixture01",
+          "region_id": "doc-fixture01-region-94",
+          "text": "Segment 4 of figure evidence discussing operating revenue of $1259 thousand.",
+          "score": 0.6,
+          "modality": "vision",
+          "rank": 5
+        }
+      ],
+      "answer": "Operating revenue was $1259 thousand [Source: doc-fixture01].",
+      "ground_truth_answer": "$1259 thousand",
+      "sql_executed": false,
+      "latency_ms": 107.0
+    },
+    {
+      "id": "fx-008",
+      "stratum": "tabular_lookup",
+      "query": "What operating revenue is reported in tabular_lookup case 8?",
+      "relevant_ids": [
+        "doc-fixture02-region-0"
+      ],
+      "results": [
+        {
+          "document_id": "doc-fixture02",
+          "region_id": "doc-fixture02-region-0",
+          "text": "Segment 0 of tabular_lookup evidence discussing operating revenue of $1296 thousand.",
+          "score": 1.0,
+          "modality": "table",
+          "rank": 1
+        },
+        {
+          "document_id": "doc-fixture02",
+          "region_id": "doc-fixture02-region-91",
+          "text": "Segment 1 of tabular_lookup evidence discussing operating revenue of $1296 thousand.",
+          "score": 0.9,
+          "modality": "table",
+          "rank": 2
+        },
+        {
+          "document_id": "doc-fixture02",
+          "region_id": "doc-fixture02-region-92",
+          "text": "Segment 2 of tabular_lookup evidence discussing operating revenue of $1296 thousand.",
+          "score": 0.8,
+          "modality": "table",
+          "rank": 3
+        },
+        {
+          "document_id": "doc-fixture02",
+          "region_id": "doc-fixture02-region-93",
+          "text": "Segment 3 of tabular_lookup evidence discussing operating revenue of $1296 thousand.",
+          "score": 0.7,
+          "modality": "table",
+          "rank": 4
+        },
+        {
+          "document_id": "doc-fixture02",
+          "region_id": "doc-fixture02-region-94",
+          "text": "Segment 4 of tabular_lookup evidence discussing operating revenue of $1296 thousand.",
+          "score": 0.6,
+          "modality": "table",
+          "rank": 5
+        }
+      ],
+      "answer": "Operating revenue was $1296 thousand [Source: doc-fixture02].",
+      "ground_truth_answer": "$1296 thousand",
+      "sql_executed": true,
+      "latency_ms": 108.0
+    },
+    {
+      "id": "fx-009",
+      "stratum": "numeric",
+      "query": "What operating revenue is reported in numeric case 9?",
+      "relevant_ids": [
+        "doc-fixture02-region-1"
+      ],
+      "results": [
+        {
+          "document_id": "doc-fixture02",
+          "region_id": "doc-fixture02-region-90",
+          "text": "Segment 0 of numeric evidence discussing operating revenue of $1333 thousand.",
+          "score": 1.0,
+          "modality": "table",
+          "rank": 1
+        },
+        {
+          "document_id": "doc-fixture02",
+          "region_id": "doc-fixture02-region-1",
+          "text": "Segment 1 of numeric evidence discussing operating revenue of $1333 thousand.",
+          "score": 0.9,
+          "modality": "table",
+          "rank": 2
+        },
+        {
+          "document_id": "doc-fixture02",
+          "region_id": "doc-fixture02-region-92",
+          "text": "Segment 2 of numeric evidence discussing operating revenue of $1333 thousand.",
+          "score": 0.8,
+          "modality": "table",
+          "rank": 3
+        },
+        {
+          "document_id": "doc-fixture02",
+          "region_id": "doc-fixture02-region-93",
+          "text": "Segment 3 of numeric evidence discussing operating revenue of $1333 thousand.",
+          "score": 0.7,
+          "modality": "table",
+          "rank": 4
+        },
+        {
+          "document_id": "doc-fixture02",
+          "region_id": "doc-fixture02-region-94",
+          "text": "Segment 4 of numeric evidence discussing operating revenue of $1333 thousand.",
+          "score": 0.6,
+          "modality": "table",
+          "rank": 5
+        }
+      ],
+      "answer": "Operating revenue was $1333 thousand [Source: doc-fixture02].",
+      "ground_truth_answer": "$1333 thousand",
+      "sql_executed": true,
+      "latency_ms": 109.0
+    },
+    {
+      "id": "fx-010",
+      "stratum": "prose",
+      "query": "What operating revenue is reported in prose case 10?",
+      "relevant_ids": [
+        "doc-fixture02-region-2"
+      ],
+      "results": [
+        {
+          "document_id": "doc-fixture02",
+          "region_id": "doc-fixture02-region-90",
+          "text": "Segment 0 of prose evidence discussing operating revenue of $1370 thousand.",
+          "score": 1.0,
+          "modality": "text",
+          "rank": 1
+        },
+        {
+          "document_id": "doc-fixture02",
+          "region_id": "doc-fixture02-region-91",
+          "text": "Segment 1 of prose evidence discussing operating revenue of $1370 thousand.",
+          "score": 0.9,
+          "modality": "text",
+          "rank": 2
+        },
+        {
+          "document_id": "doc-fixture02",
+          "region_id": "doc-fixture02-region-92",
+          "text": "Segment 2 of prose evidence discussing operating revenue of $1370 thousand.",
+          "score": 0.8,
+          "modality": "text",
+          "rank": 3
+        },
+        {
+          "document_id": "doc-fixture02",
+          "region_id": "doc-fixture02-region-2",
+          "text": "Segment 3 of prose evidence discussing operating revenue of $1370 thousand.",
+          "score": 0.7,
+          "modality": "text",
+          "rank": 4
+        },
+        {
+          "document_id": "doc-fixture02",
+          "region_id": "doc-fixture02-region-94",
+          "text": "Segment 4 of prose evidence discussing operating revenue of $1370 thousand.",
+          "score": 0.6,
+          "modality": "text",
+          "rank": 5
+        }
+      ],
+      "answer": "Operating revenue was $1370 thousand [Source: doc-fixture02].",
+      "ground_truth_answer": "$1370 thousand",
+      "sql_executed": false,
+      "latency_ms": 110.0
+    },
+    {
+      "id": "fx-011",
+      "stratum": "figure",
+      "query": "What operating revenue is reported in figure case 11?",
+      "relevant_ids": [
+        "doc-fixture02-region-3"
+      ],
+      "results": [
+        {
+          "document_id": "doc-fixture02",
+          "region_id": "doc-fixture02-region-90",
+          "text": "Segment 0 of figure evidence discussing operating revenue of $1407 thousand.",
+          "score": 1.0,
+          "modality": "vision",
+          "rank": 1
+        },
+        {
+          "document_id": "doc-fixture02",
+          "region_id": "doc-fixture02-region-91",
+          "text": "Segment 1 of figure evidence discussing operating revenue of $1407 thousand.",
+          "score": 0.9,
+          "modality": "vision",
+          "rank": 2
+        },
+        {
+          "document_id": "doc-fixture02",
+          "region_id": "doc-fixture02-region-92",
+          "text": "Segment 2 of figure evidence discussing operating revenue of $1407 thousand.",
+          "score": 0.8,
+          "modality": "vision",
+          "rank": 3
+        },
+        {
+          "document_id": "doc-fixture02",
+          "region_id": "doc-fixture02-region-93",
+          "text": "Segment 3 of figure evidence discussing operating revenue of $1407 thousand.",
+          "score": 0.7,
+          "modality": "vision",
+          "rank": 4
+        },
+        {
+          "document_id": "doc-fixture02",
+          "region_id": "doc-fixture02-region-94",
+          "text": "Segment 4 of figure evidence discussing operating revenue of $1407 thousand.",
+          "score": 0.6,
+          "modality": "vision",
+          "rank": 5
+        }
+      ],
+      "answer": "Operating revenue was $1407 thousand [Source: doc-fixture02].",
+      "ground_truth_answer": "$1407 thousand",
+      "sql_executed": false,
+      "latency_ms": 111.0
+    },
+    {
+      "id": "fx-012",
+      "stratum": "tabular_lookup",
+      "query": "What operating revenue is reported in tabular_lookup case 12?",
+      "relevant_ids": [
+        "doc-fixture03-region-0"
+      ],
+      "results": [
+        {
+          "document_id": "doc-fixture03",
+          "region_id": "doc-fixture03-region-0",
+          "text": "Segment 0 of tabular_lookup evidence discussing operating revenue of $1444 thousand.",
+          "score": 1.0,
+          "modality": "table",
+          "rank": 1
+        },
+        {
+          "document_id": "doc-fixture03",
+          "region_id": "doc-fixture03-region-91",
+          "text": "Segment 1 of tabular_lookup evidence discussing operating revenue of $1444 thousand.",
+          "score": 0.9,
+          "modality": "table",
+          "rank": 2
+        },
+        {
+          "document_id": "doc-fixture03",
+          "region_id": "doc-fixture03-region-92",
+          "text": "Segment 2 of tabular_lookup evidence discussing operating revenue of $1444 thousand.",
+          "score": 0.8,
+          "modality": "table",
+          "rank": 3
+        },
+        {
+          "document_id": "doc-fixture03",
+          "region_id": "doc-fixture03-region-93",
+          "text": "Segment 3 of tabular_lookup evidence discussing operating revenue of $1444 thousand.",
+          "score": 0.7,
+          "modality": "table",
+          "rank": 4
+        },
+        {
+          "document_id": "doc-fixture03",
+          "region_id": "doc-fixture03-region-94",
+          "text": "Segment 4 of tabular_lookup evidence discussing operating revenue of $1444 thousand.",
+          "score": 0.6,
+          "modality": "table",
+          "rank": 5
+        }
+      ],
+      "answer": "Operating revenue was $1444 thousand [Source: doc-fixture03].",
+      "ground_truth_answer": "$1444 thousand",
+      "sql_executed": true,
+      "latency_ms": 112.0
+    },
+    {
+      "id": "fx-013",
+      "stratum": "numeric",
+      "query": "What operating revenue is reported in numeric case 13?",
+      "relevant_ids": [
+        "doc-fixture03-region-1"
+      ],
+      "results": [
+        {
+          "document_id": "doc-fixture03",
+          "region_id": "doc-fixture03-region-90",
+          "text": "Segment 0 of numeric evidence discussing operating revenue of $1481 thousand.",
+          "score": 1.0,
+          "modality": "table",
+          "rank": 1
+        },
+        {
+          "document_id": "doc-fixture03",
+          "region_id": "doc-fixture03-region-1",
+          "text": "Segment 1 of numeric evidence discussing operating revenue of $1481 thousand.",
+          "score": 0.9,
+          "modality": "table",
+          "rank": 2
+        },
+        {
+          "document_id": "doc-fixture03",
+          "region_id": "doc-fixture03-region-92",
+          "text": "Segment 2 of numeric evidence discussing operating revenue of $1481 thousand.",
+          "score": 0.8,
+          "modality": "table",
+          "rank": 3
+        },
+        {
+          "document_id": "doc-fixture03",
+          "region_id": "doc-fixture03-region-93",
+          "text": "Segment 3 of numeric evidence discussing operating revenue of $1481 thousand.",
+          "score": 0.7,
+          "modality": "table",
+          "rank": 4
+        },
+        {
+          "document_id": "doc-fixture03",
+          "region_id": "doc-fixture03-region-94",
+          "text": "Segment 4 of numeric evidence discussing operating revenue of $1481 thousand.",
+          "score": 0.6,
+          "modality": "table",
+          "rank": 5
+        }
+      ],
+      "answer": "Operating revenue was $1481 thousand [Source: doc-fixture03].",
+      "ground_truth_answer": "$1481 thousand",
+      "sql_executed": true,
+      "latency_ms": 113.0
+    },
+    {
+      "id": "fx-014",
+      "stratum": "prose",
+      "query": "What operating revenue is reported in prose case 14?",
+      "relevant_ids": [
+        "doc-fixture03-region-2"
+      ],
+      "results": [
+        {
+          "document_id": "doc-fixture03",
+          "region_id": "doc-fixture03-region-90",
+          "text": "Segment 0 of prose evidence discussing operating revenue of $1518 thousand.",
+          "score": 1.0,
+          "modality": "text",
+          "rank": 1
+        },
+        {
+          "document_id": "doc-fixture03",
+          "region_id": "doc-fixture03-region-91",
+          "text": "Segment 1 of prose evidence discussing operating revenue of $1518 thousand.",
+          "score": 0.9,
+          "modality": "text",
+          "rank": 2
+        },
+        {
+          "document_id": "doc-fixture03",
+          "region_id": "doc-fixture03-region-92",
+          "text": "Segment 2 of prose evidence discussing operating revenue of $1518 thousand.",
+          "score": 0.8,
+          "modality": "text",
+          "rank": 3
+        },
+        {
+          "document_id": "doc-fixture03",
+          "region_id": "doc-fixture03-region-2",
+          "text": "Segment 3 of prose evidence discussing operating revenue of $1518 thousand.",
+          "score": 0.7,
+          "modality": "text",
+          "rank": 4
+        },
+        {
+          "document_id": "doc-fixture03",
+          "region_id": "doc-fixture03-region-94",
+          "text": "Segment 4 of prose evidence discussing operating revenue of $1518 thousand.",
+          "score": 0.6,
+          "modality": "text",
+          "rank": 5
+        }
+      ],
+      "answer": "Operating revenue was $1518 thousand [Source: doc-fixture03].",
+      "ground_truth_answer": "$1518 thousand",
+      "sql_executed": false,
+      "latency_ms": 114.0
+    },
+    {
+      "id": "fx-015",
+      "stratum": "figure",
+      "query": "What operating revenue is reported in figure case 15?",
+      "relevant_ids": [
+        "doc-fixture03-region-3"
+      ],
+      "results": [
+        {
+          "document_id": "doc-fixture03",
+          "region_id": "doc-fixture03-region-90",
+          "text": "Segment 0 of figure evidence discussing operating revenue of $1555 thousand.",
+          "score": 1.0,
+          "modality": "vision",
+          "rank": 1
+        },
+        {
+          "document_id": "doc-fixture03",
+          "region_id": "doc-fixture03-region-91",
+          "text": "Segment 1 of figure evidence discussing operating revenue of $1555 thousand.",
+          "score": 0.9,
+          "modality": "vision",
+          "rank": 2
+        },
+        {
+          "document_id": "doc-fixture03",
+          "region_id": "doc-fixture03-region-92",
+          "text": "Segment 2 of figure evidence discussing operating revenue of $1555 thousand.",
+          "score": 0.8,
+          "modality": "vision",
+          "rank": 3
+        },
+        {
+          "document_id": "doc-fixture03",
+          "region_id": "doc-fixture03-region-93",
+          "text": "Segment 3 of figure evidence discussing operating revenue of $1555 thousand.",
+          "score": 0.7,
+          "modality": "vision",
+          "rank": 4
+        },
+        {
+          "document_id": "doc-fixture03",
+          "region_id": "doc-fixture03-region-94",
+          "text": "Segment 4 of figure evidence discussing operating revenue of $1555 thousand.",
+          "score": 0.6,
+          "modality": "vision",
+          "rank": 5
+        }
+      ],
+      "answer": "Operating revenue was $1555 thousand [Source: doc-fixture03].",
+      "ground_truth_answer": "$1555 thousand",
+      "sql_executed": false,
+      "latency_ms": 115.0
+    },
+    {
+      "id": "fx-016",
+      "stratum": "tabular_lookup",
+      "query": "What operating revenue is reported in tabular_lookup case 16?",
+      "relevant_ids": [
+        "doc-fixture04-region-0"
+      ],
+      "results": [
+        {
+          "document_id": "doc-fixture04",
+          "region_id": "doc-fixture04-region-0",
+          "text": "Segment 0 of tabular_lookup evidence discussing operating revenue of $1592 thousand.",
+          "score": 1.0,
+          "modality": "table",
+          "rank": 1
+        },
+        {
+          "document_id": "doc-fixture04",
+          "region_id": "doc-fixture04-region-91",
+          "text": "Segment 1 of tabular_lookup evidence discussing operating revenue of $1592 thousand.",
+          "score": 0.9,
+          "modality": "table",
+          "rank": 2
+        },
+        {
+          "document_id": "doc-fixture04",
+          "region_id": "doc-fixture04-region-92",
+          "text": "Segment 2 of tabular_lookup evidence discussing operating revenue of $1592 thousand.",
+          "score": 0.8,
+          "modality": "table",
+          "rank": 3
+        },
+        {
+          "document_id": "doc-fixture04",
+          "region_id": "doc-fixture04-region-93",
+          "text": "Segment 3 of tabular_lookup evidence discussing operating revenue of $1592 thousand.",
+          "score": 0.7,
+          "modality": "table",
+          "rank": 4
+        },
+        {
+          "document_id": "doc-fixture04",
+          "region_id": "doc-fixture04-region-94",
+          "text": "Segment 4 of tabular_lookup evidence discussing operating revenue of $1592 thousand.",
+          "score": 0.6,
+          "modality": "table",
+          "rank": 5
+        }
+      ],
+      "answer": "Operating revenue was $1592 thousand [Source: doc-fixture04].",
+      "ground_truth_answer": "$1592 thousand",
+      "sql_executed": true,
+      "latency_ms": 116.0
+    },
+    {
+      "id": "fx-017",
+      "stratum": "numeric",
+      "query": "What operating revenue is reported in numeric case 17?",
+      "relevant_ids": [
+        "doc-fixture04-region-1"
+      ],
+      "results": [
+        {
+          "document_id": "doc-fixture04",
+          "region_id": "doc-fixture04-region-90",
+          "text": "Segment 0 of numeric evidence discussing operating revenue of $1629 thousand.",
+          "score": 1.0,
+          "modality": "table",
+          "rank": 1
+        },
+        {
+          "document_id": "doc-fixture04",
+          "region_id": "doc-fixture04-region-1",
+          "text": "Segment 1 of numeric evidence discussing operating revenue of $1629 thousand.",
+          "score": 0.9,
+          "modality": "table",
+          "rank": 2
+        },
+        {
+          "document_id": "doc-fixture04",
+          "region_id": "doc-fixture04-region-92",
+          "text": "Segment 2 of numeric evidence discussing operating revenue of $1629 thousand.",
+          "score": 0.8,
+          "modality": "table",
+          "rank": 3
+        },
+        {
+          "document_id": "doc-fixture04",
+          "region_id": "doc-fixture04-region-93",
+          "text": "Segment 3 of numeric evidence discussing operating revenue of $1629 thousand.",
+          "score": 0.7,
+          "modality": "table",
+          "rank": 4
+        },
+        {
+          "document_id": "doc-fixture04",
+          "region_id": "doc-fixture04-region-94",
+          "text": "Segment 4 of numeric evidence discussing operating revenue of $1629 thousand.",
+          "score": 0.6,
+          "modality": "table",
+          "rank": 5
+        }
+      ],
+      "answer": "Operating revenue was $1629 thousand [Source: doc-fixture04].",
+      "ground_truth_answer": "$1629 thousand",
+      "sql_executed": true,
+      "latency_ms": 117.0
+    },
+    {
+      "id": "fx-018",
+      "stratum": "prose",
+      "query": "What operating revenue is reported in prose case 18?",
+      "relevant_ids": [
+        "doc-fixture04-region-2"
+      ],
+      "results": [
+        {
+          "document_id": "doc-fixture04",
+          "region_id": "doc-fixture04-region-90",
+          "text": "Segment 0 of prose evidence discussing operating revenue of $1666 thousand.",
+          "score": 1.0,
+          "modality": "text",
+          "rank": 1
+        },
+        {
+          "document_id": "doc-fixture04",
+          "region_id": "doc-fixture04-region-91",
+          "text": "Segment 1 of prose evidence discussing operating revenue of $1666 thousand.",
+          "score": 0.9,
+          "modality": "text",
+          "rank": 2
+        },
+        {
+          "document_id": "doc-fixture04",
+          "region_id": "doc-fixture04-region-92",
+          "text": "Segment 2 of prose evidence discussing operating revenue of $1666 thousand.",
+          "score": 0.8,
+          "modality": "text",
+          "rank": 3
+        },
+        {
+          "document_id": "doc-fixture04",
+          "region_id": "doc-fixture04-region-2",
+          "text": "Segment 3 of prose evidence discussing operating revenue of $1666 thousand.",
+          "score": 0.7,
+          "modality": "text",
+          "rank": 4
+        },
+        {
+          "document_id": "doc-fixture04",
+          "region_id": "doc-fixture04-region-94",
+          "text": "Segment 4 of prose evidence discussing operating revenue of $1666 thousand.",
+          "score": 0.6,
+          "modality": "text",
+          "rank": 5
+        }
+      ],
+      "answer": "Operating revenue was $1666 thousand [Source: doc-fixture04].",
+      "ground_truth_answer": "$1666 thousand",
+      "sql_executed": false,
+      "latency_ms": 118.0
+    },
+    {
+      "id": "fx-019",
+      "stratum": "figure",
+      "query": "What operating revenue is reported in figure case 19?",
+      "relevant_ids": [
+        "doc-fixture04-region-3"
+      ],
+      "results": [
+        {
+          "document_id": "doc-fixture04",
+          "region_id": "doc-fixture04-region-90",
+          "text": "Segment 0 of figure evidence discussing operating revenue of $1703 thousand.",
+          "score": 1.0,
+          "modality": "vision",
+          "rank": 1
+        },
+        {
+          "document_id": "doc-fixture04",
+          "region_id": "doc-fixture04-region-91",
+          "text": "Segment 1 of figure evidence discussing operating revenue of $1703 thousand.",
+          "score": 0.9,
+          "modality": "vision",
+          "rank": 2
+        },
+        {
+          "document_id": "doc-fixture04",
+          "region_id": "doc-fixture04-region-92",
+          "text": "Segment 2 of figure evidence discussing operating revenue of $1703 thousand.",
+          "score": 0.8,
+          "modality": "vision",
+          "rank": 3
+        },
+        {
+          "document_id": "doc-fixture04",
+          "region_id": "doc-fixture04-region-93",
+          "text": "Segment 3 of figure evidence discussing operating revenue of $1703 thousand.",
+          "score": 0.7,
+          "modality": "vision",
+          "rank": 4
+        },
+        {
+          "document_id": "doc-fixture04",
+          "region_id": "doc-fixture04-region-94",
+          "text": "Segment 4 of figure evidence discussing operating revenue of $1703 thousand.",
+          "score": 0.6,
+          "modality": "vision",
+          "rank": 5
+        }
+      ],
+      "answer": "Operating revenue was $1703 thousand [Source: doc-fixture04].",
+      "ground_truth_answer": "$1703 thousand",
+      "sql_executed": false,
+      "latency_ms": 119.0
+    }
+  ]
+}

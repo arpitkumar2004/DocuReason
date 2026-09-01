@@ -1,0 +1,2684 @@
+{
+  "dataset": "docureason-edgar-eval",
+  "built_at": "2026-09-01T14:33:45Z",
+  "seed": 0,
+  "form": "10-K",
+  "filing_count": 8,
+  "provenance": "Gold regions are derived programmatically from the ingested corpus, not human-annotated: table cells give a known row/column intersection, and prose and figure anchors are phrases verified unique across the corpus. Derivable queries over-represent lookup and cannot express multi-hop reasoning.",
+  "generation_report": {
+    "query_count": 150,
+    "documents": 8,
+    "regions_scanned": 20966,
+    "per_stratum": {
+      "tabular_lookup": 50,
+      "numeric": 50,
+      "prose": 50
+    },
+    "rejected": {
+      "tabular_lookup:no_cell": 12,
+      "numeric:no_cell": 27,
+      "prose:too_short": 108,
+      "prose:no_unique_phrase": 18,
+      "figure:no_regions_in_corpus": 1
+    }
+  },
+  "validation": {
+    "queries": 150,
+    "regions_in_corpus": 20966,
+    "dangling_gold_ids": [],
+    "non_unique_anchors": [],
+    "valid": true
+  },
+  "queries": [
+    {
+      "id": "q-0001",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting December 31,\n(in billions), what value is shown for col_3?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-1635"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "December 31,\n(in billions)",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "December 31,\n(in billions)",
+        "column": "col_3",
+        "cell_value": "December 31,\n(in billions)"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0002",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Assumption, what value is shown for col_2?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-1032"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": "Assumption",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Assumption",
+        "column": "col_2",
+        "cell_value": "Assumption"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0003",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting ASSET & WEALTH MANAGEMENT, what value is shown for col_2?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-834"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "ASSET & WEALTH MANAGEMENT",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "ASSET & WEALTH MANAGEMENT",
+        "column": "col_2",
+        "cell_value": "ASSET & WEALTH MANAGEMENT"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0004",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Accrued compensation and related items, what value is shown for col_2?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-1649"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": "Accrued compensation and related items",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Accrued compensation and related items",
+        "column": "col_2",
+        "cell_value": "Accrued compensation and related items"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0005",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting U.S. GSEs and government agencies(a), what value is shown for col_25?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-2045"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "104800",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "U.S. GSEs and government agencies(a)",
+        "column": "col_25",
+        "cell_value": "104800"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0006",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Collections of finance receivables, what value is shown for col_25?",
+      "relevant_ids": [
+        "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7-region-868"
+      ],
+      "document_id": "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7",
+      "source": "caterpillar_10-K_2026-02-13.html",
+      "ground_truth_answer": "-",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Collections of finance receivables",
+        "column": "col_25",
+        "cell_value": "-"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0007",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Net income, what value is shown for col_23?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-664"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "2821",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Net income",
+        "column": "col_23",
+        "cell_value": "2821"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0008",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Available-for-sale debt securities in an unrealized loss position:, what value is shown for col_35?",
+      "relevant_ids": [
+        "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7-region-1629"
+      ],
+      "document_id": "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7",
+      "source": "caterpillar_10-K_2026-02-13.html",
+      "ground_truth_answer": "Available-for-sale debt securities in an unrealized loss position:",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Available-for-sale debt securities in an unrealized loss position:",
+        "column": "col_35",
+        "cell_value": "Available-for-sale debt securities in an unrealized loss position:"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0009",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting 2025 Annual Report, what value is shown for col_2?",
+      "relevant_ids": [
+        "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730-region-2011"
+      ],
+      "document_id": "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730",
+      "source": "johnson__johnson_10-K_2026-02-11.html",
+      "ground_truth_answer": "2025 Annual Report",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "2025 Annual Report",
+        "column": "col_2",
+        "cell_value": "2025 Annual Report"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0010",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Pfizer Inc., what value is shown for col_4?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-693"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": "2025 Form 10-K",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Pfizer Inc.",
+        "column": "col_4",
+        "cell_value": "2025 Form 10-K"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0011",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Consolidated Comprehensive Income (Loss) for the Years Ended December 31,, what value is shown for col_17?",
+      "relevant_ids": [
+        "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7-region-933"
+      ],
+      "document_id": "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7",
+      "source": "caterpillar_10-K_2026-02-13.html",
+      "ground_truth_answer": "Consolidated Comprehensive Income (Loss) for the Years Ended December 31,",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Consolidated Comprehensive Income (Loss) for the Years Ended December 31,",
+        "column": "col_17",
+        "cell_value": "Consolidated Comprehensive Income (Loss) for the Years Ended December 31,"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0012",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting JPMorgan Chase & Co./2025 Form 10-K, what value is shown for col_2?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-1593"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "JPMorgan Chase & Co./2025 Form 10-K",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "JPMorgan Chase & Co./2025 Form 10-K",
+        "column": "col_2",
+        "cell_value": "JPMorgan Chase & Co./2025 Form 10-K"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0013",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Development costs incurred during the year, what value is shown for col_11?",
+      "relevant_ids": [
+        "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8-region-2743"
+      ],
+      "document_id": "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8",
+      "source": "exxon_mobil_10-K_2026-02-18.html",
+      "ground_truth_answer": "16845",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Development costs incurred during the year",
+        "column": "col_11",
+        "cell_value": "16845"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0014",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Item 6., what value is shown for col_5?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-33"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "Reserved",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Item 6.",
+        "column": "col_5",
+        "cell_value": "Reserved"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0015",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting As of or for the year ended December 31, 2024 (in millions, except ratios), what value is shown for col_19?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-3593"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "Term loans by origination year(c)",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "As of or for the year ended December 31, 2024 (in millions, except ratios)",
+        "column": "col_19",
+        "cell_value": "Term loans by origination year(c)"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0016",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Table of Contents, what value is shown for col_3?",
+      "relevant_ids": [
+        "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8-region-339"
+      ],
+      "document_id": "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8",
+      "source": "exxon_mobil_10-K_2026-02-18.html",
+      "ground_truth_answer": "Table of Contents",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Table of Contents",
+        "column": "col_3",
+        "cell_value": "Table of Contents"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0017",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Due after one year through five years, what value is shown for col_13?",
+      "relevant_ids": [
+        "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7-region-1656"
+      ],
+      "document_id": "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7",
+      "source": "caterpillar_10-K_2026-02-13.html",
+      "ground_truth_answer": "1504",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Due after one year through five years",
+        "column": "col_13",
+        "cell_value": "1504"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0018",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Less: Imputed interest, what value is shown for col_3?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-3232"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": "Less: Imputed interest",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Less: Imputed interest",
+        "column": "col_3",
+        "cell_value": "Less: Imputed interest"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0019",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting JPMorgan Chase & Co./2025 Form 10-K, what value is shown for col_3?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-3335"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "JPMorgan Chase & Co./2025 Form 10-K",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "JPMorgan Chase & Co./2025 Form 10-K",
+        "column": "col_3",
+        "cell_value": "JPMorgan Chase & Co./2025 Form 10-K"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0020",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Table of Contents, what value is shown for col_3?",
+      "relevant_ids": [
+        "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8-region-1020"
+      ],
+      "document_id": "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8",
+      "source": "exxon_mobil_10-K_2026-02-18.html",
+      "ground_truth_answer": "Table of Contents",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Table of Contents",
+        "column": "col_3",
+        "cell_value": "Table of Contents"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0021",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Canada, what value is shown for col_3?",
+      "relevant_ids": [
+        "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8-region-1813"
+      ],
+      "document_id": "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8",
+      "source": "exxon_mobil_10-K_2026-02-18.html",
+      "ground_truth_answer": "Canada",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Canada",
+        "column": "col_3",
+        "cell_value": "Canada"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0022",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting (millions of dollars), what value is shown for col_12?",
+      "relevant_ids": [
+        "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8-region-765"
+      ],
+      "document_id": "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8",
+      "source": "exxon_mobil_10-K_2026-02-18.html",
+      "ground_truth_answer": "Total",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "(millions of dollars)",
+        "column": "col_12",
+        "cell_value": "Total"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0023",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Table of Contents, what value is shown for col_9?",
+      "relevant_ids": [
+        "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8-region-1419"
+      ],
+      "document_id": "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8",
+      "source": "exxon_mobil_10-K_2026-02-18.html",
+      "ground_truth_answer": "Financial Table of Contents",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Table of Contents",
+        "column": "col_9",
+        "cell_value": "Financial Table of Contents"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0024",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Total, what value is shown for col_7?",
+      "relevant_ids": [
+        "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8-region-1002"
+      ],
+      "document_id": "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8",
+      "source": "exxon_mobil_10-K_2026-02-18.html",
+      "ground_truth_answer": "3954",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Total",
+        "column": "col_7",
+        "cell_value": "3954"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0025",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Cost\n                                of sales, what value is shown for col_5?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-bcda7cdbd0907f77-region-938"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-bcda7cdbd0907f77",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": "-89587",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Cost\n                                of sales",
+        "column": "col_5",
+        "cell_value": "-89587"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0026",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting PART II, what value is shown for col_2?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-789"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": "PART II",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "PART II",
+        "column": "col_2",
+        "cell_value": "PART II"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0027",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Table of Contents, what value is shown for col_8?",
+      "relevant_ids": [
+        "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8-region-2316"
+      ],
+      "document_id": "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8",
+      "source": "exxon_mobil_10-K_2026-02-18.html",
+      "ground_truth_answer": "Financial Table of Contents",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Table of Contents",
+        "column": "col_8",
+        "cell_value": "Financial Table of Contents"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0028",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Walmart International retail units, what value is shown for col_13?",
+      "relevant_ids": [
+        "doc-walmart_10-K_2026-03-13-22563e5dea3b635e-region-429"
+      ],
+      "document_id": "doc-walmart_10-K_2026-03-13-22563e5dea3b635e",
+      "source": "walmart_10-K_2026-03-13.html",
+      "ground_truth_answer": "4257",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Walmart International retail units",
+        "column": "col_13",
+        "cell_value": "4257"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0029",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Gross profit, what value is shown for col_20?",
+      "relevant_ids": [
+        "doc-walmart_10-K_2026-03-13-22563e5dea3b635e-region-585"
+      ],
+      "document_id": "doc-walmart_10-K_2026-03-13-22563e5dea3b635e",
+      "source": "walmart_10-K_2026-03-13.html",
+      "ground_truth_answer": "26.8",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Gross profit",
+        "column": "col_20",
+        "cell_value": "26.8"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0030",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting 2025 Annual Report, what value is shown for col_2?",
+      "relevant_ids": [
+        "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730-region-220"
+      ],
+      "document_id": "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730",
+      "source": "johnson__johnson_10-K_2026-02-11.html",
+      "ground_truth_answer": "2025 Annual Report",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "2025 Annual Report",
+        "column": "col_2",
+        "cell_value": "2025 Annual Report"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0031",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Total available-for-sale securities with gross unrealized losses, what value is shown for col_5?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-3407"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "16015",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Total available-for-sale securities with gross unrealized losses",
+        "column": "col_5",
+        "cell_value": "16015"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0032",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Impairments, what value is shown for col_31?",
+      "relevant_ids": [
+        "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7-region-1572"
+      ],
+      "document_id": "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7",
+      "source": "caterpillar_10-K_2026-02-13.html",
+      "ground_truth_answer": "-",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Impairments",
+        "column": "col_31",
+        "cell_value": "-"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0033",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Class, what value is shown for col_3?",
+      "relevant_ids": [
+        "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8-region-38"
+      ],
+      "document_id": "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8",
+      "source": "exxon_mobil_10-K_2026-02-18.html",
+      "ground_truth_answer": "Class",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Class",
+        "column": "col_3",
+        "cell_value": "Class"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0034",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Total Firm assets, what value is shown for col_2?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-1718"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "Total Firm assets",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Total Firm assets",
+        "column": "col_2",
+        "cell_value": "Total Firm assets"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0035",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Expected volatility of the Company's stock, what value is shown for col_2?",
+      "relevant_ids": [
+        "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7-region-1209"
+      ],
+      "document_id": "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7",
+      "source": "caterpillar_10-K_2026-02-13.html",
+      "ground_truth_answer": "Expected volatility of the Company's stock",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Expected volatility of the Company's stock",
+        "column": "col_2",
+        "cell_value": "Expected volatility of the Company's stock"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0036",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting (in millions), what value is shown for col_11?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-1001"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "December 31,\n2024",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "(in millions)",
+        "column": "col_11",
+        "cell_value": "December 31,\n2024"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0037",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting 2.610% notes due 2030, what value is shown for col_11?",
+      "relevant_ids": [
+        "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8-region-2255"
+      ],
+      "document_id": "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8",
+      "source": "exxon_mobil_10-K_2026-02-18.html",
+      "ground_truth_answer": "2000",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "2.610% notes due 2030",
+        "column": "col_11",
+        "cell_value": "2000"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0038",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Consumer, excluding credit card, what value is shown for col_16?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-528"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "$",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Consumer, excluding credit card",
+        "column": "col_16",
+        "cell_value": "$"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0039",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Corporate Total(millions of dollars), what value is shown for col_12?",
+      "relevant_ids": [
+        "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8-region-782"
+      ],
+      "document_id": "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8",
+      "source": "exxon_mobil_10-K_2026-02-18.html",
+      "ground_truth_answer": "2023",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Corporate Total(millions of dollars)",
+        "column": "col_12",
+        "cell_value": "2023"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0040",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Alliance revenues(b), what value is shown for col_19?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-2086"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": "7582",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Alliance revenues(b)",
+        "column": "col_19",
+        "cell_value": "7582"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0041",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting JPMorgan Chase & Co./2025 Form 10-K, what value is shown for col_2?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-3509"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "JPMorgan Chase & Co./2025 Form 10-K",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "JPMorgan Chase & Co./2025 Form 10-K",
+        "column": "col_2",
+        "cell_value": "JPMorgan Chase & Co./2025 Form 10-K"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0042",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Pfizer Inc., what value is shown for col_5?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-1574"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": "2025 Form 10-K",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Pfizer Inc.",
+        "column": "col_5",
+        "cell_value": "2025 Form 10-K"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0043",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting JPMorgan Chase & Co./2025 Form 10-K, what value is shown for col_2?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-1873"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "JPMorgan Chase & Co./2025 Form 10-K",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "JPMorgan Chase & Co./2025 Form 10-K",
+        "column": "col_2",
+        "cell_value": "JPMorgan Chase & Co./2025 Form 10-K"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0044",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Chicago, Illinois, what value is shown for col_3?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-199"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "Chicago, Illinois",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Chicago, Illinois",
+        "column": "col_3",
+        "cell_value": "Chicago, Illinois"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0045",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting (MILLIONS), what value is shown for col_31?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-3447"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": "2024",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "(MILLIONS)",
+        "column": "col_31",
+        "cell_value": "2024"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0046",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting See accompanying notes to Consolidated Financial Statements., what value is shown for col_6?",
+      "relevant_ids": [
+        "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7-region-955"
+      ],
+      "document_id": "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7",
+      "source": "caterpillar_10-K_2026-02-13.html",
+      "ground_truth_answer": "See accompanying notes to Consolidated Financial Statements.",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "See accompanying notes to Consolidated Financial Statements.",
+        "column": "col_6",
+        "cell_value": "See accompanying notes to Consolidated Financial Statements."
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0047",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Table of Contents, what value is shown for col_8?",
+      "relevant_ids": [
+        "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8-region-2753"
+      ],
+      "document_id": "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8",
+      "source": "exxon_mobil_10-K_2026-02-18.html",
+      "ground_truth_answer": "Financial Table of Contents",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Table of Contents",
+        "column": "col_8",
+        "cell_value": "Financial Table of Contents"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0048",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Accumulated benefit obligation, what value is shown for col_3?",
+      "relevant_ids": [
+        "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8-region-2046"
+      ],
+      "document_id": "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8",
+      "source": "exxon_mobil_10-K_2026-02-18.html",
+      "ground_truth_answer": "Accumulated benefit obligation",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Accumulated benefit obligation",
+        "column": "col_3",
+        "cell_value": "Accumulated benefit obligation"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0049",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Part I, what value is shown for col_4?",
+      "relevant_ids": [
+        "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7-region-41"
+      ],
+      "document_id": "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7",
+      "source": "caterpillar_10-K_2026-02-13.html",
+      "ground_truth_answer": "Item 1.",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Part I",
+        "column": "col_4",
+        "cell_value": "Item 1."
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0050",
+      "stratum": "tabular_lookup",
+      "query": "In the table reporting Pfizer Inc., what value is shown for col_5?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-2434"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": "2025 Form 10-K",
+      "derivation": "table_cell",
+      "anchor": {
+        "row_label": "Pfizer Inc.",
+        "column": "col_5",
+        "cell_value": "2025 Form 10-K"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0051",
+      "stratum": "numeric",
+      "query": "What is the Total lending- and deposit-related fees figure reported under col_8?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-3220"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "7606",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Total lending- and deposit-related fees",
+        "column": "col_8",
+        "cell_value": "7606"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0052",
+      "stratum": "numeric",
+      "query": "What is the Total noninterest expense(d) figure reported under col_8?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-4761"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "1825",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Total noninterest expense(d)",
+        "column": "col_8",
+        "cell_value": "1825"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0053",
+      "stratum": "numeric",
+      "query": "What is the 2025 Annual Report figure reported under col_6?",
+      "relevant_ids": [
+        "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730-region-427"
+      ],
+      "document_id": "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730",
+      "source": "johnson__johnson_10-K_2026-02-11.html",
+      "ground_truth_answer": "19",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "2025 Annual Report",
+        "column": "col_6",
+        "cell_value": "19"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0054",
+      "stratum": "numeric",
+      "query": "What is the Net periodic benefit cost (credit) figure reported under col_31?",
+      "relevant_ids": [
+        "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730-region-1478"
+      ],
+      "document_id": "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730",
+      "source": "johnson__johnson_10-K_2026-02-11.html",
+      "ground_truth_answer": "530",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Net periodic benefit cost (credit)",
+        "column": "col_31",
+        "cell_value": "530"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0055",
+      "stratum": "numeric",
+      "query": "What is the Actual annual rate of return on plan assets figure reported under col_20?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-1024"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": "-4.6",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Actual annual rate of return on plan assets",
+        "column": "col_20",
+        "cell_value": "-4.6"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0056",
+      "stratum": "numeric",
+      "query": "What is the United States figure reported under col_8?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-2294"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": "2593",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "United States",
+        "column": "col_8",
+        "cell_value": "2593"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0057",
+      "stratum": "numeric",
+      "query": "What is the Value of restricted stock units figure reported under col_6?",
+      "relevant_ids": [
+        "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8-region-2499"
+      ],
+      "document_id": "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8",
+      "source": "exxon_mobil_10-K_2026-02-18.html",
+      "ground_truth_answer": "2025",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Value of restricted stock units",
+        "column": "col_6",
+        "cell_value": "2025"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0058",
+      "stratum": "numeric",
+      "query": "What is the Pfizer Inc. figure reported under col_8?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-1205"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": "41",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Pfizer Inc.",
+        "column": "col_8",
+        "cell_value": "41"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0059",
+      "stratum": "numeric",
+      "query": "What is the Over (under) funded status figure reported under col_32?",
+      "relevant_ids": [
+        "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7-region-1667"
+      ],
+      "document_id": "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7",
+      "source": "caterpillar_10-K_2026-02-13.html",
+      "ground_truth_answer": "-2214",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Over (under) funded status",
+        "column": "col_32",
+        "cell_value": "-2214"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0060",
+      "stratum": "numeric",
+      "query": "What is the Goodwill, related to acquisitions figure reported under col_17?",
+      "relevant_ids": [
+        "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730-region-1116"
+      ],
+      "document_id": "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730",
+      "source": "johnson__johnson_10-K_2026-02-11.html",
+      "ground_truth_answer": "7569",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Goodwill, related to acquisitions",
+        "column": "col_17",
+        "cell_value": "7569"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0061",
+      "stratum": "numeric",
+      "query": "What is the Emerging Markets figure reported under col_25?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-3447"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": "9313",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Emerging Markets",
+        "column": "col_25",
+        "cell_value": "9313"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0062",
+      "stratum": "numeric",
+      "query": "What is the 2025 Annual Report figure reported under col_5?",
+      "relevant_ids": [
+        "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730-region-1931"
+      ],
+      "document_id": "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730",
+      "source": "johnson__johnson_10-K_2026-02-11.html",
+      "ground_truth_answer": "89",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "2025 Annual Report",
+        "column": "col_5",
+        "cell_value": "89"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0063",
+      "stratum": "numeric",
+      "query": "What is the Loans at fair value figure reported under col_20?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-1228"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "1502",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Loans at fair value",
+        "column": "col_20",
+        "cell_value": "1502"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0064",
+      "stratum": "numeric",
+      "query": "What is the Liquid securities and other cash collateral held against derivative receivables figure reported under col_5?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-1461"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "-28891",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Liquid securities and other cash collateral held against derivative receivables",
+        "column": "col_5",
+        "cell_value": "-28891"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0065",
+      "stratum": "numeric",
+      "query": "What is the Pfizer Inc. figure reported under col_9?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-640"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": "19",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Pfizer Inc.",
+        "column": "col_9",
+        "cell_value": "19"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0066",
+      "stratum": "numeric",
+      "query": "What is the S&P Financials Index figure reported under col_23?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-441"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "135.32",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "S&P Financials Index",
+        "column": "col_23",
+        "cell_value": "135.32"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0067",
+      "stratum": "numeric",
+      "query": "What is the JPMorgan Chase & Co./2025 Form 10-K figure reported under col_8?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-1593"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "135",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "JPMorgan Chase & Co./2025 Form 10-K",
+        "column": "col_8",
+        "cell_value": "135"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0068",
+      "stratum": "numeric",
+      "query": "What is the JPMorgan Chase & Co./2025 Form 10-K figure reported under col_9?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-4521"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "289",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "JPMorgan Chase & Co./2025 Form 10-K",
+        "column": "col_9",
+        "cell_value": "289"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0069",
+      "stratum": "numeric",
+      "query": "What is the 2025 Annual Report figure reported under col_6?",
+      "relevant_ids": [
+        "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730-region-220"
+      ],
+      "document_id": "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730",
+      "source": "johnson__johnson_10-K_2026-02-11.html",
+      "ground_truth_answer": "3",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "2025 Annual Report",
+        "column": "col_6",
+        "cell_value": "3"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0070",
+      "stratum": "numeric",
+      "query": "What is the Expected stock price volatility (based on implied volatility, after consideration of historical volatility) figure reported under col_14?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-3157"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": "26.56",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Expected stock price volatility (based on implied volatility, after consideration of historical volatility)",
+        "column": "col_14",
+        "cell_value": "26.56"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0071",
+      "stratum": "numeric",
+      "query": "What is the Pfizer Inc. figure reported under col_9?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-2069"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": "66",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Pfizer Inc.",
+        "column": "col_9",
+        "cell_value": "66"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0072",
+      "stratum": "numeric",
+      "query": "What is the Fully taxable-equivalent adjustments figure reported under col_14?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-617"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "3782",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Fully taxable-equivalent adjustments",
+        "column": "col_14",
+        "cell_value": "3782"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0073",
+      "stratum": "numeric",
+      "query": "What is the Total securities loaned and other figure reported under col_16?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-3500"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "976",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Total securities loaned and other",
+        "column": "col_16",
+        "cell_value": "976"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0074",
+      "stratum": "numeric",
+      "query": "What is the Asia-Pacific figure reported under col_11?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-825"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "16107",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Asia-Pacific",
+        "column": "col_11",
+        "cell_value": "16107"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0075",
+      "stratum": "numeric",
+      "query": "What is the Pfizer Inc. figure reported under col_7?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-536"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": "14",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Pfizer Inc.",
+        "column": "col_7",
+        "cell_value": "14"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0076",
+      "stratum": "numeric",
+      "query": "What is the Corporate debt securities figure reported under col_13?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-2452"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "322",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Corporate debt securities",
+        "column": "col_13",
+        "cell_value": "322"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0077",
+      "stratum": "numeric",
+      "query": "What is the December 29, 2024 figure reported under col_13?",
+      "relevant_ids": [
+        "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730-region-1656"
+      ],
+      "document_id": "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730",
+      "source": "johnson__johnson_10-K_2026-02-11.html",
+      "ground_truth_answer": "1",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "December 29, 2024",
+        "column": "col_13",
+        "cell_value": "1"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0078",
+      "stratum": "numeric",
+      "query": "What is the Total at fair value figure reported under col_28?",
+      "relevant_ids": [
+        "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8-region-2010"
+      ],
+      "document_id": "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8",
+      "source": "exxon_mobil_10-K_2026-02-18.html",
+      "ground_truth_answer": "250",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Total at fair value",
+        "column": "col_28",
+        "cell_value": "250"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0079",
+      "stratum": "numeric",
+      "query": "What is the MP&E capital expenditures figure reported under col_26?",
+      "relevant_ids": [
+        "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7-region-820"
+      ],
+      "document_id": "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7",
+      "source": "caterpillar_10-K_2026-02-13.html",
+      "ground_truth_answer": "-1988",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "MP&E capital expenditures",
+        "column": "col_26",
+        "cell_value": "-1988"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0080",
+      "stratum": "numeric",
+      "query": "What is the Pfizer Inc. figure reported under col_8?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-358"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": "7",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Pfizer Inc.",
+        "column": "col_8",
+        "cell_value": "7"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0081",
+      "stratum": "numeric",
+      "query": "What is the Vested figure reported under col_23?",
+      "relevant_ids": [
+        "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7-region-1224"
+      ],
+      "document_id": "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7",
+      "source": "caterpillar_10-K_2026-02-13.html",
+      "ground_truth_answer": "253.98",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Vested",
+        "column": "col_23",
+        "cell_value": "253.98"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0082",
+      "stratum": "numeric",
+      "query": "What is the Long-term debt figure reported under col_13?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-2012"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "46673",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Long-term debt",
+        "column": "col_13",
+        "cell_value": "46673"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0083",
+      "stratum": "numeric",
+      "query": "What is the All other investing activities, net figure reported under col_20?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-4808"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "25",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "All other investing activities, net",
+        "column": "col_20",
+        "cell_value": "25"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0084",
+      "stratum": "numeric",
+      "query": "What is the Postretirement benefits reserves figure reported under col_5?",
+      "relevant_ids": [
+        "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8-region-1883"
+      ],
+      "document_id": "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8",
+      "source": "exxon_mobil_10-K_2026-02-18.html",
+      "ground_truth_answer": "-1278",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Postretirement benefits reserves",
+        "column": "col_5",
+        "cell_value": "-1278"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0085",
+      "stratum": "numeric",
+      "query": "What is the Report of Independent Registered Public Accounting Firm figure reported under col_3?",
+      "relevant_ids": [
+        "doc-microsoft_10-K_2026-07-29-2b2764e68b92caf4-region-1804"
+      ],
+      "document_id": "doc-microsoft_10-K_2026-07-29-2b2764e68b92caf4",
+      "source": "microsoft_10-K_2026-07-29.html",
+      "ground_truth_answer": "86",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Report of Independent Registered Public Accounting Firm",
+        "column": "col_3",
+        "cell_value": "86"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0086",
+      "stratum": "numeric",
+      "query": "What is the Self-insurance(2) figure reported under col_14?",
+      "relevant_ids": [
+        "doc-walmart_10-K_2026-03-13-22563e5dea3b635e-region-1099"
+      ],
+      "document_id": "doc-walmart_10-K_2026-03-13-22563e5dea3b635e",
+      "source": "walmart_10-K_2026-03-13.html",
+      "ground_truth_answer": "4976",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Self-insurance(2)",
+        "column": "col_14",
+        "cell_value": "4976"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0087",
+      "stratum": "numeric",
+      "query": "What is the Inter-Segment figure reported under col_26?",
+      "relevant_ids": [
+        "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7-region-614"
+      ],
+      "document_id": "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7",
+      "source": "caterpillar_10-K_2026-02-13.html",
+      "ground_truth_answer": "6",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Inter-Segment",
+        "column": "col_26",
+        "cell_value": "6"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0088",
+      "stratum": "numeric",
+      "query": "What is the Provision for taxes on income figure reported under col_15?",
+      "relevant_ids": [
+        "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730-region-2173"
+      ],
+      "document_id": "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730",
+      "source": "johnson__johnson_10-K_2026-02-11.html",
+      "ground_truth_answer": "307",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Provision for taxes on income",
+        "column": "col_15",
+        "cell_value": "307"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0089",
+      "stratum": "numeric",
+      "query": "What is the Total assets acquired in loan satisfactions figure reported under col_8?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-1300"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "112",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Total assets acquired in loan satisfactions",
+        "column": "col_8",
+        "cell_value": "112"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0090",
+      "stratum": "numeric",
+      "query": "What is the JPMorgan Chase & Co./2025 Form 10-K figure reported under col_8?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-2450"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "187",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "JPMorgan Chase & Co./2025 Form 10-K",
+        "column": "col_8",
+        "cell_value": "187"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0091",
+      "stratum": "numeric",
+      "query": "What is the Employee benefits figure reported under col_7?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-4525"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "1165",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Employee benefits",
+        "column": "col_7",
+        "cell_value": "1165"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0092",
+      "stratum": "numeric",
+      "query": "What is the Pfizer Inc. figure reported under col_8?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-1646"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": "53",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Pfizer Inc.",
+        "column": "col_8",
+        "cell_value": "53"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0093",
+      "stratum": "numeric",
+      "query": "What is the Pfizer Inc. figure reported under col_8?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-2573"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": "76",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Pfizer Inc.",
+        "column": "col_8",
+        "cell_value": "76"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0094",
+      "stratum": "numeric",
+      "query": "What is the All Other Segment figure reported under col_25?",
+      "relevant_ids": [
+        "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7-region-2138"
+      ],
+      "document_id": "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7",
+      "source": "caterpillar_10-K_2026-02-13.html",
+      "ground_truth_answer": "14",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "All Other Segment",
+        "column": "col_25",
+        "cell_value": "14"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0095",
+      "stratum": "numeric",
+      "query": "What is the Canada figure reported under col_5?",
+      "relevant_ids": [
+        "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8-region-1044"
+      ],
+      "document_id": "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8",
+      "source": "exxon_mobil_10-K_2026-02-18.html",
+      "ground_truth_answer": "402",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Canada",
+        "column": "col_5",
+        "cell_value": "402"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0096",
+      "stratum": "numeric",
+      "query": "What is the (Amounts in millions, except per share data) figure reported under col_13?",
+      "relevant_ids": [
+        "doc-walmart_10-K_2026-03-13-22563e5dea3b635e-region-1096"
+      ],
+      "document_id": "doc-walmart_10-K_2026-03-13-22563e5dea3b635e",
+      "source": "walmart_10-K_2026-03-13.html",
+      "ground_truth_answer": "2025",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "(Amounts in millions, except per share data)",
+        "column": "col_13",
+        "cell_value": "2025"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0097",
+      "stratum": "numeric",
+      "query": "What is the Effective income tax rate figure reported under col_11?",
+      "relevant_ids": [
+        "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8-region-1258"
+      ],
+      "document_id": "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8",
+      "source": "exxon_mobil_10-K_2026-02-18.html",
+      "ground_truth_answer": "33",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Effective income tax rate",
+        "column": "col_11",
+        "cell_value": "33"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0098",
+      "stratum": "numeric",
+      "query": "What is the JPMorgan Chase & Co./2025 Form 10-K figure reported under col_8?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-660"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": "63",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "JPMorgan Chase & Co./2025 Form 10-K",
+        "column": "col_8",
+        "cell_value": "63"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0099",
+      "stratum": "numeric",
+      "query": "What is the Asset-backed securities figure reported under col_5?",
+      "relevant_ids": [
+        "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7-region-1641"
+      ],
+      "document_id": "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7",
+      "source": "caterpillar_10-K_2026-02-13.html",
+      "ground_truth_answer": "7",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "Asset-backed securities",
+        "column": "col_5",
+        "cell_value": "7"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0100",
+      "stratum": "numeric",
+      "query": "What is the 2025 Annual Report figure reported under col_6?",
+      "relevant_ids": [
+        "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730-region-731"
+      ],
+      "document_id": "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730",
+      "source": "johnson__johnson_10-K_2026-02-11.html",
+      "ground_truth_answer": "39",
+      "derivation": "table_cell_numeric",
+      "anchor": {
+        "row_label": "2025 Annual Report",
+        "column": "col_6",
+        "cell_value": "39"
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0101",
+      "stratum": "prose",
+      "query": "What does the filing say about collaboration with valneva se?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-1360"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "collaboration with valneva se",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0102",
+      "stratum": "prose",
+      "query": "What does the filing say about or otherwise disrupting critical?",
+      "relevant_ids": [
+        "doc-walmart_10-K_2026-03-13-22563e5dea3b635e-region-289"
+      ],
+      "document_id": "doc-walmart_10-K_2026-03-13-22563e5dea3b635e",
+      "source": "walmart_10-K_2026-03-13.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "or otherwise disrupting critical",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0103",
+      "stratum": "prose",
+      "query": "What does the filing say about the accounting treatment for?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-bcda7cdbd0907f77-region-731"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-bcda7cdbd0907f77",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "the accounting treatment for",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0104",
+      "stratum": "prose",
+      "query": "What does the filing say about the asia-pacific africa region?",
+      "relevant_ids": [
+        "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730-region-496"
+      ],
+      "document_id": "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730",
+      "source": "johnson__johnson_10-K_2026-02-11.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "the asia-pacific africa region",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0105",
+      "stratum": "prose",
+      "query": "What does the filing say about device market demand between?",
+      "relevant_ids": [
+        "doc-microsoft_10-K_2026-07-29-2b2764e68b92caf4-region-168"
+      ],
+      "document_id": "doc-microsoft_10-K_2026-07-29-2b2764e68b92caf4",
+      "source": "microsoft_10-K_2026-07-29.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "device market demand between",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0106",
+      "stratum": "prose",
+      "query": "What does the filing say about union disputes or other?",
+      "relevant_ids": [
+        "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7-region-316"
+      ],
+      "document_id": "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7",
+      "source": "caterpillar_10-K_2026-02-13.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "union disputes or other",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0107",
+      "stratum": "prose",
+      "query": "What does the filing say about other employment taxes and?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-bcda7cdbd0907f77-region-892"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-bcda7cdbd0907f77",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "other employment taxes and",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0108",
+      "stratum": "prose",
+      "query": "What does the filing say about new products in the?",
+      "relevant_ids": [
+        "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8-region-1053"
+      ],
+      "document_id": "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8",
+      "source": "exxon_mobil_10-K_2026-02-18.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "new products in the",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0109",
+      "stratum": "prose",
+      "query": "What does the filing say about climate change see the?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-542"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "climate change see the",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0110",
+      "stratum": "prose",
+      "query": "What does the filing say about included in other income deductions?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-2059"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "included in other income deductions",
+        "phrase_words": 5
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0111",
+      "stratum": "prose",
+      "query": "What does the filing say about approximates fair value or?",
+      "relevant_ids": [
+        "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7-region-1789"
+      ],
+      "document_id": "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7",
+      "source": "caterpillar_10-K_2026-02-13.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "approximates fair value or",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0112",
+      "stratum": "prose",
+      "query": "What does the filing say about ms wengel was appointed executive vice?",
+      "relevant_ids": [
+        "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730-region-440"
+      ],
+      "document_id": "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730",
+      "source": "johnson__johnson_10-K_2026-02-11.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "ms wengel was appointed executive vice",
+        "phrase_words": 6
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0113",
+      "stratum": "prose",
+      "query": "What does the filing say about fees recorded in primarily?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-1168"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "fees recorded in primarily",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0114",
+      "stratum": "prose",
+      "query": "What does the filing say about of changing assumptions for?",
+      "relevant_ids": [
+        "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7-region-657"
+      ],
+      "document_id": "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7",
+      "source": "caterpillar_10-K_2026-02-13.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "of changing assumptions for",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0115",
+      "stratum": "prose",
+      "query": "What does the filing say about sold of approximately million?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-2019"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "sold of approximately million",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0116",
+      "stratum": "prose",
+      "query": "What does the filing say about february the firm redeemed?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-4299"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "february the firm redeemed",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0117",
+      "stratum": "prose",
+      "query": "What does the filing say about improper payments or providing?",
+      "relevant_ids": [
+        "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7-region-356"
+      ],
+      "document_id": "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7",
+      "source": "caterpillar_10-K_2026-02-13.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "improper payments or providing",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0118",
+      "stratum": "prose",
+      "query": "What does the filing say about tables show information by?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-bcda7cdbd0907f77-region-916"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-bcda7cdbd0907f77",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "tables show information by",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0119",
+      "stratum": "prose",
+      "query": "What does the filing say about consolidated financial statements and involved?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-1559"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "consolidated financial statements and involved",
+        "phrase_words": 5
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0120",
+      "stratum": "prose",
+      "query": "What does the filing say about costs related asset impairments?",
+      "relevant_ids": [
+        "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730-region-2144"
+      ],
+      "document_id": "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730",
+      "source": "johnson__johnson_10-K_2026-02-11.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "costs related asset impairments",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0121",
+      "stratum": "prose",
+      "query": "What does the filing say about exchange reported on july?",
+      "relevant_ids": [
+        "doc-walmart_10-K_2026-03-13-22563e5dea3b635e-region-37"
+      ],
+      "document_id": "doc-walmart_10-K_2026-03-13-22563e5dea3b635e",
+      "source": "walmart_10-K_2026-03-13.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "exchange reported on july",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0122",
+      "stratum": "prose",
+      "query": "What does the filing say about need to rely on?",
+      "relevant_ids": [
+        "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8-region-184"
+      ],
+      "document_id": "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8",
+      "source": "exxon_mobil_10-K_2026-02-18.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "need to rely on",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0123",
+      "stratum": "prose",
+      "query": "What does the filing say about copilot are key tools?",
+      "relevant_ids": [
+        "doc-microsoft_10-K_2026-07-29-2b2764e68b92caf4-region-185"
+      ],
+      "document_id": "doc-microsoft_10-K_2026-07-29-2b2764e68b92caf4",
+      "source": "microsoft_10-K_2026-07-29.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "copilot are key tools",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0124",
+      "stratum": "prose",
+      "query": "What does the filing say about yet adopted were assessed?",
+      "relevant_ids": [
+        "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7-region-1163"
+      ],
+      "document_id": "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7",
+      "source": "caterpillar_10-K_2026-02-13.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "yet adopted were assessed",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0125",
+      "stratum": "prose",
+      "query": "What does the filing say about costs and less flexibility?",
+      "relevant_ids": [
+        "doc-microsoft_10-K_2026-07-29-2b2764e68b92caf4-region-408"
+      ],
+      "document_id": "doc-microsoft_10-K_2026-07-29-2b2764e68b92caf4",
+      "source": "microsoft_10-K_2026-07-29.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "costs and less flexibility",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0126",
+      "stratum": "prose",
+      "query": "What does the filing say about to support customer and?",
+      "relevant_ids": [
+        "doc-walmart_10-K_2026-03-13-22563e5dea3b635e-region-159"
+      ],
+      "document_id": "doc-walmart_10-K_2026-03-13-22563e5dea3b635e",
+      "source": "walmart_10-K_2026-03-13.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "to support customer and",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0127",
+      "stratum": "prose",
+      "query": "What does the filing say about global health crises pandemics?",
+      "relevant_ids": [
+        "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730-region-292"
+      ],
+      "document_id": "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730",
+      "source": "johnson__johnson_10-K_2026-02-11.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "global health crises pandemics",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0128",
+      "stratum": "prose",
+      "query": "What does the filing say about estate loans excluding those?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-3636"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "estate loans excluding those",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0129",
+      "stratum": "prose",
+      "query": "What does the filing say about government agency securities of?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-2236"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "government agency securities of",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0130",
+      "stratum": "prose",
+      "query": "What does the filing say about to the information set?",
+      "relevant_ids": [
+        "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730-region-399"
+      ],
+      "document_id": "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730",
+      "source": "johnson__johnson_10-K_2026-02-11.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "to the information set",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0131",
+      "stratum": "prose",
+      "query": "What does the filing say about year the following activity?",
+      "relevant_ids": [
+        "doc-microsoft_10-K_2026-07-29-2b2764e68b92caf4-region-1633"
+      ],
+      "document_id": "doc-microsoft_10-K_2026-07-29-2b2764e68b92caf4",
+      "source": "microsoft_10-K_2026-07-29.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "year the following activity",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0132",
+      "stratum": "prose",
+      "query": "What does the filing say about and ecommerce businesses in?",
+      "relevant_ids": [
+        "doc-walmart_10-K_2026-03-13-22563e5dea3b635e-region-351"
+      ],
+      "document_id": "doc-walmart_10-K_2026-03-13-22563e5dea3b635e",
+      "source": "walmart_10-K_2026-03-13.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "and ecommerce businesses in",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0133",
+      "stratum": "prose",
+      "query": "What does the filing say about maintenance costs of the?",
+      "relevant_ids": [
+        "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7-region-236"
+      ],
+      "document_id": "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7",
+      "source": "caterpillar_10-K_2026-02-13.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "maintenance costs of the",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0134",
+      "stratum": "prose",
+      "query": "What does the filing say about actual and estimated payments?",
+      "relevant_ids": [
+        "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7-region-1168"
+      ],
+      "document_id": "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7",
+      "source": "caterpillar_10-K_2026-02-13.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "actual and estimated payments",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0135",
+      "stratum": "prose",
+      "query": "What does the filing say about we rely extensively on?",
+      "relevant_ids": [
+        "doc-walmart_10-K_2026-03-13-22563e5dea3b635e-region-301"
+      ],
+      "document_id": "doc-walmart_10-K_2026-03-13-22563e5dea3b635e",
+      "source": "walmart_10-K_2026-03-13.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "we rely extensively on",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0136",
+      "stratum": "prose",
+      "query": "What does the filing say about financial products and of?",
+      "relevant_ids": [
+        "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7-region-843"
+      ],
+      "document_id": "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7",
+      "source": "caterpillar_10-K_2026-02-13.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "financial products and of",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0137",
+      "stratum": "prose",
+      "query": "What does the filing say about uses formulations and product?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-339"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "uses formulations and product",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0138",
+      "stratum": "prose",
+      "query": "What does the filing say about class of the selected?",
+      "relevant_ids": [
+        "doc-pfizer_10-K_2026-02-26-14f04faab20489c5-region-1143"
+      ],
+      "document_id": "doc-pfizer_10-K_2026-02-26-14f04faab20489c5",
+      "source": "pfizer_10-K_2026-02-26.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "class of the selected",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0139",
+      "stratum": "prose",
+      "query": "What does the filing say about use the mortality assumption?",
+      "relevant_ids": [
+        "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7-region-744"
+      ],
+      "document_id": "doc-caterpillar_10-K_2026-02-13-91280835de60a5a7",
+      "source": "caterpillar_10-K_2026-02-13.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "use the mortality assumption",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0140",
+      "stratum": "prose",
+      "query": "What does the filing say about regulations and interpretations could?",
+      "relevant_ids": [
+        "doc-walmart_10-K_2026-03-13-22563e5dea3b635e-region-357"
+      ],
+      "document_id": "doc-walmart_10-K_2026-03-13-22563e5dea3b635e",
+      "source": "walmart_10-K_2026-03-13.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "regulations and interpretations could",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0141",
+      "stratum": "prose",
+      "query": "What does the filing say about equipment increased reflecting the?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-576"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "equipment increased reflecting the",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0142",
+      "stratum": "prose",
+      "query": "What does the filing say about plans at december and?",
+      "relevant_ids": [
+        "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730-region-1582"
+      ],
+      "document_id": "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730",
+      "source": "johnson__johnson_10-K_2026-02-11.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "plans at december and",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0143",
+      "stratum": "prose",
+      "query": "What does the filing say about data centers retail and?",
+      "relevant_ids": [
+        "doc-apple_10-K_2025-10-31-bcda7cdbd0907f77-region-319"
+      ],
+      "document_id": "doc-apple_10-K_2025-10-31-bcda7cdbd0907f77",
+      "source": "apple_10-K_2025-10-31.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "data centers retail and",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0144",
+      "stratum": "prose",
+      "query": "What does the filing say about revenue and market share?",
+      "relevant_ids": [
+        "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730-region-150"
+      ],
+      "document_id": "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730",
+      "source": "johnson__johnson_10-K_2026-02-11.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "revenue and market share",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0145",
+      "stratum": "prose",
+      "query": "What does the filing say about and production activities unaudited?",
+      "relevant_ids": [
+        "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8-region-2562"
+      ],
+      "document_id": "doc-exxon_mobil_10-K_2026-02-18-c6ded73193db5de8",
+      "source": "exxon_mobil_10-K_2026-02-18.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "and production activities unaudited",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0146",
+      "stratum": "prose",
+      "query": "What does the filing say about owning and managing real?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-152"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "owning and managing real",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0147",
+      "stratum": "prose",
+      "query": "What does the filing say about tcja foreign undistributed earnings?",
+      "relevant_ids": [
+        "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730-region-1444"
+      ],
+      "document_id": "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730",
+      "source": "johnson__johnson_10-K_2026-02-11.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "tcja foreign undistributed earnings",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0148",
+      "stratum": "prose",
+      "query": "What does the filing say about is liquidity requirement for?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-1141"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "is liquidity requirement for",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0149",
+      "stratum": "prose",
+      "query": "What does the filing say about were well-capitalized and met?",
+      "relevant_ids": [
+        "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4-region-4597"
+      ],
+      "document_id": "doc-jpmorgan_chase_10-K_2026-02-13-0b600893751cd5f4",
+      "source": "jpmorgan_chase_10-K_2026-02-13.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "were well-capitalized and met",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    },
+    {
+      "id": "q-0150",
+      "stratum": "prose",
+      "query": "What does the filing say about on the restricted share?",
+      "relevant_ids": [
+        "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730-region-1760"
+      ],
+      "document_id": "doc-johnson__johnson_10-K_2026-02-11-f9e17634dccb0730",
+      "source": "johnson__johnson_10-K_2026-02-11.html",
+      "ground_truth_answer": null,
+      "derivation": "unique_phrase",
+      "anchor": {
+        "phrase": "on the restricted share",
+        "phrase_words": 4
+      },
+      "provenance": "programmatic"
+    }
+  ]
+}

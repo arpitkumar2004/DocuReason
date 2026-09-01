@@ -34,6 +34,9 @@ dependencies = [
     "easyocr>=1.7.0,<2.0.0",
     "faiss-cpu>=1.8.0,<2.0.0",
     "pypdf>=5.0.0,<7.0.0",
+    # Page rasterization for figure crops and OCR (docureason/tripath/ingestion/rasterizer.py).
+    # Arrived transitively via docling; declared now that it is imported directly.
+    "pypdfium2>=4.0.0,<6.0.0",
     "pyyaml>=6.0.1,<7.0.0",
     "uvicorn>=0.20.0,<1.0.0"
 ]
@@ -43,7 +46,15 @@ test = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
     "pytest-asyncio>=0.21.0",
-    "httpx>=0.24.0"
+    "httpx>=0.24.0",
+    # The figure builders are code, so they are tested. Here rather than only in
+    # [figures] so the CI gate covers them instead of skipping them.
+    "matplotlib>=3.7.0,<4.0.0"
+]
+figures = [
+    # Reporting only: docureason/tripath/evaluation/figures.py imports it lazily, so a
+    # serving install carries no plotting stack.
+    "matplotlib>=3.7.0,<4.0.0"
 ]
 lint = [
     "ruff>=0.1.0",
@@ -56,7 +67,7 @@ build = [
     "wheel>=0.41.0"
 ]
 dev = [
-    "docureason-framework[test,lint,build]"
+    "docureason-framework[test,lint,build,figures]"
 ]
 
 [project.scripts]
