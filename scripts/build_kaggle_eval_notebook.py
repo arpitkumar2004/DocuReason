@@ -391,7 +391,7 @@ assert not missing, f"response is missing {missing} - the query path is not wire
 breakdown = smoke_response["latency_breakdown"]
 print(f"\nresults          : {len(smoke_response['results'])}")
 print(f"answer           : {str(smoke_response['answer'])[:160]}")
-print(f"retrieval mode   : {[(m, s.get('mode')) for m, s in (smoke_response.get('retrieval_stats') or {}).items()]}")
+print(f"retrieval mode   : {[(m, s.get('mode') if isinstance(s, dict) else s) for m, s in ((smoke_response.get('retrieval_stats') or {}).get('modality_modes') or {}).items()]}")
 print(f"total_ms         : {breakdown.get('total_ms')}   residual_ms: {breakdown.get('residual_ms')}")
 print(f"stages           : {sorted((breakdown.get('stages_ms') or {}).keys())}")
 print(f"degradation      : {smoke_response['degradation'] or 'none'}")
