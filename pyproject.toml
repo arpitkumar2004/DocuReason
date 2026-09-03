@@ -45,7 +45,7 @@ dependencies = [
 test = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
-    "pytest-asyncio>=0.21.0",
+    "pytest-asyncio>=1.4.0",
     "httpx>=0.24.0",
     # The figure builders are code, so they are tested. Here rather than only in
     # [figures] so the CI gate covers them instead of skipping them.
