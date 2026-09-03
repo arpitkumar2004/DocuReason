@@ -14,7 +14,7 @@ bm25s>=0.2.0
 
 # API Serving & Backend
 fastapi>=0.110.0
-uvicorn[standard]>=0.28.0
+uvicorn[standard]>=0.52.4
 pydantic>=2.6.0
 
 # Configuration & Utilities
