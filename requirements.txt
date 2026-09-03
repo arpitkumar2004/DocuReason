@@ -4,7 +4,7 @@
 # Core Ingestion & Parsing
 pypdf>=5.0.0
 docling>=2.117.0
-easyocr>=1.7.1
+easyocr>=1.7.2
 pillow>=10.0.0
 
 # Embeddings & Dense Indexing
