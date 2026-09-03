@@ -68,7 +68,7 @@ jobs:
           pip install -e .[test]
 
       - name: Cache HuggingFace models
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           # Several tests construct real Ranker / DenseIndexBuilder instances, which
           # download models. Without this cache every matrix leg re-downloads them and
