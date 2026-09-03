@@ -31,7 +31,7 @@ dependencies = [
     "sentence-transformers>=2.2.0,<6.0.0",
     "bm25s>=0.1.0,<1.0.0",
     "docling>=2.0.0,<3.0.0",
-    "easyocr>=1.7.0,<2.0.0",
+    "easyocr>=1.7.2,<2.0.0",
     "faiss-cpu>=1.8.0,<2.0.0",
     "pypdf>=5.0.0,<7.0.0",
     # Page rasterization for figure crops and OCR (docureason/tripath/ingestion/rasterizer.py).
