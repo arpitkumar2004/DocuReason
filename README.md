@@ -1,4 +1,4 @@
-# DocuReason v1.1.4 — Tri-Path Multimodal RAG Framework
+# DocuReason v1.2.0 — Tri-Path Multimodal RAG Framework
 
 [![CI Pipeline](https://github.com/arpitkumar2004/DocuReason/actions/workflows/ci.yml/badge.svg)](https://github.com/arpitkumar2004/DocuReason/actions/workflows/ci.yml)
 [![PyPI](https://img.shields.io/pypi/v/docureason-framework.svg)](https://pypi.org/project/docureason-framework/)
@@ -54,7 +54,7 @@
 
 Enterprise document collections contain a mix of prose, multi-row financial tables, and embedded diagrams or charts. Standard RAG systems treat all content as plain text, leading to severe accuracy degradation on tabular data and visual figures.
 
-**DocuReason 1.1.4** addresses this via a **Tri-Path Multimodal RAG Architecture**:
+**DocuReason 1.2.0** addresses this via a **Tri-Path Multimodal RAG Architecture**:
 1. **Text Path**: Builds dense vector embeddings ([SentenceTransformers](https://www.sbert.net/) indexed with [FAISS](https://github.com/facebookresearch/faiss) HNSW) alongside sparse keyword retrieval ([BM25S](https://github.com/xhluca/bm25s)).
 2. **Table / SQL Path**: Extracts tabular regions, serializes to Markdown/HTML/JSON schemas, infers per-column SQL types, and executes aggregations using [DuckDB](https://duckdb.org/).
 3. **Vision / Chart Path**: Converts figure regions into indexable **text** via a captioning chain — [BLIP-2](https://huggingface.co/docs/transformers/model_doc/blip-2) free-form caption → [CLIP](https://huggingface.co/docs/transformers/model_doc/clip) zero-shot chart-type label → deterministic metadata caption.
@@ -128,10 +128,11 @@ DocuReason breaks complex multimodal document reasoning into **4 clear, modular 
 ![Step 2: Tri-Path Dynamic Query Routing and Multimodal Indexing](assets/step2_routing.jpg)
 
 * **Modality Router**: A keyword-density scorer passed through a sigmoid analyzes incoming user queries to determine the search intent (Text, Table/SQL, or Vision/Chart). It is rule-based and YAML-configurable — no training data or GPU required.
-* **Specialized Tri-Path Processing**:
-  - **Text Path**: Dense vector index (**FAISS** HNSW over SentenceTransformers embeddings) plus a sparse **BM25S** lexical index.
-  - **Table Path**: Table JSON schemas are registered as typed in-memory **DuckDB** tables and queried with generated SQL (`SUM`, filters, column projection).
+* **Specialized Tri-Path Processing (Concurrent Execution)**:
+  - **Text Path**: Dense vector index (**FAISS** HNSW over SentenceTransformers embeddings) plus a sparse **BM25S** lexical index. Indexes are fully queried at retrieval time with degradation logging.
+  - **Table Path**: Table JSON schemas are registered as typed read-only **DuckDB** tables during ingestion and queried with generated SQL (`SUM`, filters, column projection).
   - **Vision Path**: Figures are captioned with **BLIP-2**, labelled by **CLIP** zero-shot classification, and indexed as text.
+* **Bounded Response Caching**: Queries are cached on a fingerprint of the effective configuration to avoid re-computation.
 
 ---
 
@@ -162,28 +163,22 @@ DocuReason breaks complex multimodal document reasoning into **4 clear, modular 
 
 DocuReason ships a **22-dimension evaluation harness** (`docureason/tripath/evaluation/eval_harness.py`) covering retrieval quality, ranking order, context/evidence integrity, groundedness, latency percentiles, throughput and estimated cost, with automated pass/fail verification against configurable SLA targets.
 
-**What is measured today:** the harness runs end to end and is exercised by the test suite. Per-query pipeline latency is now timed at the call site, and gold identifiers are resolved to canonical corpus IDs before **exact** matching.
+**What is measured today:** The harness runs end to end on a real evaluation corpus from **SEC EDGAR**. It features stratified gold queries (prose, table, figure), a **naive-RAG baseline** for true comparison, an **ablation runner** to measure component impact, and **bootstrap intervals** with paired significance testing for statistical rigor. The pipeline latency is accurately timed at the call site per stage, and gold identifiers are resolved to canonical corpus IDs before exact matching.
 
-**What is not measured:** benchmark-scale retrieval and answer quality. The corpus in `samples/` is a **smoke corpus** — a handful of short documents used to verify that the pipeline executes. No result in this repository should be read as a benchmark number, and no baseline system is implemented for comparison.
-
-To reproduce the harness on the smoke corpus:
+To reproduce the harness:
 
 ```bash
-python scripts/evaluate_system.py          # writes artifacts/evaluation/system_evaluation_report.json
+python scripts/build_eval_corpus.py --filings 8  # builds the SEC EDGAR corpus
+python scripts/evaluate_system.py                 # writes artifacts/evaluation/system_evaluation_report.json
 ```
 
-Planned evaluation work — a real annotated corpus, an implemented naive-RAG baseline, per-component ablations and bootstrap confidence intervals — is specified in [`Documentations/audit.md`](Documentations/audit.md) §13 and in `Documentations/eval_method.md`.
-
-> [!NOTE]
-> Earlier releases of this README contained a benchmark comparison table against an
-> "industry standard baseline". Those figures were not reproducible from this
-> repository and no baseline implementation existed, so the table has been removed
-> rather than left standing. The harness that would produce trustworthy numbers is
-> implemented; the corpus and baseline are not yet.
+Detailed evaluation methodology is specified in [`Documentations/audit.md`](Documentations/audit.md) and in `Documentations/eval_method.md`.
 
 ---
 
 ## Installation
+
+DocuReason can be deployed via Docker, installed from PyPI, or run from source. A fully pinned `requirements.lock` and two-stage `Dockerfile` ensure reproducible builds.
 
 ### PyPI Installation
 
@@ -207,7 +202,7 @@ Verify installation:
 
 ```python
 import docureason
-print(docureason.__version__)  # Output: 1.1.4
+print(docureason.__version__)  # Output: 1.2.0
 ```
 
 ### Kaggle & Offline Notebook Installation
@@ -215,7 +210,7 @@ print(docureason.__version__)  # Output: 1.1.4
 To install in Kaggle or offline environments without internet access, upload the `.whl` package file as a Kaggle Dataset and install:
 
 ```python
-!pip install /kaggle/input/your-dataset-name/docureason_framework-1.1.4-py3-none-any.whl
+!pip install /kaggle/input/your-dataset-name/docureason_framework-1.2.0-py3-none-any.whl
 ```
 
 Or install directly from GitHub:

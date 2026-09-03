@@ -1,13 +1,30 @@
+# Private LLM context & local documents (never commit)
+cv.md
+agent.md
+update.md
+interview.md
+audit.md
+Documentations/audit.md
+project_ppt.pptx
+scratch/
 plan/
 artifacts/
-# notebooks/* rather than notebooks/: git cannot re-include a file inside an excluded
-# directory, so the negation below would never fire against a directory pattern.
-notebooks/*
-# ...except the generated Kaggle runner: it is the only way to reproduce the full
-# evaluation without a local GPU, so it is worth reviewing. Regenerate it with
-# scripts/build_kaggle_eval_notebook.py rather than editing the JSON.
-!notebooks/docureason_full_eval_kaggle.ipynb
+notebooks/
 .ipynb_checkpoints/
+
+# Allow only the Kaggle evaluation notebook, ignore other scratch notebooks
+notebooks/*
+!notebooks/docureason_full_eval_kaggle.ipynb
+
+# Evaluation corpus build output (scripts/build_eval_corpus.py)
+# Allowlist: keep dataset definitions, ignore gigabyte-sized corpus build artifacts
+data/*
+!data/eval*/
+data/eval*/*
+!data/eval*/queries.json
+!data/eval*/filings/
+data/eval*/filings/*
+!data/eval*/filings/provenance.json
 
 
 # Byte-compiled / optimized / DLL files
